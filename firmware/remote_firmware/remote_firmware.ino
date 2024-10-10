@@ -14,7 +14,13 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   //This was very heavily inspired by the AnalogReadSerial Example
-  int sensorValue = analogRead(A3);
-  Serial.println(sensorValue);
+  int leftsideways = analogRead(A0);
+  int leftupdown = analogRead(A1);
+  int rightsideways = analogRead(A2);
+  int rightupdown = analogRead(A3);
+  Serial.println(leftsidways);
+  Serial.println(leftupdown);
+  Serial.println(rightsidways);
+  Serial.println(rightupdown);
   delay(1);  // delay in between reads for stability
 }
