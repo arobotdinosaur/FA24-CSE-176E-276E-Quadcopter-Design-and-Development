@@ -6,8 +6,11 @@
 void setup() {
   // put your setup code here, to run once:
 	const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
-	Serial.begin(SERIAL_BAUD);           // Start up serial
-	delay(100);
+	Serial.begin(SERIAL_BAUD);          // Start up serial
+	delay(1000);
+  const int BAT_SENSE_PIN = A7; 
+  pinMode(BAT_SENSE_PIN, INPUT);
+  analogReference(INTERNAL);
 	quad_remote_setup();
 }
 
@@ -18,9 +21,12 @@ void loop() {
   int leftupdown = analogRead(A1);
   int rightsideways = analogRead(A2);
   int rightupdown = analogRead(A3);
+  int BAT_SENSE_PIN = analogRead(A7); 
   Serial.println(leftsideways);
   Serial.println(leftupdown);
   Serial.println(rightsideways);
   Serial.println(rightupdown);
-  delay(1);  // delay in between reads for stability
+  Serial.print("Battery Voltage:"); 
+  Serial.println(BAT_SENSE_PIN);
+  delay(1000);  // delay in between reads for stability
 }
