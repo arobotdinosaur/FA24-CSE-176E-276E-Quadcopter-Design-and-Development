@@ -18,9 +18,9 @@ void loop() {
   int leftupdown = analogRead(A1);
   int rightsideways = analogRead(A2);
   int rightupdown = analogRead(A3);
-  Serial.println(leftsidways);
+  Serial.println(leftsideways);
   Serial.println(leftupdown);
-  Serial.println(rightsidways);
+  Serial.println(rightsideways);
   Serial.println(rightupdown);
   delay(1);  // delay in between reads for stability
 }
