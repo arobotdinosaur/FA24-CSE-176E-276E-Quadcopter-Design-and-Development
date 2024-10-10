@@ -1,14 +1,20 @@
 #include <radio.h>
 #include "quad_remote.h"      // Header file with pin definitions and setup
 #include <serLCD.h>
-serLCD lcd;
+//serLCD lcd; //idk why but this doesn't compile. Maybe changing it to SerLCD fixes it?
 
 void setup() {
   // put your setup code here, to run once:
-
+	const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
+	Serial.begin(SERIAL_BAUD);           // Start up serial
+	delay(100);
+	quad_remote_setup();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  //This was very heavily inspired by the AnalogReadSerial Example
+  int sensorValue = analogRead(A3);
+  Serial.println(sensorValue);
+  delay(1);  // delay in between reads for stability
 }
