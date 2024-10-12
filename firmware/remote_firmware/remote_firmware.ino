@@ -3,6 +3,7 @@
 #include <serLCD.h>
 #include <EEPROM.h>
 //serLCD lcd; //idk why but this doesn't compile. Maybe changing it to SerLCD fixes it?
+const int magicnumber = 5700;
 struct flightControl{
   
   int roll;
@@ -21,7 +22,7 @@ struct flightControl{
   bool knobpress;
   int knobturn;
 
-  const int magicnumber = 5700;
+  //const int magicnumber = 5700;
 };
 //battery voltage seems to be capped at 57 using analogReference(INTERNAL);
 void setup() {
@@ -45,6 +46,10 @@ void loop() {
   int rightsideways = analogRead(A2);
   int rightupdown = analogRead(A3);
   int BAT_SENSE_PIN = analogRead(A7); 
+  leftsideways = constrain(leftsideways, 0,255);//constraining as per instructions
+  leftupdown = constrain(leftupdown, 0, 255);//constraining as per instructions
+  rightsideways = contstrain(rightsideways, 0,255); //constraining as per instructions
+  rightupdown = constrain(rightupdown, 0, 255);//constraining as per instructions
  //Serial.println(leftsideways);
   //Serial.println(leftupdown);
   //Serial.println(rightsideways);
