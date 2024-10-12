@@ -1,3 +1,10 @@
+// global declaration of LEDs 
+const int LED1 = 16;
+const int LED2 = 17; 
+const int LED3 = 18; 
+const int LED4 = 36; 
+const int PRETTY_LEDS = 34;
+
 void setup() {
   //rear is where the 6 pins are sticking out
   const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
@@ -11,18 +18,11 @@ void setup() {
   pinMode(BAT_SENSE_PIN, INPUT);
   analogReference(INTERNAL);
 
-  const int LED1 = 16;
-  const int LED2 = 17; 
-  const int LED3 = 18; 
-  const int LED4 = 36; 
-
-
-
 }
 
 //full battery is at 885 max 
 void loop() {
-  const int LED3 = 18; 
+   
   analogWrite(8, 10);
   analogWrite(3, 10);
   analogWrite(5, 10);
@@ -32,10 +32,13 @@ void loop() {
   Serial.print("Battery Voltage:"); 
   Serial.println(BAT_SENSE_PIN);
 
-
-  
+  analogWrite(LED1, 200);
+  analogWrite(LED2, 200);
   analogWrite(LED3, 200);
+  analogWrite(LED4, 200);
 
-  delay(1000);
+  analogWrite(PRETTY_LEDS, 200);
+
+  delay(400);
 }
 
