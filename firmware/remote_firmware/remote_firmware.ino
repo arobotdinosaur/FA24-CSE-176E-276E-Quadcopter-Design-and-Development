@@ -23,7 +23,7 @@ struct flightControl{
 
   const int magicnumber = 5700;
 };
-
+//battery voltage seems to be capped at 57 using analogReference(INTERNAL);
 void setup() {
   // put your setup code here, to run once:
 	const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
@@ -49,17 +49,19 @@ void loop() {
   //Serial.println(leftupdown);
   //Serial.println(rightsideways);
   //Serial.println(rightupdown);
-  //Serial.print("Battery Voltage:"); 
-  //Serial.println(BAT_SENSE_PIN);
-  uint8_t b[256];
-  int len;
-  if (len = rfAvailable())  // If serial comes in...
-  {
-    rfRead(b, len);
-    b[len] = 0;
-    Serial.write((char *)b);
-  }
+  Serial.print("Battery Voltage:"); 
+  Serial.println(BAT_SENSE_PIN);
+  //uint8_t b[256];
+  //int len;
+  //if (len = rfAvailable())  // If serial comes in...
+  //{
+    //rfRead(b, len);
+    //b[len] = 0;
+    //Serial.write((char *)b);
+  //}
 
-  rfwrite(flightControl);
-  delay(1000);  // delay in between reads for stability
+  //rfwrite(flightControl);
+  //delay(1000);  // delay in between reads for stability
+
+
 }
