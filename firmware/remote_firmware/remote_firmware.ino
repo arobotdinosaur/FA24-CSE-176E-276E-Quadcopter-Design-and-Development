@@ -5,13 +5,14 @@
 //serLCD lcd; //idk why but this doesn't compile. Maybe changing it to SerLCD fixes it?
 const int magicnumber = 5700;
 struct flightControl{
+  uint8_t magicnumber = 5700;
   
   int roll;
   int pitch;
   int yaw;
   int throttle;
   
-  bool top;
+  /*bool top;
   bool bottom;
   bool right;
   bool left;
@@ -20,16 +21,16 @@ struct flightControl{
   bool btn2;
   bool ist;
   bool knobpress;
-  int knobturn;
+  int knobturn;*/
 
   //const int magicnumber = 5700;
 };
 
 //data corresponding to max and min gimbal (top-bottom)
-int gimbal_value_l = 0;
-int gimbal_value_r = 0;
-int max_gimbal = 1023; 
-int min_gimbal = 0; 
+uint8_t gimbal_value_l = 0;
+uint8_t gimbal_value_r = 0;
+uint8_t max_gimbal = 1023; 
+uint8_t min_gimbal = 0; 
 
 //battery voltage seems to be capped at 57 using analogReference(INTERNAL);
 void setup() {
@@ -47,7 +48,7 @@ void setup() {
   rfPrint("ATmega128RFA1 Dev Board Online!\r\n");
 
   //testing for gimbal calibration 
-  while (millis() < 3010) {
+ /* while (millis() < 1000) {
     gimbal_value_l = analogRead(A1);
     gimbal_value_r = analogRead(A3);
 
@@ -59,7 +60,7 @@ void setup() {
       int max_gimbal_r = gimbal_value_r; 
     }
   }
-
+*/
 }
 
 void loop() {
@@ -67,20 +68,20 @@ void loop() {
   //This was very heavily inspired by the AnalogReadSerial Example
   //involves battery and gimbal control
   int leftsideways = analogRead(A0);
-  int leftupdown = analogRead(A1);
+  float leftupdown = analogRead(A1);
   int rightsideways = analogRead(A2);
   int rightupdown = analogRead(A3);
   int BAT_SENSE_PIN = analogRead(A7); 
   //part of calibration 
-  
+ /* 
   leftsideways = constrain(leftsideways, min_gimbal_l,max_gimbal_l);//constraining as per instructions
   leftupdown = constrain(leftupdown, min_gimbal_l, max_gimbal_l);//constraining as per instructions
-  rightsideways = contstrain(rightsideways, min_gimbal_r,max_gimbal_r); //constraining as per instructions
+  rightsideways = constrain(rightsideways, min_gimbal_r,max_gimbal_r); //constraining as per instructions
   rightupdown = constrain(rightupdown, min_gimbal_r, max_gimbal_r);//constraining as per instructions
   leftsideways = map(leftsideways, min_gimbal_l, max_gimbal_l, 0, 255);
   rightsideways = map(rightsideways, min_gimbal_r, max_gimbal_r, 0, 255);
   rightupdown = map(rightupdown, min_gimbal_r, max_gimbal_r, 0, 255);
-  leftupdown = map(leftupdown, min_gimbal_l, max_gimbal_l, 0, 255);
+  leftupdown = map(leftupdown, min_gimbal_l, max_gimbal_l, 0, 255);*/
  //Serial.println(leftsideways);
   //Serial.println(leftupdown);
   //Serial.println(rightsideways);
@@ -100,8 +101,20 @@ void loop() {
     //Serial.write((char *)b);
   //}
 
-  //rfwrite(flightControl);
-  //delay(1000);  // delay in between reads for stability
+  //rfWrite(flightControl);
+  float max_gimbal_l=855;
+  float min_gimbal_l=128;
+int throttle=255*((leftupdown-min_gimbal_l)/(max_gimbal_l-min_gimbal_l));//
+uint8_t a[4];
+a[0]=57;//Magic number
+a[1]=throttle;
+Serial.println(throttle);
+a[2]=2;
+a[3]=3;
+a[4]=4;
+  rfWrite(a,5);
+  //rfWrite('hi');
+  delay(10);  // delay in between reads for stability
 
 
 }
