@@ -3,28 +3,6 @@
 #include <serLCD.h>
 #include <EEPROM.h>
 //serLCD lcd; //idk why but this doesn't compile. Maybe changing it to SerLCD fixes it?
-const int magicnumber = 5700;
-struct flightControl{
-  uint8_t magicnumber = 5700;
-  
-  int roll;
-  int pitch;
-  int yaw;
-  int throttle;
-  
-  /*bool top;
-  bool bottom;
-  bool right;
-  bool left;
-  bool center;
-  bool btn1;
-  bool btn2;
-  bool ist;
-  bool knobpress;
-  int knobturn;*/
-
-  //const int magicnumber = 5700;
-};
 
 //data corresponding to max and min gimbal (top-bottom)
 uint8_t gimbal_value_l = 0;
@@ -37,7 +15,6 @@ void setup() {
   
 	const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
 	Serial.begin(SERIAL_BAUD);          // Start up serial
-	delay(1000);
   const int BAT_SENSE_PIN = A7;   //battery pin 
   pinMode(BAT_SENSE_PIN, INPUT);
   analogReference(INTERNAL);
@@ -73,7 +50,7 @@ void loop() {
   int rightupdown = analogRead(A3);
   int BAT_SENSE_PIN = analogRead(A7); 
   //part of calibration 
- /* 
+  /*
   leftsideways = constrain(leftsideways, min_gimbal_l,max_gimbal_l);//constraining as per instructions
   leftupdown = constrain(leftupdown, min_gimbal_l, max_gimbal_l);//constraining as per instructions
   rightsideways = constrain(rightsideways, min_gimbal_r,max_gimbal_r); //constraining as per instructions
@@ -115,6 +92,15 @@ a[4]=4;
   rfWrite(a,5);
   //rfWrite('hi');
   delay(10);  // delay in between reads for stability
+  lcd.print("Hi");
+  delay(1000);
+  update_display();
 
 
+}
+
+void update_display() {
+	lcd.clear();
+	lcd.setCursor(0, 0);
+	lcd.print(knob1.getCurrentPos());
 }
