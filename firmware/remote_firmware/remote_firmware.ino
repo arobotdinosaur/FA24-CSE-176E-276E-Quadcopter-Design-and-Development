@@ -36,6 +36,7 @@ int rightsideways = 0;
 int armed=0;
 
 //battery voltage seems to be capped at 57 using analogReference(INTERNAL);
+//7 is the lowest I've seen. But not sure if 7 means high or low voltage? seems like 7 should mean lower...
 void setup() {
   Serial.begin(SERIAL_BAUD);
   pinMode(BAT_SENSE_PIN, INPUT);
@@ -45,7 +46,11 @@ void setup() {
 
   rfBegin(channel);  //radio stuff
   rfPrint("ATmega128RFA1 Dev Board Online!\r\n");
-     
+
+  max_gimbal_l_vert=EEPROM.get(0,max_gimbal_l_vert);
+  min_gimbal_l_vert=EEPROM.get(2,min_gimbal_l_vert); //I think we have to increment the EEPROM addresses by two as the gimbal values take up two bytes
+  Serial.println(max_gimbal_l_vert);
+
 
   //testing for gimbal calibration
   /* while (millis() < 1000) {
@@ -130,6 +135,8 @@ void calibrate() {
   lcd.print("Move right joystick high");
   delay(5000);
   max_gimbal_l_vert = analogRead(A1);
+  EEPROM.put(0,max_gimbal_l_vert);
+  EEPROM.put(2,min_gimbal_l_vert);
 
 
 
