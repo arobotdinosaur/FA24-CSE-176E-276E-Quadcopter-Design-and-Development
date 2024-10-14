@@ -4,6 +4,7 @@
   const int right_rear = 3;
   const int left_top = 5; 
   const int right_top = 4; 
+  int start_time = 0; 
 void setup() {
   //copied from rfecho
   rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
@@ -27,24 +28,38 @@ void setup() {
 
 //full battery is at 885 max 
 void loop() {
-int len;
+  int throttle = 0; 
+  int len;
 uint8_t a[4];
  if (len = rfAvailable())  // If serial comes in...
   {
     rfRead(a, len);
     if (a[0]==57 && a[1]==1){
+      start_time = 0; 
       Serial.println(a[0]);
       Serial.println(a[1]);
-      int throttle=a[2];
+      throttle=a[2];
       analogWrite(left_rear, throttle);
       analogWrite(right_rear, throttle);
       analogWrite(left_top, throttle );
       analogWrite(right_top, throttle);
-  
+      
+
     }
+
   }
 
+
+  start_time = start_time + 1;
+  if (start_time >= 20){
+    analogWrite(left_rear, 0); 
+      analogWrite(right_rear, 0);
+      analogWrite(left_top, 0);
+      analogWrite(right_top, 0);
+  }
   delay(10);
+  Serial.println(start_time);
+
   
    
  /* analogWrite(8, 10);
@@ -64,5 +79,8 @@ uint8_t a[4];
   //analogWrite(PRETTY_LEDS, 200);
 
 
+
+
 }
+
 

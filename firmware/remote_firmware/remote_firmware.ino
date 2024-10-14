@@ -96,15 +96,20 @@ void loop() {
   //int throttle=255*((leftupdown-min_gimbal_l)/(max_gimbal_l-min_gimbal_l));
   uint8_t a[4];
   a[0] = magicNumber;
-    if (leftupdown==0){
-  a[1]=1;
-  }
+
+  a[1]=armed;
 
   leftupdown = constrain(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert);
   leftupdown = map(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert, 0, 255);
   Serial.println(leftupdown);
-  a[2] = leftupdown;
 
+  if (leftupdown==0 & knob_down == 1){
+  update_display();
+  lcd.print("Quadcopter Armed");
+  armed = 1;
+  }
+
+  a[2] = leftupdown;
 
   a[3] = 2;
   a[4] = 3;
@@ -114,14 +119,14 @@ void loop() {
 		calibrate();
 	}
 
-a[1]=1;
-  if (a[1]==1){
+
+  if (armed==1){
   update_display();
   lcd.print("Armed");
 }
 
   rfWrite(a, 5);
-  delay(100);  // delay in between reads for stability
+  delay(5);  // delay in between reads for stability
 
 }
 
@@ -137,6 +142,7 @@ void btn1_pressed(bool down) {
 }
 
 void calibrate() {
+  armed = 0;
   update_display();
   lcd.print("Beginning Calibration");
   delay(1000);
@@ -150,7 +156,10 @@ void calibrate() {
   max_gimbal_l_vert = analogRead(A1);
   EEPROM.put(max_gimbal_l_vert_ad,max_gimbal_l_vert);
   EEPROM.put(min_gimbal_l_vert_ad,min_gimbal_l_vert);
+  armed = 0; 
   update_display();
+  lcd.print("Calibration done!");
+
 
 
 
@@ -174,8 +183,6 @@ void calibrate() {
  void knob_pressed(bool down) {
 	if(down) {
 		//Serial.println("knob down");
-		//knob1.setCurrentPos(0);
-		//update_display();
     knob_down=1;
 	}else {
 		//Serial.println("knob up");  
