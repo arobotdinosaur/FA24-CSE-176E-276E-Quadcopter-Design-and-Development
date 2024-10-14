@@ -35,7 +35,7 @@ uint8_t a[4];
     if (a[0]==57 && a[1]==1){
       Serial.println(a[0]);
       Serial.println(a[1]);
-      int throttle=a[1];
+      int throttle=a[2];
       analogWrite(left_rear, throttle);
       analogWrite(right_rear, throttle);
       analogWrite(left_top, throttle );
@@ -52,9 +52,9 @@ uint8_t a[4];
   analogWrite(5, 10);
   analogWrite(4, 10);*/
 
-  //int BAT_SENSE_PIN = analogRead(A7); 
-  //Serial.print("Battery Voltage:"); 
-  //Serial.println(BAT_SENSE_PIN);
+  int BAT_SENSE_PIN = analogRead(A7); 
+  Serial.print("Battery Voltage:"); 
+  Serial.println(BAT_SENSE_PIN);
 
   //analogWrite(LED1, 200);
   //analogWrite(LED2, 200);

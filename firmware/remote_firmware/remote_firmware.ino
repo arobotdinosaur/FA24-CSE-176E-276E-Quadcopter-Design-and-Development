@@ -16,6 +16,11 @@ void btn_left_pressed(bool down);
 void btn_right_pressed(bool down);
 void btn_center_pressed(bool down);
 
+int max_gimbal_l_vert_ad = 0;
+int min_gimbal_l_vert_ad = 2;
+
+bool knob_down=0;
+
 //data corresponding to max and min gimbal (top-bottom)
 uint8_t gimbal_value_l = 0;
 uint8_t gimbal_value_r = 0;
@@ -47,11 +52,11 @@ void setup() {
   rfBegin(channel);  //radio stuff
   rfPrint("ATmega128RFA1 Dev Board Online!\r\n");
 
-  max_gimbal_l_vert=EEPROM.get(0,max_gimbal_l_vert);
-  min_gimbal_l_vert=EEPROM.get(2,min_gimbal_l_vert); //I think we have to increment the EEPROM addresses by two as the gimbal values take up two bytes
-  Serial.println(max_gimbal_l_vert);
+  max_gimbal_l_vert=EEPROM.get(max_gimbal_l_vert_ad,max_gimbal_l_vert);
+  min_gimbal_l_vert=EEPROM.get(min_gimbal_l_vert_ad,min_gimbal_l_vert); //I think we have to increment the EEPROM addresses by two as the gimbal values take up two bytes
+  //Serial.println(max_gimbal_l_vert);
 
-
+  knob1_btn_cb = knob_pressed;
   //testing for gimbal calibration
   /* while (millis() < 1000) {
     gimbal_value_l = analogRead(A1);
@@ -72,7 +77,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   //This was very heavily inspired by the AnalogReadSerial Example
   //involves battery and gimbal control
-  //int leftsideways = analogRead(A0);
+ // int leftsideways = analogRead(A0);
   int leftupdown = analogRead(A1);
   //int rightsideways = analogRead(A2);
   //int rightupdown = analogRead(A3);
@@ -81,34 +86,42 @@ void loop() {
   //btn1_pressed();
 
   //Serial.println(leftsideways);
-  leftupdown = constrain(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert);
-  leftupdown = map(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert, 0, 255);
-  Serial.println(leftupdown);
   //Serial.println(rightsideways);
   //Serial.println(rightupdown);
-  Serial.print("Battery Voltage:");
-  Serial.println(BAT_SENSE_PIN);
+  //Serial.print("Battery Voltage:");
+ // Serial.println(BAT_SENSE_PIN);
 
   //float max_gimbal_l=855;
   //float min_gimbal_l=128;
   //int throttle=255*((leftupdown-min_gimbal_l)/(max_gimbal_l-min_gimbal_l));
   uint8_t a[4];
   a[0] = magicNumber;
+    if (leftupdown==0){
+  a[1]=1;
+  }
+
+  leftupdown = constrain(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert);
+  leftupdown = map(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert, 0, 255);
+  Serial.println(leftupdown);
   a[2] = leftupdown;
-  //Serial.println(throttle);
+
+
   a[3] = 2;
   a[4] = 3;
-  rfWrite(a, 5);
-  //rfWrite('hi');
-  delay(10);  // delay in between reads for stability
-  update_display();
-  lcd.print("Hi");
+
 
 	if (is_pressed(BUTTON_UP_PIN)) {
 		calibrate();
 	}
 
-  
+a[1]=1;
+  if (a[1]==1){
+  update_display();
+  lcd.print("Armed");
+}
+
+  rfWrite(a, 5);
+  delay(100);  // delay in between reads for stability
 
 }
 
@@ -135,8 +148,9 @@ void calibrate() {
   lcd.print("Move right joystick high");
   delay(5000);
   max_gimbal_l_vert = analogRead(A1);
-  EEPROM.put(0,max_gimbal_l_vert);
-  EEPROM.put(2,min_gimbal_l_vert);
+  EEPROM.put(max_gimbal_l_vert_ad,max_gimbal_l_vert);
+  EEPROM.put(min_gimbal_l_vert_ad,min_gimbal_l_vert);
+  update_display();
 
 
 
@@ -154,5 +168,17 @@ void calibrate() {
   rightupdown = constrain(rightupdown, min_gimbal_r, max_gimbal_r);
   rightupdown = map(rightupdown, min_gimbal_r, max_gimbal_r, 0, 255);
 */
+
 }
 
+ void knob_pressed(bool down) {
+	if(down) {
+		//Serial.println("knob down");
+		//knob1.setCurrentPos(0);
+		//update_display();
+    knob_down=1;
+	}else {
+		//Serial.println("knob up");  
+    knob_down=0;  
+	}
+}
