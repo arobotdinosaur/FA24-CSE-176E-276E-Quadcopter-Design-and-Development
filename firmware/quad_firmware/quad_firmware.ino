@@ -27,6 +27,24 @@ void setup() {
 
 //full battery is at 885 max 
 void loop() {
+int len;
+uint8_t a[4];
+ if (len = rfAvailable())  // If serial comes in...
+  {
+    rfRead(a, len);
+    if (a[0]==57 && a[1]==1){
+      Serial.println(a[0]);
+      Serial.println(a[1]);
+      int throttle=a[1];
+      analogWrite(left_rear, throttle);
+      analogWrite(right_rear, throttle);
+      analogWrite(left_top, throttle );
+      analogWrite(right_top, throttle);
+  
+    }
+  }
+
+  delay(10);
   
    
  /* analogWrite(8, 10);
@@ -34,32 +52,17 @@ void loop() {
   analogWrite(5, 10);
   analogWrite(4, 10);*/
 
-  int BAT_SENSE_PIN = analogRead(A7); 
+  //int BAT_SENSE_PIN = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_SENSE_PIN);
 
-  analogWrite(LED1, 200);
-  analogWrite(LED2, 200);
+  //analogWrite(LED1, 200);
+  //analogWrite(LED2, 200);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
   //analogWrite(PRETTY_LEDS, 200);
-int len;
-uint8_t a[4];
- if (len = rfAvailable())  // If serial comes in...
-  {
-    rfRead(a, len);
-    Serial.println(a[0]);
-    Serial.println(a[1]);
-    int throttle=a[1];
-    analogWrite(left_rear, throttle);
-    analogWrite(right_rear, throttle);
-    analogWrite(left_top, throttle );
-    analogWrite(right_top, throttle);
 
-  }
-
-  delay(10);
 
 }
 
