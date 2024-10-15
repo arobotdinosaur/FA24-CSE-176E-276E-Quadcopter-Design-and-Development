@@ -85,6 +85,7 @@ void setup() {
   min_gimbal_r_hor=EEPROM.get(min_gimbal_r_hor_ad,min_gimbal_r_hor);
 
   knob1_btn_cb = knob_pressed;
+  btn1_cb = btn1_pressed;
   //testing for gimbal calibration
   /* while (millis() < 1000) {
     gimbal_value_l = analogRead(A1);
@@ -110,9 +111,7 @@ void loop() {
   Serial.print(leftupdown);
   //int rightsideways = analogRead(A2);
   //int rightupdown = analogRead(A3);
-  //int BAT_SENSE_PIN = analogRead(A7);
-  //part of calibration
-  //btn1_pressed();
+  int BAT_SENSE_PIN = analogRead(A7);
 
   //Serial.println(leftsideways);
   //Serial.println(rightsideways);
@@ -148,7 +147,7 @@ void loop() {
   a[3] = a[0] + a[1] + a[2];
 
 
-	if (is_pressed(BUTTON_UP_PIN)) {
+	if (is_pressed(BUTTON_UP_PIN)&&armed==0) {
 		calibrate();
     armed = 0;
 	}
@@ -158,9 +157,13 @@ void loop() {
   update_display();
   lcd.print("Armed");
 }
+else{
+  update_display();
+  lcd.print("Press knob to arm");
+}
 
   rfWrite(a, 4);
-  delay(5);  // delay in between reads for stability
+  delay(10);  // delay in between reads for stability
 
 }
 
@@ -259,6 +262,8 @@ void calibrate() {
 	}
 }
 
+
+
 void quad_bat(){
   uint8_t b[256];
   int len2;
@@ -267,4 +272,13 @@ void quad_bat(){
     b[len2] =0;
     Serial.write((char *)b);
   }
+}
+
+void btn1_pressed(bool down) {
+	if(down) {
+		//Serial.println("btn1 down");
+    armed=0;
+	} //else {
+	//	Serial.println("btn1 up");    
+	//}
 }

@@ -42,8 +42,8 @@ uint8_t a[4] = {0};
     rfRead(a, len);
     if (a[0]==57 && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
       start_time = 0; 
-      Serial.println(a[0]);
-      Serial.println(a[1]);
+      analogWrite(LED1, 200);
+      //analogWrite(LED2, 200);
       throttle=a[2];
       analogWrite(left_rear, throttle);
       analogWrite(right_rear, throttle);
@@ -60,8 +60,9 @@ uint8_t a[4] = {0};
   }
 
 
-
+  if (start_time<=254){
   start_time = start_time + 1;
+  }
   if (start_time >= 20){
       a[4]={0};
       throttle=0;
@@ -70,19 +71,13 @@ uint8_t a[4] = {0};
       analogWrite(left_top, 0);
       analogWrite(right_top, 0);
   }
-  delay(10);
   Serial.println(start_time);
 
-  
-   
- /* analogWrite(8, 10);
-  analogWrite(3, 10);
-  analogWrite(5, 10);
-  analogWrite(4, 10);*/
 
+  //rfWrite(b, 3);
+
+  delay(10);
   
-  //analogWrite(LED1, 200);
-  //analogWrite(LED2, 200);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
