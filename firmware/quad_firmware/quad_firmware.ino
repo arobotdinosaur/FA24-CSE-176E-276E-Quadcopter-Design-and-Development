@@ -5,6 +5,7 @@
   const int left_top = 5; 
   const int right_top = 4; 
   uint32_t start_time = 0; 
+  int magicNumber = 57;
 void setup() {
   //copied from rfecho
   rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
@@ -28,11 +29,9 @@ void setup() {
 
 //full battery is at 885 max 
 void loop() {
-  int BAT_SENSE_PIN = analogRead(A7); 
- // Serial.print("Battery Voltage:"); 
- // Serial.println(BAT_SENSE_PIN);
-  //rfWrite(BAT_SENSE_PIN);
-
+  int BAT_VALUE = analogRead(A7); 
+  Serial.print("Battery Voltage:"); 
+  Serial.println(BAT_VALUE);
 
   int throttle = 0; 
   int len;
@@ -40,7 +39,7 @@ uint8_t a[4] = {0};
  if (len = rfAvailable())  
   {
     rfRead(a, len);
-    if (a[0]==57 && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
+    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
       start_time = 0; 
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
@@ -66,15 +65,20 @@ uint8_t a[4] = {0};
   if (start_time >= 20){
       a[4]={0};
       throttle=0;
+      analogWrite(LED1, 0);
       analogWrite(left_rear, 0); 
       analogWrite(right_rear, 0);
       analogWrite(left_top, 0);
       analogWrite(right_top, 0);
   }
-  Serial.println(start_time);
+  //Serial.println(start_time);
 
+  uint8_t b[3] = {0};
+  b[0] = magicNumber;
+  b[1]= BAT_VALUE;
+  b[2] = b[0]+b[1];
 
-  //rfWrite(b, 3);
+  rfWrite(b, 3);
 
   delay(10);
   

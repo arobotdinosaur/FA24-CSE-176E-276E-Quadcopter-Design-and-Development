@@ -29,6 +29,7 @@ int max_gimbal_r_hor_ad = 12;
 int min_gimbal_r_hor_ad = 14;
 
 bool knob_down=0;
+uint32_t start_time = 0; 
 
 //data corresponding to max and min gimbal (top-bottom)
 uint8_t gimbal_value_l = 0;
@@ -51,6 +52,11 @@ const int SERIAL_BAUD = 9600;
 const int channel = 12;
 
 const int BAT_SENSE_PIN = A7;
+const int max_bat_remote = 57;
+const int min_bat_remote = 7;
+const int max_bat_quad = 115; // 885; I was getting different values in testing than we recorded earlier
+const int min_bat_quad = 25; // 750;
+int remotebattery = 0;
 
 int leftupdown = 0;
 int rightupdown = 0;
@@ -152,17 +158,51 @@ void loop() {
     armed = 0;
 	}
 
+remotebattery = map(BAT_SENSE_PIN, min_bat_remote, max_bat_remote, 0, 100);
 
   if (armed==1){
   update_display();
-  lcd.print("Armed");
+  lcd.print("Armed ");
+  lcd.print("remote:");
+  lcd.print(remotebattery);
+  lcd.print("%");
 }
 else{
   update_display();
-  lcd.print("Press knob to arm");
+  lcd.print("Unarmed ");
+  lcd.print("remote:");
+  lcd.print(remotebattery);
+  lcd.print("%");
 }
 
   rfWrite(a, 4);
+
+uint8_t b[3] = {0};
+if (rfAvailable())  
+  {
+    rfRead(b, 3);
+    if (b[0]==magicNumber && b[0] + b[1] == b[2]){
+      start_time = 0; 
+      //Serial.println(b[1]);885
+      int quadbattery=b[1];
+      quadbattery = map(quadbattery, min_bat_quad, max_bat_quad, 0, 100);
+      lcd.print(" quad:");
+      lcd.print(quadbattery);
+      lcd.print("%");
+    }
+    else{
+      rfFlush();
+    }
+  }
+  
+  //Makes sure to disarm the remote if connection with the quad is lost
+  if (start_time<=254){
+  start_time = start_time + 1;
+  }
+  if (start_time >= 10){ //short time - but seems to work okay
+    armed=0;
+  }
+
   delay(10);  // delay in between reads for stability
 
 }
@@ -233,9 +273,6 @@ void calibrate() {
   rfWrite(a,4);
 
 
-
-
-
   /*
   leftsideways = constrain(leftsideways, min_gimbal_l,max_gimbal_l);
   leftsideways = map(leftsideways, min_gimbal_l, max_gimbal_l, 0, 255);
@@ -263,7 +300,8 @@ void calibrate() {
 }
 
 
-
+//unused as of right now
+/*
 void quad_bat(){
   uint8_t b[256];
   int len2;
@@ -272,7 +310,7 @@ void quad_bat(){
     b[len2] =0;
     Serial.write((char *)b);
   }
-}
+}*/
 
 void btn1_pressed(bool down) {
 	if(down) {
