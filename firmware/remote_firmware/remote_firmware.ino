@@ -256,11 +256,11 @@ void calibrate() {
   delay(1000);
   update_display();
 
-    lcd.print("Move left joystick left");
+    lcd.print("Move right joystick left");
   delay(5000);
   min_gimbal_r_hor = analogRead(A4);
   update_display();
-  lcd.print("Move left joystick right");
+  lcd.print("Move right joystick right");
   delay(5000);
   max_gimbal_r_hor = analogRead(A4);
   EEPROM.put(max_gimbal_r_hor_ad,max_gimbal_r_hor);
