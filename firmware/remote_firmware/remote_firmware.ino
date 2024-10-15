@@ -48,8 +48,9 @@ int16_t max_gimbal_r_hor = 0;
 int16_t min_gimbal_r_hor = 0;
 
 const int magicNumber = 57;
+const int magicNumber2 = 53;
 const int SERIAL_BAUD = 9600;
-const int channel = 12;
+const int channel = 26;
 
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
@@ -180,8 +181,8 @@ else{
 uint8_t b[3] = {0};
 if (rfAvailable())  
   {
-    rfRead(b, 3);
-    if (b[0]==magicNumber && b[0] + b[1] == b[2]){
+    rfRead(b, 4);
+    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){
       start_time = 0; 
       //Serial.println(b[1]);885
       int quadbattery=b[1];
@@ -189,6 +190,9 @@ if (rfAvailable())
       lcd.print(" quad:");
       lcd.print(quadbattery);
       lcd.print("%");
+      if (b[2]=0){
+        armed = 0;
+      }
     }
     else{
       rfFlush();
@@ -203,7 +207,7 @@ if (rfAvailable())
     armed=0;
   }
 
-  delay(10);  // delay in between reads for stability
+  delay(50);  // delay in between reads for stability
 
 }
 
@@ -258,11 +262,11 @@ void calibrate() {
 
     lcd.print("Move right joystick left");
   delay(5000);
-  min_gimbal_r_hor = analogRead(A4);
+  min_gimbal_r_hor = analogRead(A2);
   update_display();
   lcd.print("Move right joystick right");
   delay(5000);
-  max_gimbal_r_hor = analogRead(A4);
+  max_gimbal_r_hor = analogRead(A2);
   EEPROM.put(max_gimbal_r_hor_ad,max_gimbal_r_hor);
   EEPROM.put(min_gimbal_r_hor_ad,min_gimbal_r_hor);
   delay(1000);

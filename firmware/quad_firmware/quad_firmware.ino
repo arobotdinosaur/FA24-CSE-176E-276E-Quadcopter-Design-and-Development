@@ -5,10 +5,23 @@
   const int left_top = 5; 
   const int right_top = 4; 
   uint32_t start_time = 0; 
-  int magicNumber = 57;
+  const int magicNumber = 57;
+  const int magicNumber2 = 53;
+
+  uint8_t a[4] = {0};
+
+
 void setup() {
   //copied from rfecho
-  rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(26);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  int disarm = 1;
+  disarm = 0;
+  uint8_t b[4] = {0};
+  b[0] = magicNumber2;
+  b[1]= 57;
+  b[2]=disarm;
+  b[3] = b[0]+b[1]+b[2];
+  rfWrite(b,4);
 
   //rear is where the 6 pins are sticking out
   const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
@@ -35,6 +48,7 @@ void loop() {
 
   int throttle = 0; 
   int len;
+  
 uint8_t a[4] = {0};
  if (len = rfAvailable())  
   {
@@ -48,9 +62,6 @@ uint8_t a[4] = {0};
       analogWrite(right_rear, throttle);
       analogWrite(left_top, throttle );
       analogWrite(right_top, throttle);
-    
-      
-
     }
     else{
       rfFlush();
@@ -58,6 +69,7 @@ uint8_t a[4] = {0};
 
   }
 
+ // read_radio();
 
   if (start_time<=254){
   start_time = start_time + 1;
@@ -73,15 +85,15 @@ uint8_t a[4] = {0};
   }
   //Serial.println(start_time);
 
-  uint8_t b[3] = {0};
-  b[0] = magicNumber;
+  uint8_t b[4] = {0};
+  b[0] = magicNumber2;
   b[1]= BAT_VALUE;
-  b[2] = b[0]+b[1];
+  b[2]=1;
+  b[3] = b[0]+b[1]+b[2];
+  //disarm = 0;
 
-  rfWrite(b, 3);
-
-  delay(10);
-  
+  rfWrite(b,4);
+  delay(50);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
@@ -92,4 +104,29 @@ uint8_t a[4] = {0};
 
 }
 
+
+void read_radio() {
+int i = 0;
+uint8_t a[4] = {0};
+ rfRead(a, 4);
+    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
+      start_time = 0; 
+      analogWrite(LED1, 200);
+      //analogWrite(LED2, 200);
+      analogWrite(left_rear, a[2]);
+      analogWrite(right_rear, a[2]);
+      analogWrite(left_top, a[2]);
+      analogWrite(right_top, a[2]);
+    }
+    else{
+      if(i<=254){
+       i=i+1;
+      rfFlush();
+      read_radio();
+      }
+      else{
+      rfFlush();
+    }
+    }
+}
 
