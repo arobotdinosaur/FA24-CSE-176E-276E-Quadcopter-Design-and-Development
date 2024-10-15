@@ -79,6 +79,7 @@ void loop() {
   //involves battery and gimbal control
  // int leftsideways = analogRead(A0);
   int leftupdown = analogRead(A1);
+  Serial.print(leftupdown);
   //int rightsideways = analogRead(A2);
   //int rightupdown = analogRead(A3);
   //int BAT_SENSE_PIN = analogRead(A7);
@@ -111,7 +112,7 @@ void loop() {
   }
 
   a[2] = leftupdown;
-
+  Serial.println(leftupdown);
   a[3] = a[0] + a[1] + a[2];
 
 
@@ -126,7 +127,7 @@ void loop() {
   lcd.print("Armed");
 }
 
-  rfWrite(a, 5);
+  rfWrite(a, 4);
   delay(5);  // delay in between reads for stability
 
 }
@@ -155,6 +156,8 @@ void calibrate() {
   delay(1000);
   update_display();
   lcd.print("Calibration done!");
+  uint8_t a[4]={0};
+  rfWrite(a,4);
 
 
 

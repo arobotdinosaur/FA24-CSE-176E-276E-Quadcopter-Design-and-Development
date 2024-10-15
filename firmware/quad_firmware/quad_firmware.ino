@@ -37,7 +37,7 @@ void loop() {
   int throttle = 0; 
   int len;
 uint8_t a[4] = {0};
- if (len = rfAvailable())  // If serial comes in...
+ if (len = rfAvailable())  
   {
     rfRead(a, len);
     if (a[0]==57 && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
@@ -63,7 +63,9 @@ uint8_t a[4] = {0};
 
   start_time = start_time + 1;
   if (start_time >= 20){
-    analogWrite(left_rear, 0); 
+      a[4]={0};
+      throttle=0;
+      analogWrite(left_rear, 0); 
       analogWrite(right_rear, 0);
       analogWrite(left_top, 0);
       analogWrite(right_top, 0);
