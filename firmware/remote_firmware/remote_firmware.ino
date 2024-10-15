@@ -19,8 +19,14 @@ void btn_center_pressed(bool down);
 int max_gimbal_l_vert_ad = 0;
 int min_gimbal_l_vert_ad = 2;
 
-int max_gimbal_r_vert_ad = 0;
-int min_gimbal_r_vert_ad = 2;
+int max_gimbal_r_vert_ad = 4;
+int min_gimbal_r_vert_ad = 6;
+
+int max_gimbal_l_hor_ad = 8;
+int min_gimbal_l_hor_ad = 10;
+
+int max_gimbal_r_hor_ad = 12;
+int min_gimbal_r_hor_ad = 14;
 
 bool knob_down=0;
 
@@ -30,9 +36,15 @@ uint8_t gimbal_value_r = 0;
 int16_t max_gimbal_l_vert = 1023;  //uint8_t only goes to 255 so I changed this data type. Also, we want a signed int - we get negative values sometimes
 int16_t min_gimbal_l_vert = 0;
 
+int16_t max_gimbal_l_hor = 0;
+int16_t min_gimbal_l_hor = 0;
+
 //added for right updown
 int16_t max_gimbal_r_vert = 1023;  
 int16_t min_gimbal_r_vert = 0;
+
+int16_t max_gimbal_r_hor = 0;
+int16_t min_gimbal_r_hor = 0;
 
 const int magicNumber = 57;
 const int SERIAL_BAUD = 9600;
@@ -62,9 +74,15 @@ void setup() {
   min_gimbal_l_vert=EEPROM.get(min_gimbal_l_vert_ad,min_gimbal_l_vert); //I think we have to increment the EEPROM addresses by two as the gimbal values take up two bytes
   //Serial.println(max_gimbal_l_vert);
 
+  max_gimbal_l_hor=EEPROM.get(max_gimbal_l_hor_ad,max_gimbal_l_hor);
+  min_gimbal_l_hor=EEPROM.get(min_gimbal_l_hor_ad,min_gimbal_l_hor);
+
   //added for right updown
   max_gimbal_r_vert=EEPROM.get(max_gimbal_r_vert_ad,max_gimbal_r_vert);
   min_gimbal_r_vert=EEPROM.get(min_gimbal_r_vert_ad,min_gimbal_r_vert);
+
+  max_gimbal_r_hor=EEPROM.get(max_gimbal_r_hor_ad,max_gimbal_r_hor);
+  min_gimbal_r_hor=EEPROM.get(min_gimbal_r_hor_ad,min_gimbal_r_hor);
 
   knob1_btn_cb = knob_pressed;
   //testing for gimbal calibration
@@ -170,6 +188,18 @@ void calibrate() {
   delay(1000);
   update_display();
 
+  lcd.print("Move left joystick left");
+  delay(5000);
+  min_gimbal_l_hor = analogRead(A0);
+  update_display();
+  lcd.print("Move left joystick right");
+  delay(5000);
+  max_gimbal_l_hor = analogRead(A0);
+  EEPROM.put(max_gimbal_l_hor_ad,max_gimbal_l_hor);
+  EEPROM.put(min_gimbal_l_hor_ad,min_gimbal_l_hor);
+  delay(1000);
+  update_display();
+
   //right side updown
   lcd.print("Move right joystick low");
   delay(5000);
@@ -180,6 +210,18 @@ void calibrate() {
   max_gimbal_r_vert = analogRead(A3);
   EEPROM.put(max_gimbal_r_vert_ad,max_gimbal_r_vert);
   EEPROM.put(min_gimbal_r_vert_ad,min_gimbal_r_vert);
+  delay(1000);
+  update_display();
+
+    lcd.print("Move left joystick left");
+  delay(5000);
+  min_gimbal_r_hor = analogRead(A4);
+  update_display();
+  lcd.print("Move left joystick right");
+  delay(5000);
+  max_gimbal_r_hor = analogRead(A4);
+  EEPROM.put(max_gimbal_r_hor_ad,max_gimbal_r_hor);
+  EEPROM.put(min_gimbal_r_hor_ad,min_gimbal_r_hor);
   delay(1000);
   update_display();
 
