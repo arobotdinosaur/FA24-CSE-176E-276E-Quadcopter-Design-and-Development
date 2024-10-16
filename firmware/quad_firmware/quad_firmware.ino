@@ -8,12 +8,14 @@
   const int magicNumber = 57;
   const int magicNumber2 = 53;
 
+  int len = 0;
+
   uint8_t a[4] = {0};
 
 
 void setup() {
   //copied from rfecho
-  rfBegin(26);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
@@ -53,7 +55,7 @@ uint8_t a[4] = {0};
  if (len = rfAvailable())  
   {
     rfRead(a, len);
-    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
+    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
       start_time = 0; 
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
@@ -103,6 +105,7 @@ uint8_t a[4] = {0};
 
 
 }
+
 
 
 void read_radio() {

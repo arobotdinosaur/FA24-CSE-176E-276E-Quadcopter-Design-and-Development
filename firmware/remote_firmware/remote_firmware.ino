@@ -50,7 +50,7 @@ int16_t min_gimbal_r_hor = 0;
 const int magicNumber = 57;
 const int magicNumber2 = 53;
 const int SERIAL_BAUD = 9600;
-const int channel = 26;
+const int channel = 12;
 
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
@@ -64,6 +64,8 @@ int rightupdown = 0;
 int leftsideways = 0;
 int rightsideways = 0;
 int armed=0;
+int len = 0;
+int i = 0;
 
 //battery voltage seems to be capped at 57 using analogReference(INTERNAL);
 //7 is the lowest I've seen. But not sure if 7 means high or low voltage? seems like 7 should mean lower...
@@ -137,11 +139,11 @@ void loop() {
 
   leftupdown = constrain(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert);
   leftupdown = map(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert, 0, 255);
-  Serial.println(leftupdown);
+ // Serial.println(leftupdown);
 
   rightupdown = constrain(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert);
   rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, 0,255);
-  Serial.println(rightupdown);
+ // Serial.println(rightupdown);
 
   if (leftupdown==0 && knob_down == 1){
   update_display();
@@ -150,7 +152,7 @@ void loop() {
   }
 
   a[2] = leftupdown;
-  Serial.println(leftupdown);
+  //Serial.println(leftupdown);
   a[3] = a[0] + a[1] + a[2];
 
 
@@ -178,11 +180,12 @@ else{
 
   rfWrite(a, 4);
 
-uint8_t b[3] = {0};
-if (rfAvailable())  
+uint8_t b[4] = {0};
+if (len = rfAvailable())  
   {
     rfRead(b, 4);
-    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){
+    Serial.println(len);
+    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ //adding len==4 check fails - len seems to be 126 always
       start_time = 0; 
       //Serial.println(b[1]);885
       int quadbattery=b[1];
@@ -324,3 +327,37 @@ void btn1_pressed(bool down) {
 	//	Serial.println("btn1 up");    
 	//}
 }
+/*
+void radio_transmit(){
+  uint8_t a[4] = {0};
+  a[0] = magicNumber;
+
+  a[1]=armed;
+
+  a[2] = leftupdown;
+ // Serial.println(leftupdown);
+  a[3] = a[0] + a[1] + a[2];
+  while(i<=254){
+  uint8_t b[3] = {0};
+if (len = rfAvailable())  
+  {
+    rfRead(b, len);
+    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3] && len==4){
+      start_time = 0; 
+      //Serial.println(b[1]);885
+      int quadbattery=b[1];
+      quadbattery = map(quadbattery, min_bat_quad, max_bat_quad, 0, 100);
+      lcd.print(" quad:");
+      lcd.print(quadbattery);
+      lcd.print("%");
+      if (b[2]=0){
+        armed = 0;
+      }
+    }
+    else{
+      rfFlush();
+    }
+  }
+  rfWrite(a, 4);
+  }
+}*/
