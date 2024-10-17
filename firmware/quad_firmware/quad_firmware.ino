@@ -95,7 +95,7 @@ uint8_t a[4] = {0};
   //disarm = 0;
 
   rfWrite(b,4);
-  delay(50);
+  delay(100);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 

@@ -183,7 +183,7 @@ else{
 uint8_t b[4] = {0};
 if (len = rfAvailable())  
   {
-    rfRead(b, 4);
+    rfRead(b, len);
     Serial.println(len);
     if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ //adding len==4 check fails - len seems to be 126 always
       start_time = 0; 
@@ -210,7 +210,7 @@ if (len = rfAvailable())
     armed=0;
   }
 
-  delay(50);  // delay in between reads for stability
+  delay(100);  // delay in between reads for stability
 
 }
 
