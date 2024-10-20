@@ -5,6 +5,7 @@
 #include <Adafruit_Sensor.h>
 #include <QuadClass_LSM6DSOX.h>
 
+
   const int left_rear = 8;
   const int right_rear = 3;
   const int left_top = 5; 
@@ -20,11 +21,18 @@
 
   float pitch; 
   float pitch_rate;
+  float roll;
   QuadClass_LSM6DSOX lsm = QuadClass_LSM6DSOX();
   Adafruit_Simple_AHRS *ahrs = NULL;
   Adafruit_Sensor *_accel = NULL;
   Adafruit_Sensor *_gyro = NULL;
   Adafruit_Sensor *_mag = NULL; 
+
+  //complementary filter param 
+  #define RAD_TO_DEG 57.295779513082320876798154814105
+  float gain = 0.98; 
+  float cf_pitch = 0.0;
+  float cf_roll = 0.0;
 
 //sensors in imu
 void setupSensor()
@@ -97,7 +105,9 @@ void loop() {
 
   //checking data from imu 
   quad_data_t orientation;
-  int now = millis();
+  static unsigned long last_time = millis();
+  unsigned long now = millis();
+  float dt = (now - last_time);
   if (ahrs->getQuadOrientation(&orientation))
   {
     /* 'orientation' should have valid .roll and .pitch fields */
@@ -109,10 +119,24 @@ void loop() {
     Serial.print(F(" "));
     Serial.print(orientation.pitch_rate);
     Serial.print(F(" "));
+
+    roll = orientation.roll;
+    sensors_event_t gyro_event;
+    _gyro->getEvent(&gyro_event);
+    float gyro_raw_pitch = gyro_event.gyro.z * RAD_TO_DEG;
+    float gyro_raw_roll = gyro_event.gyro.y * RAD_TO_DEG;
+
+    float gyro_angle_pitch = cf_pitch + (gyro_raw_pitch)*dt;
+    float gyro_angle_roll = cf_roll + (gyro_raw_roll)*dt;
+    cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
+    cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
+
   }
 
   last = now;
 
+  
+  
 
 
   int throttle = 0; 
@@ -203,4 +227,5 @@ uint8_t a[4] = {0};
     }
     }
 }
+
 
