@@ -119,7 +119,7 @@ void loop() {
     Serial.print(F(" "));
     Serial.print(orientation.pitch_rate);
     Serial.print(F(" "));
-
+    //implemeting for complemetary filtering (check if this is right)
     roll = orientation.roll;
     sensors_event_t gyro_event;
     _gyro->getEvent(&gyro_event);
