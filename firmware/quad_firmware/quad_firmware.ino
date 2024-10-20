@@ -1,4 +1,9 @@
 #include <radio.h>
+#include <Adafruit_Simple_AHRS.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <QuadClass_LSM6DSOX.h>
+
 
   const int left_rear = 8;
   const int right_rear = 3;
@@ -11,6 +16,52 @@
   int16_t len = 0;
 
   uint8_t a[4] = {0};
+
+
+  float pitch; 
+  float pitch_rate;
+  float roll;
+  QuadClass_LSM6DSOX lsm = QuadClass_LSM6DSOX();
+  Adafruit_Simple_AHRS *ahrs = NULL;
+  Adafruit_Sensor *_accel = NULL;
+  Adafruit_Sensor *_gyro = NULL;
+  Adafruit_Sensor *_mag = NULL; 
+
+  //complementary filter param 
+  #define RAD_TO_DEG 57.295779513082320876798154814105
+  float gain = 0.98; 
+  float cf_pitch = 0.0;
+  float cf_roll = 0.0;
+
+//sensors in imu
+void setupSensor()
+{
+  // Set data rate for G and XL.  Set G low-pass cut off.  (Section 7.12)
+ // lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG1_G,  ODR_952 | G_BW_G_10 );  //952hz ODR + 63Hz cuttof
+
+  // Enable the XL (Section 7.23)
+  //lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG5_XL, XL_ENABLE_X | XL_ENABLE_Y | XL_ENABLE_Z);
+
+  // Set low-pass XL filter frequency divider (Section 7.25)
+  //lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG7_XL, HR_MODE | XL_LP_ODR_RATIO_9);
+  
+
+  // This only sets range of measurable values for each sensor.  Setting these manually (I.e., without using these functions) will cause incorrect output from the library.
+ // lsm.setupAccel(Adafruit_LSM9DS1::LSM9DS1_ACCELRANGE_2G);
+  //lsm.setupMag(Adafruit_LSM9DS1::LSM9DS1_MAGGAIN_4GAUSS);
+ // lsm.setupGyro(Adafruit_LSM9DS1::LSM9DS1_GYROSCALE_245DPS);
+
+ if (!lsm.begin_I2C()) {
+    Serial.println("Failed to find LSM6DSOX chip");
+    while (1) {
+      delay(10);
+    }
+  }
+  _accel = lsm.getAccelerometerSensor();
+  _gyro = lsm.getGyroSensor();
+  ahrs = new Adafruit_Simple_AHRS(_accel, _mag, _gyro);
+#
+}
 
 
 void setup() {
@@ -26,9 +77,11 @@ void setup() {
   rfWrite(b,4);
 
   //rear is where the 6 pins are sticking out
-  const int SERIAL_BAUD = 9600 ;        // Baud rate for serial port 
+  const int SERIAL_BAUD = 115200 ;        // Baud rate for serial port 
 	Serial.begin(SERIAL_BAUD);          // Start up serial
 
+  //calling sensor meansurement func
+  setupSensor();
   const int BAT_SENSE_PIN = A7; 
   pinMode(BAT_SENSE_PIN, INPUT);
   analogReference(INTERNAL);
@@ -42,11 +95,48 @@ void setup() {
 
 }
 
+unsigned int last = millis();
 //full battery is at 885 max 
 void loop() {
   int BAT_VALUE = analogRead(A7); 
  // Serial.print("Battery Voltage:"); 
  // Serial.println(BAT_VALUE);
+
+  //checking data from imu 
+  quad_data_t orientation;
+  static unsigned long last_time = millis();
+  unsigned long now = millis();
+  float dt = (now - last_time);
+  if (ahrs->getQuadOrientation(&orientation))
+  {
+    /* 'orientation' should have valid .roll and .pitch fields */
+    Serial.print(now - last);
+    Serial.print(F(" "));
+    pitch = orientation.pitch;
+    pitch_rate = orientation.pitch_rate;
+    Serial.print(orientation.pitch);
+    Serial.print(F(" "));
+    Serial.print(orientation.pitch_rate);
+    Serial.print(F(" "));
+
+    roll = orientation.roll;
+    sensors_event_t gyro_event;
+    _gyro->getEvent(&gyro_event);
+    float gyro_raw_pitch = gyro_event.gyro.z * RAD_TO_DEG;
+    float gyro_raw_roll = gyro_event.gyro.y * RAD_TO_DEG;
+
+    float gyro_angle_pitch = cf_pitch + (gyro_raw_pitch)*dt;
+    float gyro_angle_roll = cf_roll + (gyro_raw_roll)*dt;
+    cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
+    cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
+
+  }
+
+  last = now;
+
+  
+  
+
 
   int throttle = 0; 
   int len;
@@ -74,6 +164,9 @@ uint8_t a[4] = {0};
       rfFlush();
          Serial.println("Flush");
     }
+
+
+  
 
   }
 
@@ -109,6 +202,7 @@ uint8_t a[4] = {0};
 delay(100);
 
 
+
 }
 
 
@@ -137,4 +231,5 @@ uint8_t a[4] = {0};
     }
     }
 }
+
 
