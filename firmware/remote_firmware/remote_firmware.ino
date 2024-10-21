@@ -55,7 +55,7 @@ const int channel = 12;
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
 const int min_bat_remote = 7;
-const int max_bat_quad = 115; // 885; I was getting different values in testing than we recorded earlier
+const int max_bat_quad = 125; // 885; I was getting different values in testing than we recorded earlier
 const int min_bat_quad = 25; // 750;
 int remotebattery = 0;
 
