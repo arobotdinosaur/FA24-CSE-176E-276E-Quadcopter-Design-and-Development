@@ -6779,7 +6779,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <pinref part="J3" gate="G$1" pin="8"/>
 <wire x1="91.44" y1="50.8" x2="96.52" y2="50.8" width="0.1524" layer="91"/>
-<label x="104.14" y="50.8" size="1.778" layer="95" xref="yes"/>
+<label x="96.52" y="50.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="GND40" gate="1" pin="BAT_GND"/>
@@ -6815,12 +6815,12 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <pinref part="U1" gate="G$1" pin="PB5(OC1A/PCINT5)"/>
 <wire x1="-177.8" y1="68.58" x2="-182.88" y2="68.58" width="0.1524" layer="91"/>
-<label x="-182.88" y="68.58" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="-182.88" y="68.58" size="1.778" layer="95" rot="MR0" xref="yes"/>
 </segment>
 <segment>
 <pinref part="J3" gate="G$1" pin="4"/>
 <wire x1="91.44" y1="40.64" x2="104.14" y2="40.64" width="0.1524" layer="91"/>
-<label x="114.3" y="40.64" size="1.778" layer="95" xref="yes"/>
+<label x="104.14" y="40.64" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="N$18" class="0">
@@ -6929,12 +6929,12 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <pinref part="U1" gate="G$1" pin="PB7(OC0A/OC1C/PCINT7)"/>
 <wire x1="-177.8" y1="63.5" x2="-182.88" y2="63.5" width="0.1524" layer="91"/>
-<label x="-182.88" y="63.5" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="-182.88" y="63.5" size="1.778" layer="95" rot="MR0" xref="yes"/>
 </segment>
 <segment>
 <pinref part="J3" gate="G$1" pin="6"/>
 <wire x1="91.44" y1="45.72" x2="104.14" y2="45.72" width="0.1524" layer="91"/>
-<label x="114.3" y="45.72" size="1.778" layer="95" xref="yes"/>
+<label x="104.14" y="45.72" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="LED1" class="0">
@@ -6967,17 +6967,18 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </net>
 <net name="N$23" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="EN"/>
-<wire x1="22.86" y1="-55.88" x2="15.24" y2="-55.88" width="0.1524" layer="91"/>
 <pinref part="S1" gate="G$1" pin="C"/>
 <pinref part="B2" gate="G$1" pin="N"/>
-<wire x1="15.24" y1="-55.88" x2="0" y2="-55.88" width="0.1524" layer="91"/>
 <wire x1="0" y1="-55.88" x2="-7.62" y2="-55.88" width="0.1524" layer="91"/>
 <wire x1="0" y1="-40.64" x2="0" y2="-55.88" width="0.1524" layer="91"/>
-<junction x="0" y="-55.88"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
 <pinref part="C15" gate="G$1" pin="2"/>
 <wire x1="15.24" y1="-50.8" x2="15.24" y2="-55.88" width="0.1524" layer="91"/>
-<junction x="15.24" y="-55.88"/>
+<pinref part="U$1" gate="G$1" pin="EN"/>
+<wire x1="22.86" y1="-55.88" x2="15.24" y2="-55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
