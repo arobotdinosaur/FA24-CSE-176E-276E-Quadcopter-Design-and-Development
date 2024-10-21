@@ -178,12 +178,22 @@ else{
   lcd.print("%");
 }
 
-  rfWrite(a, 4);
-
 uint8_t b[4] = {0};
 if (len = rfAvailable())  
   {
+    Serial.println("raw len");
+    Serial.println(len);
+    if (len!=(4) && len!=8 && len!=12){
+    rfFlush();
+    }
+/*i=0;
+while((len!=(4) && len!=8 && len!=12) && i<254){
+  rfFlush();
+  i=i+1;
+}*/
+
     rfRead(b, len);
+    Serial.println("filtered");
     Serial.println(len);
     if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ //adding len==4 check fails - len seems to be 126 always
       start_time = 0; 
@@ -195,7 +205,9 @@ if (len = rfAvailable())
       lcd.print("%");
       if (b[2]=0){
         armed = 0;
+        a[2]=0;
       }
+        rfWrite(a, 4);
     }
     else{
       rfFlush();
@@ -209,8 +221,8 @@ if (len = rfAvailable())
   if (start_time >= 10){ //short time - but seems to work okay
     armed=0;
   }
-
-  delay(100);  // delay in between reads for stability
+  //rfWrite(a,4);
+  //delay(50);  // delay in between reads for stability
 
 }
 

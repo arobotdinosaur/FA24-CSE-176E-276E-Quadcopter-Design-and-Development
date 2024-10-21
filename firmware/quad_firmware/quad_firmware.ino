@@ -54,6 +54,9 @@ void loop() {
 uint8_t a[4] = {0};
  if (len = rfAvailable()) 
  Serial.println(len); 
+ if (len != 4){
+  rfFlush();
+ }
   {
     rfRead(a, len);
     if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]&& len==4){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
