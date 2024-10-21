@@ -3,7 +3,7 @@
 void setup()
 {
 	Serial.begin(9600);  // Start up serial
-	rfBegin(11);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+	rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
 	
 	// Send a message to other RF boards on this channel
 	rfPrint("ATmega128RFA1 Dev Board Online!\r\n");
@@ -43,7 +43,7 @@ void loop()
 		Serial.write((char*)b);
 //		Serial.print("; YAW=");
 //		Serial.print(analogRead(PIN_YAW));
-		Serial.prinln();
+//		Serial.prinln();
 	}
 	
 }

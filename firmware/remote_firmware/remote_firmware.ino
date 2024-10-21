@@ -64,7 +64,7 @@ int rightupdown = 0;
 int leftsideways = 0;
 int rightsideways = 0;
 int armed=0;
-int len = 0;
+int16_t len = 0;
 int i = 0;
 
 //battery voltage seems to be capped at 57 using analogReference(INTERNAL);

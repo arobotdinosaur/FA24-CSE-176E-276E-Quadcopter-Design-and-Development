@@ -8,7 +8,7 @@
   const int magicNumber = 57;
   const int magicNumber2 = 53;
 
-  int len = 0;
+  int16_t len = 0;
 
   uint8_t a[4] = {0};
 
@@ -45,18 +45,20 @@ void setup() {
 //full battery is at 885 max 
 void loop() {
   int BAT_VALUE = analogRead(A7); 
-  Serial.print("Battery Voltage:"); 
-  Serial.println(BAT_VALUE);
+ // Serial.print("Battery Voltage:"); 
+ // Serial.println(BAT_VALUE);
 
   int throttle = 0; 
   int len;
   
 uint8_t a[4] = {0};
- if (len = rfAvailable())  
+ if (len = rfAvailable()) 
+ Serial.println(len); 
   {
     rfRead(a, len);
-    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
+    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]&& len==4){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
       start_time = 0; 
+      Serial.println("armed, len=4");
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
@@ -67,6 +69,7 @@ uint8_t a[4] = {0};
     }
     else{
       rfFlush();
+         Serial.println("Flush");
     }
 
   }
@@ -95,13 +98,12 @@ uint8_t a[4] = {0};
   //disarm = 0;
 
   rfWrite(b,4);
-  delay(100);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
   //analogWrite(PRETTY_LEDS, 200);
 
-
+delay(100);
 
 
 }
