@@ -31,8 +31,8 @@
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
   float gain = 0.98; 
-  float cf_pitch = 0.0;
-  float cf_roll = 0.0;
+  double cf_pitch = 0.0;
+  double cf_roll = 0.0;
 
 //sensors in imu
 void setupSensor()
@@ -53,13 +53,14 @@ void setupSensor()
  // lsm.setupGyro(Adafruit_LSM9DS1::LSM9DS1_GYROSCALE_245DPS);
 
  if (!lsm.begin_I2C()) {
-    Serial.println("Failed to find LSM6DSOX chip");
+   // Serial.println("Failed to find LSM6DSOX chip");
     while (1) {
       delay(10);
     }
   }
   _accel = lsm.getAccelerometerSensor();
   _gyro = lsm.getGyroSensor();
+
   ahrs = new Adafruit_Simple_AHRS(_accel, _mag, _gyro);
 #
 }
@@ -78,7 +79,7 @@ void setup() {
   rfWrite(b,4);
 
   //rear is where the 6 pins are sticking out
-  const int SERIAL_BAUD = 115200 ;        // Baud rate for serial port 
+  const int SERIAL_BAUD = 19200 ;        // Baud rate for serial port 
 	Serial.begin(SERIAL_BAUD);          // Start up serial
 
   //calling sensor meansurement func
@@ -96,41 +97,58 @@ void setup() {
 
 }
 
-unsigned int last = millis();
+unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
   int BAT_VALUE = analogRead(A7); 
-  Serial.print("Battery Voltage:"); 
-  Serial.println(BAT_VALUE);
+  //Serial.print("Battery Voltage:"); 
+  //Serial.println(BAT_VALUE);
 
   //checking data from imu 
   quad_data_t orientation;
-  static unsigned long last_time = millis();
-  unsigned long now = millis();
-  float dt = (now - last_time);
+  //static unsigned long  last_time = millis();
+  unsigned long  now = millis();
+  float dt = (now - last);
   if (ahrs->getQuadOrientation(&orientation))
   {
     /* 'orientation' should have valid .roll and .pitch fields */
-    Serial.print(now - last);
-    Serial.print(F(" "));
+    //Serial.print(now - last);
+    //Serial.print(F(" "));
     pitch = orientation.pitch;
     pitch_rate = orientation.pitch_rate;
-    Serial.print(orientation.pitch);
-    Serial.print(F(" "));
-    Serial.print(orientation.pitch_rate);
-    Serial.print(F(" "));
+   // Serial.print(orientation.pitch);
+   // Serial.print(F(" "));
+   // Serial.print(orientation.pitch_rate);
+    //Serial.print(F(" "));
     //implemeting for complemetary filtering (check if this is right)
     roll = orientation.roll;
+    
     sensors_event_t gyro_event;
     _gyro->getEvent(&gyro_event);
-    float gyro_raw_pitch = gyro_event.gyro.z * RAD_TO_DEG;
-    float gyro_raw_roll = gyro_event.gyro.y * RAD_TO_DEG;
+    double gyro_raw_pitch = gyro_event.gyro.z;
+    double gyro_raw_roll = gyro_event.gyro.y;
 
-    float gyro_angle_pitch = cf_pitch + (gyro_raw_pitch)*dt;
-    float gyro_angle_roll = cf_roll + (gyro_raw_roll)*dt;
+    //Serial.print(gyro_raw_pitch);
+    //Serial.print(F(" "));
+    //Serial.print(gyro_raw_roll);
+    //Serial.print(F(" "));
+    //Serial.print(dt);
+    //Serial.print(F(" "));
+    double gyro_angle_pitch = cf_pitch + (gyro_raw_pitch * RAD_TO_DEG)*dt*0.001;
+    double gyro_angle_roll = cf_roll + (gyro_raw_roll * RAD_TO_DEG)*dt*0.001;
+    //Serial.print(gyro_angle_pitch);
+    //Serial.print(F(" "));
+    //Serial.print(gyro_angle_roll);
+    //Serial.print(F(" "));
     cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
     cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
+    
+    
 
+    Serial.println(cf_pitch);
+   Serial.print(F(" "));
+    Serial.println(cf_roll);
+   // Serial.print(F(" "));
   }
 
   last = now;
