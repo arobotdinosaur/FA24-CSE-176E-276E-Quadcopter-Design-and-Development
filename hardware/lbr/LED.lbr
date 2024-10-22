@@ -121,6 +121,7 @@
 <technologies>
 <technology name="">
 <attribute name="CREATOR" value="AlexanderHaken"/>
+<attribute name="CUSTOM" value="CUSTOM"/>
 <attribute name="DIST" value="Digikey"/>
 <attribute name="DISTPN" value="150060YS75000"/>
 </technology>
