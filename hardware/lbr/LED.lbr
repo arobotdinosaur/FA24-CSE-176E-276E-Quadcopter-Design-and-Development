@@ -108,7 +108,7 @@
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="LED_YELLOW">
+<deviceset name="LED_YELLOW" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="LED_YELLOW" x="0" y="0"/>
 </gates>

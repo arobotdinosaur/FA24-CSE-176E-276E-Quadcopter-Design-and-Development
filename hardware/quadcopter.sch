@@ -5512,9 +5512,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </deviceset>
 </devicesets>
 </library>
-<library name="LED" urn="urn:adsk.wipprod:fs.file:vf.dgQ34RYLRkWtLog4lTO-XQ">
+<library name="LED">
 <packages>
-<package name="LEDC1507X80NYELLOW" library_version="7">
+<package name="LEDC1507X80NYELLOW">
 <description>Chip LED, 1.52 X 0.76 X 0.80 mm body
  &lt;p&gt;Chip LED package with body size 1.52 X 0.76 X 0.80 mm&lt;/p&gt;</description>
 <smd name="C" x="-0.7245" y="0" dx="0.5769" dy="0.8638" layer="1"/>
@@ -5535,7 +5535,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </package>
 </packages>
 <symbols>
-<symbol name="LED_YELLOW" library_version="7">
+<symbol name="LED_YELLOW">
 <wire x1="0" y1="0" x2="0" y2="2.54" width="0.1524" layer="94"/>
 <wire x1="0" y1="2.54" x2="2.54" y2="0" width="0.1524" layer="94"/>
 <wire x1="2.54" y1="0" x2="0" y2="-2.54" width="0.1524" layer="94"/>
@@ -5549,7 +5549,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="LED_YELLOW" library_version="7">
+<deviceset name="LED_YELLOW" uservalue="yes">
 <gates>
 <gate name="G$1" symbol="LED_YELLOW" x="0" y="0"/>
 </gates>
@@ -5690,13 +5690,13 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="GND42" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="GND43" library="quadparts_prebuilt_2022" deviceset="GND" device=""/>
 <part name="P+19" library="quadparts_prebuilt_2022" deviceset="3V" device=""/>
-<part name="LEDNUM4" library="LED" library_urn="urn:adsk.wipprod:fs.file:vf.dgQ34RYLRkWtLog4lTO-XQ" deviceset="LED_YELLOW" device=""/>
-<part name="LEDNUM3" library="LED" library_urn="urn:adsk.wipprod:fs.file:vf.dgQ34RYLRkWtLog4lTO-XQ" deviceset="LED_YELLOW" device=""/>
-<part name="LEDNUM2" library="LED" library_urn="urn:adsk.wipprod:fs.file:vf.dgQ34RYLRkWtLog4lTO-XQ" deviceset="LED_YELLOW" device=""/>
-<part name="LEDNUM1" library="LED" library_urn="urn:adsk.wipprod:fs.file:vf.dgQ34RYLRkWtLog4lTO-XQ" deviceset="LED_YELLOW" device=""/>
-<part name="U$1" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="NETBRIDGE" device=""/>
+<part name="NETBRIDGE" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="NETBRIDGE" device=""/>
 <part name="GND17" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="GND18" library="quadparts_prebuilt_2022" deviceset="GND" device=""/>
+<part name="LED_1" library="LED" deviceset="LED_YELLOW" device="" value="yellow"/>
+<part name="LED_2" library="LED" deviceset="LED_YELLOW" device="" value="yellow"/>
+<part name="LED_3" library="LED" deviceset="LED_YELLOW" device="" value="yellow"/>
+<part name="LED_4" library="LED" deviceset="LED_YELLOW" device="" value="yellow"/>
 </parts>
 <sheets>
 <sheet>
@@ -6028,12 +6028,12 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="J4" gate="G$1" x="149.86" y="48.26" smashed="yes" rot="R180">
 <attribute name="NAME" x="155.702" y="55.88" size="1.778" layer="95" rot="R180"/>
 </instance>
-<instance part="GND23" gate="1" x="104.14" y="-71.12" smashed="yes">
-<attribute name="VALUE" x="104.14" y="-73.66" size="1.778" layer="96" align="center"/>
+<instance part="GND23" gate="1" x="104.14" y="-78.74" smashed="yes">
+<attribute name="VALUE" x="104.14" y="-81.28" size="1.778" layer="96" align="center"/>
 </instance>
-<instance part="R6" gate="G$1" x="104.14" y="-53.34" smashed="yes" rot="R90">
-<attribute name="VALUE" x="107.442" y="-57.15" size="1.778" layer="96" rot="R90"/>
-<attribute name="NAME" x="102.6414" y="-57.15" size="1.778" layer="95" rot="R90"/>
+<instance part="R6" gate="G$1" x="104.14" y="-60.96" smashed="yes" rot="R90">
+<attribute name="VALUE" x="107.442" y="-64.77" size="1.778" layer="96" rot="R90"/>
+<attribute name="NAME" x="102.6414" y="-64.77" size="1.778" layer="95" rot="R90"/>
 </instance>
 <instance part="GND37" gate="1" x="121.92" y="-43.18" smashed="yes">
 <attribute name="VALUE" x="121.92" y="-45.72" size="1.778" layer="96" align="center"/>
@@ -6092,26 +6092,30 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="P+19" gate="G$1" x="50.8" y="-40.64" smashed="yes">
 <attribute name="VALUE" x="50.8" y="-38.1" size="1.778" layer="96" rot="R180" align="center"/>
 </instance>
-<instance part="LEDNUM4" gate="G$1" x="93.98" y="-35.56" smashed="yes">
-<attribute name="NAME" x="91.44" y="-30.48" size="1.778" layer="95"/>
-</instance>
-<instance part="LEDNUM3" gate="G$1" x="93.98" y="-22.86" smashed="yes">
-<attribute name="NAME" x="91.44" y="-17.78" size="1.778" layer="95"/>
-</instance>
-<instance part="LEDNUM2" gate="G$1" x="93.98" y="-12.7" smashed="yes">
-<attribute name="NAME" x="91.44" y="-7.62" size="1.778" layer="95"/>
-</instance>
-<instance part="LEDNUM1" gate="G$1" x="93.98" y="-2.54" smashed="yes">
-<attribute name="NAME" x="91.44" y="2.54" size="1.778" layer="95"/>
-</instance>
-<instance part="U$1" gate="G$1" x="27.94" y="-86.36" smashed="yes">
-<attribute name="NAME" x="25.4" y="-81.28" size="1.778" layer="95"/>
+<instance part="NETBRIDGE" gate="G$1" x="27.94" y="-86.36" smashed="yes">
+<attribute name="NAME" x="20.32" y="-86.36" size="1.778" layer="95"/>
 </instance>
 <instance part="GND17" gate="1" x="20.32" y="-101.6" smashed="yes">
 <attribute name="VALUE" x="20.32" y="-104.14" size="1.778" layer="96" align="center"/>
 </instance>
 <instance part="GND18" gate="1" x="35.56" y="-101.6" smashed="yes">
 <attribute name="VALUE" x="35.56" y="-104.14" size="1.778" layer="96" align="center"/>
+</instance>
+<instance part="LED_1" gate="G$1" x="93.98" y="-2.54" smashed="yes">
+<attribute name="NAME" x="91.44" y="2.54" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="-10.16" size="1.778" layer="96"/>
+</instance>
+<instance part="LED_2" gate="G$1" x="93.98" y="-17.78" smashed="yes">
+<attribute name="NAME" x="91.44" y="-12.7" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="-25.4" size="1.778" layer="96"/>
+</instance>
+<instance part="LED_3" gate="G$1" x="93.98" y="-35.56" smashed="yes">
+<attribute name="NAME" x="91.44" y="-30.48" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="-43.18" size="1.778" layer="96"/>
+</instance>
+<instance part="LED_4" gate="G$1" x="93.98" y="-50.8" smashed="yes">
+<attribute name="NAME" x="91.44" y="-45.72" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="-58.42" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -6285,7 +6289,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="139.7" y="50.8" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<wire x1="104.14" y1="-58.42" x2="104.14" y2="-68.58" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="-66.04" x2="104.14" y2="-76.2" width="0.1524" layer="91"/>
 <pinref part="GND23" gate="1" pin="GND"/>
 <pinref part="R6" gate="G$1" pin="1"/>
 </segment>
@@ -6298,7 +6302,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="C19" gate="G$1" pin="-"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="GND"/>
+<pinref part="NETBRIDGE" gate="G$1" pin="GND"/>
 <wire x1="35.56" y1="-88.9" x2="35.56" y2="-99.06" width="0.1524" layer="91" style="longdash"/>
 <pinref part="GND18" gate="1" pin="GND"/>
 </segment>
@@ -6487,9 +6491,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="-185.42" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="LEDNUM2" gate="G$1" pin="A"/>
-<wire x1="86.36" y1="-12.7" x2="76.2" y2="-12.7" width="0.1524" layer="91"/>
-<label x="76.2" y="-12.7" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<wire x1="86.36" y1="-17.78" x2="76.2" y2="-17.78" width="0.1524" layer="91"/>
+<label x="76.2" y="-17.78" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<pinref part="LED_2" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="LED3" class="0">
@@ -6500,9 +6504,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="-185.42" y="25.4" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="LEDNUM3" gate="G$1" pin="A"/>
-<wire x1="86.36" y1="-22.86" x2="76.2" y2="-22.86" width="0.1524" layer="91"/>
-<label x="76.2" y="-22.86" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<wire x1="86.36" y1="-35.56" x2="76.2" y2="-35.56" width="0.1524" layer="91"/>
+<label x="76.2" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<pinref part="LED_3" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="LED4" class="0">
@@ -6513,9 +6517,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="-185.42" y="22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="LEDNUM4" gate="G$1" pin="A"/>
-<wire x1="86.36" y1="-35.56" x2="76.2" y2="-35.56" width="0.1524" layer="91"/>
-<label x="76.2" y="-35.56" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<wire x1="86.36" y1="-50.8" x2="76.2" y2="-50.8" width="0.1524" layer="91"/>
+<label x="76.2" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<pinref part="LED_4" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -6853,7 +6857,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="-12.7" y1="-99.06" x2="-12.7" y2="-91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="BAT_GND"/>
+<pinref part="NETBRIDGE" gate="G$1" pin="BAT_GND"/>
 <wire x1="20.32" y1="-88.9" x2="20.32" y2="-99.06" width="0.1524" layer="91" style="longdash"/>
 <pinref part="GND17" gate="1" pin="BAT_GND"/>
 </segment>
@@ -7000,9 +7004,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="-182.88" y="0" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="LEDNUM1" gate="G$1" pin="A"/>
 <wire x1="86.36" y1="-2.54" x2="76.2" y2="-2.54" width="0.1524" layer="91"/>
 <label x="76.2" y="-2.54" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<pinref part="LED_1" gate="G$1" pin="A"/>
 </segment>
 </net>
 <net name="EN" class="0">
@@ -7017,27 +7021,27 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <label x="5.08" y="-68.58" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="N$12" class="0">
-<segment>
-<pinref part="LEDNUM1" gate="G$1" pin="C"/>
-<wire x1="104.14" y1="-2.54" x2="104.14" y2="-12.7" width="0.1524" layer="91"/>
-<pinref part="LEDNUM4" gate="G$1" pin="C"/>
-<wire x1="104.14" y1="-12.7" x2="104.14" y2="-22.86" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="-22.86" x2="104.14" y2="-35.56" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="-35.56" x2="104.14" y2="-48.26" width="0.1524" layer="91"/>
-<pinref part="LEDNUM3" gate="G$1" pin="C"/>
-<pinref part="LEDNUM2" gate="G$1" pin="C"/>
-<pinref part="R6" gate="G$1" pin="2"/>
-<junction x="104.14" y="-12.7"/>
-<junction x="104.14" y="-35.56"/>
-<junction x="104.14" y="-22.86"/>
-</segment>
-</net>
 <net name="N$13" class="0">
 <segment>
 <wire x1="12.7" y1="76.2" x2="12.7" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="J1" gate="G$1" pin="5"/>
 <pinref part="C12" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="LED_1" gate="G$1" pin="C"/>
+<wire x1="104.14" y1="-2.54" x2="104.14" y2="-17.78" width="0.1524" layer="91"/>
+<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="LED_2" gate="G$1" pin="C"/>
+<wire x1="104.14" y1="-17.78" x2="104.14" y2="-35.56" width="0.1524" layer="91"/>
+<junction x="104.14" y="-17.78"/>
+<pinref part="LED_3" gate="G$1" pin="C"/>
+<wire x1="104.14" y1="-35.56" x2="104.14" y2="-50.8" width="0.1524" layer="91"/>
+<junction x="104.14" y="-35.56"/>
+<pinref part="LED_4" gate="G$1" pin="C"/>
+<wire x1="104.14" y1="-50.8" x2="104.14" y2="-55.88" width="0.1524" layer="91"/>
+<junction x="104.14" y="-50.8"/>
 </segment>
 </net>
 </nets>
