@@ -183,9 +183,13 @@ else{
 uint8_t b[4] = {0};
 if (len = rfAvailable())  
   {
+  if(len!=4 && len!=8 && len!=12){
+  rfFlush();
+ }  
+ else{
     rfRead(b, len);
     Serial.println(len);
-    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ //adding len==4 check fails - len seems to be 126 always
+    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ 
       start_time = 0; 
       //Serial.println(b[1]);885
       int quadbattery=b[1];
@@ -196,10 +200,12 @@ if (len = rfAvailable())
       if (b[2]=0){
         armed = 0;
       }
+      rfWrite(a,4);
     }
     else{
       rfFlush();
     }
+   }
   }
   
   //Makes sure to disarm the remote if connection with the quad is lost
@@ -209,8 +215,8 @@ if (len = rfAvailable())
   if (start_time >= 10){ //short time - but seems to work okay
     armed=0;
   }
-
-  delay(100);  // delay in between reads for stability
+  
+  //delay(100);  // delay in between reads for stability
 
 }
 

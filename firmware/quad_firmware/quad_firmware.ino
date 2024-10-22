@@ -161,8 +161,13 @@ void loop() {
   int len;
   
 uint8_t a[4] = {0};
- if (len = rfAvailable())  
-  {
+ if (len = rfAvailable()){
+  Serial.print("Read packets:");
+  Serial.println(len);
+  if(len!=4){
+  rfFlush();
+ }  
+ else{
     rfRead(a, len);
     if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
       start_time = 0; 
@@ -177,15 +182,12 @@ uint8_t a[4] = {0};
     else{
       rfFlush();
     }
-
-
-  
-
+   }
   }
 
  // read_radio();
 
-  if (start_time<=254){
+  if (start_time<=4){
   start_time = start_time + 1;
   }
   if (start_time >= 20){
@@ -207,7 +209,7 @@ uint8_t a[4] = {0};
   //disarm = 0;
 
   rfWrite(b,4);
-  delay(100);
+  delay(50);
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
