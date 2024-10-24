@@ -68,7 +68,7 @@ void setupSensor()
 
 void setup() {
   //copied from rfecho
-  rfBegin(12);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(13);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
