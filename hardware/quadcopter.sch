@@ -5634,7 +5634,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="P+6" library="quadparts_prebuilt_2022" deviceset="3V" device=""/>
 <part name="R5" library="quadparts_prebuilt_2022" deviceset="RESISTOR_" device="SMD-2012-0805-10K" value="10K"/>
 <part name="P+11" library="quadparts_prebuilt_2022" deviceset="VBAT" device=""/>
-<part name="MOTOR_PAD_1" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
+<part name="MP1" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
 <part name="GND24" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="D5" library="quadparts_prebuilt_2022" deviceset="DIODE-SCHOTTKY_" device="-SMD-SOD123" package3d_urn="urn:adsk.eagle:package:11793366/1" value="360mV"/>
 <part name="Q3" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="MOSFET-FET-SI2302CDS-T1-E3CT-ND" device="SI2302CDS-T1-E3CT-ND"/>
@@ -5642,7 +5642,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="GND25" library="quadparts_prebuilt_2022" deviceset="GND" device=""/>
 <part name="GND26" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="P+12" library="quadparts_prebuilt_2022" deviceset="VBAT" device=""/>
-<part name="MOTOR_PAD_2" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
+<part name="MP2" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
 <part name="GND27" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="D6" library="quadparts_prebuilt_2022" deviceset="DIODE-SCHOTTKY_" device="-SMD-SOD123" package3d_urn="urn:adsk.eagle:package:11793366/1" value="360mV"/>
 <part name="Q4" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="MOSFET-FET-SI2302CDS-T1-E3CT-ND" device="SI2302CDS-T1-E3CT-ND"/>
@@ -5650,7 +5650,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="GND28" library="quadparts_prebuilt_2022" deviceset="GND" device=""/>
 <part name="GND29" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="P+13" library="quadparts_prebuilt_2022" deviceset="VBAT" device=""/>
-<part name="MOTOR_PAD_3" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
+<part name="MP3" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
 <part name="GND30" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="D7" library="quadparts_prebuilt_2022" deviceset="DIODE-SCHOTTKY_" device="-SMD-SOD123" package3d_urn="urn:adsk.eagle:package:11793366/1" value="360mV"/>
 <part name="Q5" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="MOSFET-FET-SI2302CDS-T1-E3CT-ND" device="SI2302CDS-T1-E3CT-ND"/>
@@ -5658,7 +5658,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="GND31" library="quadparts_prebuilt_2022" deviceset="GND" device=""/>
 <part name="GND32" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="P+14" library="quadparts_prebuilt_2022" deviceset="VBAT" device=""/>
-<part name="MOTOR_PAD_4" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
+<part name="MP4" library="quadparts_prebuilt_2022" deviceset="MOTOR_PADS_GND" device="-MOLEX-SMD"/>
 <part name="GND33" library="quadparts_prebuilt_2022" deviceset="BAT_GND" device=""/>
 <part name="D8" library="quadparts_prebuilt_2022" deviceset="DIODE-SCHOTTKY_" device="-SMD-SOD123" package3d_urn="urn:adsk.eagle:package:11793366/1" value="360mV"/>
 <part name="Q6" library="custom_v9" library_urn="urn:adsk.wipprod:fs.file:vf.hOpq96TzSi2cy5Li20AtXQ" deviceset="MOSFET-FET-SI2302CDS-T1-E3CT-ND" device="SI2302CDS-T1-E3CT-ND"/>
@@ -5899,7 +5899,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="P+11" gate="VCC" x="-198.12" y="-43.18" smashed="yes">
 <attribute name="VALUE" x="-198.12" y="-40.64" size="1.778" layer="96" rot="R180" align="center"/>
 </instance>
-<instance part="MOTOR_PAD_1" gate="G$1" x="-190.5" y="-63.5" smashed="yes">
+<instance part="MP1" gate="G$1" x="-190.5" y="-63.5" smashed="yes">
 <attribute name="NAME" x="-193.04" y="-55.88" size="0.8128" layer="95"/>
 </instance>
 <instance part="GND24" gate="1" x="-190.5" y="-71.12" smashed="yes">
@@ -5925,7 +5925,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="P+12" gate="VCC" x="-154.94" y="-43.18" smashed="yes">
 <attribute name="VALUE" x="-154.94" y="-40.64" size="1.778" layer="96" rot="R180" align="center"/>
 </instance>
-<instance part="MOTOR_PAD_2" gate="G$1" x="-147.32" y="-63.5" smashed="yes">
+<instance part="MP2" gate="G$1" x="-147.32" y="-63.5" smashed="yes">
 <attribute name="NAME" x="-149.86" y="-55.88" size="0.8128" layer="95"/>
 </instance>
 <instance part="GND27" gate="1" x="-147.32" y="-71.12" smashed="yes">
@@ -5951,7 +5951,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="P+13" gate="VCC" x="-114.3" y="-43.18" smashed="yes">
 <attribute name="VALUE" x="-114.3" y="-40.64" size="1.778" layer="96" rot="R180" align="center"/>
 </instance>
-<instance part="MOTOR_PAD_3" gate="G$1" x="-106.68" y="-63.5" smashed="yes">
+<instance part="MP3" gate="G$1" x="-106.68" y="-63.5" smashed="yes">
 <attribute name="NAME" x="-109.22" y="-55.88" size="0.8128" layer="95"/>
 </instance>
 <instance part="GND30" gate="1" x="-106.68" y="-71.12" smashed="yes">
@@ -5977,7 +5977,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <instance part="P+14" gate="VCC" x="-68.58" y="-43.18" smashed="yes">
 <attribute name="VALUE" x="-68.58" y="-40.64" size="1.778" layer="96" rot="R180" align="center"/>
 </instance>
-<instance part="MOTOR_PAD_4" gate="G$1" x="-60.96" y="-63.5" smashed="yes">
+<instance part="MP4" gate="G$1" x="-60.96" y="-63.5" smashed="yes">
 <attribute name="NAME" x="-63.5" y="-55.88" size="0.8128" layer="95"/>
 </instance>
 <instance part="GND33" gate="1" x="-60.96" y="-71.12" smashed="yes">
@@ -6767,7 +6767,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="-198.12" y1="-50.8" x2="-180.34" y2="-50.8" width="0.1524" layer="91"/>
 <wire x1="-180.34" y1="-50.8" x2="-180.34" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="-180.34" y1="-58.42" x2="-182.88" y2="-58.42" width="0.1524" layer="91"/>
-<pinref part="MOTOR_PAD_1" gate="G$1" pin="V+"/>
+<pinref part="MP1" gate="G$1" pin="V+"/>
 <wire x1="-180.34" y1="-50.8" x2="-170.18" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-180.34" y="-50.8"/>
 <pinref part="D5" gate="G$1" pin="C"/>
@@ -6778,7 +6778,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="-154.94" y1="-50.8" x2="-137.16" y2="-50.8" width="0.1524" layer="91"/>
 <wire x1="-137.16" y1="-50.8" x2="-137.16" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="-137.16" y1="-58.42" x2="-139.7" y2="-58.42" width="0.1524" layer="91"/>
-<pinref part="MOTOR_PAD_2" gate="G$1" pin="V+"/>
+<pinref part="MP2" gate="G$1" pin="V+"/>
 <wire x1="-137.16" y1="-50.8" x2="-127" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-137.16" y="-50.8"/>
 <pinref part="D6" gate="G$1" pin="C"/>
@@ -6789,7 +6789,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="-114.3" y1="-50.8" x2="-96.52" y2="-50.8" width="0.1524" layer="91"/>
 <wire x1="-96.52" y1="-50.8" x2="-96.52" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="-96.52" y1="-58.42" x2="-99.06" y2="-58.42" width="0.1524" layer="91"/>
-<pinref part="MOTOR_PAD_3" gate="G$1" pin="V+"/>
+<pinref part="MP3" gate="G$1" pin="V+"/>
 <wire x1="-96.52" y1="-50.8" x2="-86.36" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-96.52" y="-50.8"/>
 <pinref part="D7" gate="G$1" pin="C"/>
@@ -6800,7 +6800,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="-68.58" y1="-50.8" x2="-50.8" y2="-50.8" width="0.1524" layer="91"/>
 <wire x1="-50.8" y1="-50.8" x2="-50.8" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="-50.8" y1="-58.42" x2="-53.34" y2="-58.42" width="0.1524" layer="91"/>
-<pinref part="MOTOR_PAD_4" gate="G$1" pin="V+"/>
+<pinref part="MP4" gate="G$1" pin="V+"/>
 <wire x1="-50.8" y1="-50.8" x2="-40.64" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-50.8" y="-50.8"/>
 <pinref part="D8" gate="G$1" pin="C"/>
@@ -6839,11 +6839,11 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </net>
 <net name="BAT_GND" class="0">
 <segment>
-<pinref part="MOTOR_PAD_1" gate="G$1" pin="GND"/>
+<pinref part="MP1" gate="G$1" pin="GND"/>
 <pinref part="GND24" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
-<pinref part="MOTOR_PAD_2" gate="G$1" pin="GND"/>
+<pinref part="MP2" gate="G$1" pin="GND"/>
 <pinref part="GND27" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
@@ -6852,7 +6852,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="GND29" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
-<pinref part="MOTOR_PAD_3" gate="G$1" pin="GND"/>
+<pinref part="MP3" gate="G$1" pin="GND"/>
 <pinref part="GND30" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
@@ -6861,7 +6861,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="GND32" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
-<pinref part="MOTOR_PAD_4" gate="G$1" pin="GND"/>
+<pinref part="MP4" gate="G$1" pin="GND"/>
 <pinref part="GND33" gate="1" pin="BAT_GND"/>
 </segment>
 <segment>
@@ -6942,7 +6942,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <wire x1="-170.18" y1="-58.42" x2="-170.18" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q3" gate="G$1" pin="D"/>
-<pinref part="MOTOR_PAD_1" gate="G$1" pin="V-"/>
+<pinref part="MP1" gate="G$1" pin="V-"/>
 <wire x1="-170.18" y1="-63.5" x2="-170.18" y2="-76.2" width="0.1524" layer="91"/>
 <wire x1="-182.88" y1="-63.5" x2="-170.18" y2="-63.5" width="0.1524" layer="91"/>
 <wire x1="-170.18" y1="-76.2" x2="-162.56" y2="-76.2" width="0.1524" layer="91"/>
@@ -6957,7 +6957,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <wire x1="-127" y1="-58.42" x2="-127" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q4" gate="G$1" pin="D"/>
-<pinref part="MOTOR_PAD_2" gate="G$1" pin="V-"/>
+<pinref part="MP2" gate="G$1" pin="V-"/>
 <wire x1="-127" y1="-63.5" x2="-127" y2="-76.2" width="0.1524" layer="91"/>
 <wire x1="-139.7" y1="-63.5" x2="-127" y2="-63.5" width="0.1524" layer="91"/>
 <junction x="-127" y="-63.5"/>
@@ -6968,7 +6968,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <wire x1="-86.36" y1="-58.42" x2="-86.36" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q5" gate="G$1" pin="D"/>
-<pinref part="MOTOR_PAD_3" gate="G$1" pin="V-"/>
+<pinref part="MP3" gate="G$1" pin="V-"/>
 <wire x1="-86.36" y1="-63.5" x2="-86.36" y2="-76.2" width="0.1524" layer="91"/>
 <wire x1="-99.06" y1="-63.5" x2="-86.36" y2="-63.5" width="0.1524" layer="91"/>
 <junction x="-86.36" y="-63.5"/>
@@ -6979,7 +6979,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <segment>
 <wire x1="-40.64" y1="-58.42" x2="-40.64" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q6" gate="G$1" pin="D"/>
-<pinref part="MOTOR_PAD_4" gate="G$1" pin="V-"/>
+<pinref part="MP4" gate="G$1" pin="V-"/>
 <wire x1="-40.64" y1="-63.5" x2="-40.64" y2="-76.2" width="0.1524" layer="91"/>
 <wire x1="-53.34" y1="-63.5" x2="-40.64" y2="-63.5" width="0.1524" layer="91"/>
 <junction x="-40.64" y="-63.5"/>
