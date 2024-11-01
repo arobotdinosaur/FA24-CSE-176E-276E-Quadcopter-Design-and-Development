@@ -5663,7 +5663,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 </class>
 <class number="1" name="HIGH-I" width="0.381" drill="0">
 </class>
-<class number="3" name="POWER" width="0" drill="0">
+<class number="3" name="PWR" width="0" drill="0">
 </class>
 <class number="4" name="RFSIG" width="0" drill="0">
 </class>
@@ -6689,6 +6689,10 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="L4" gate="G$1" pin="A"/>
 </segment>
 </net>
+<net name="N$3" class="0">
+<segment>
+</segment>
+</net>
 <net name="RESET" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="RSTN"/>
@@ -7041,7 +7045,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="J3" gate="G$1" pin="4"/>
 </segment>
 </net>
-<net name="N$18" class="0">
+<net name="N$18" class="1">
 <segment>
 <wire x1="-170.18" y1="-58.42" x2="-170.18" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q3" gate="G$1" pin="D"/>
@@ -7056,7 +7060,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="C11" gate="G$1" pin="+"/>
 </segment>
 </net>
-<net name="N$19" class="0">
+<net name="N$19" class="1">
 <segment>
 <wire x1="-127" y1="-58.42" x2="-127" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q4" gate="G$1" pin="D"/>
@@ -7067,7 +7071,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="D6" gate="G$1" pin="A"/>
 </segment>
 </net>
-<net name="N$20" class="0">
+<net name="N$20" class="1">
 <segment>
 <wire x1="-86.36" y1="-58.42" x2="-86.36" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q5" gate="G$1" pin="D"/>
@@ -7078,7 +7082,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="D7" gate="G$1" pin="A"/>
 </segment>
 </net>
-<net name="N$21" class="0">
+<net name="N$21" class="1">
 <segment>
 <wire x1="-40.64" y1="-58.42" x2="-40.64" y2="-63.5" width="0.1524" layer="91"/>
 <pinref part="Q6" gate="G$1" pin="D"/>
