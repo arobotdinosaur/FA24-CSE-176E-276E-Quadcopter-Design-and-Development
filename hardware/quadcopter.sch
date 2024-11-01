@@ -5795,7 +5795,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <part name="H2" library="quadparts_prebuilt_2022" deviceset="MOUNTING_HOLE" device="-2-56"/>
 <part name="H3" library="quadparts_prebuilt_2022" deviceset="MOUNTING_HOLE" device="-2-56"/>
 <part name="H4" library="quadparts_prebuilt_2022" deviceset="MOUNTING_HOLE" device="-2-56"/>
-<part name="U$2" library="logo" deviceset="PIDLOGO" device=""/>
+<part name="LOGO" library="logo" deviceset="PIDLOGO" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6253,7 +6253,7 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <attribute name="NAME" x="154.94" y="-77.47" size="0.9" layer="95" font="vector" align="center"/>
 <attribute name="VALUE" x="154.94" y="-80.01" size="0.9" layer="96" font="vector" align="center"/>
 </instance>
-<instance part="U$2" gate="G$1" x="88.9" y="-109.22" smashed="yes">
+<instance part="LOGO" gate="G$1" x="88.9" y="-109.22" smashed="yes">
 <attribute name="NAME" x="86.36" y="-106.68" size="1.778" layer="94" font="vector"/>
 </instance>
 </instances>
@@ -6687,10 +6687,6 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="86.36" y1="-50.8" x2="76.2" y2="-50.8" width="0.1524" layer="91"/>
 <label x="76.2" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
 <pinref part="L4" gate="G$1" pin="A"/>
-</segment>
-</net>
-<net name="N$3" class="0">
-<segment>
 </segment>
 </net>
 <net name="RESET" class="0">
