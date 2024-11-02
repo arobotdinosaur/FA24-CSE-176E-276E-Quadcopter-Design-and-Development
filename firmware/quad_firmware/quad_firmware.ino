@@ -31,8 +31,18 @@
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
   float gain = 0.98; 
+  
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
+
+  //pid params tuning 
+  float setpointPitch = 0.0;
+  float Kp = 1.0; 
+  float Ki = 0.1;
+  float Kd = 0.01;
+  float integral = 0.0;
+  float integral_error = 0.0;
+  float previousError = 0.0;
 
 //sensors in imu
 void setupSensor()
@@ -127,6 +137,14 @@ void loop() {
     
     sensors_event_t gyro_event;
     _gyro->getEvent(&gyro_event);
+    lsm.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
+    lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+
+    // don't know why this doesnt work- check 
+   // _accel->getEvent(&accel_event);
+    //lsm.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
+    //lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
+
     double gyro_raw_pitch = gyro_event.gyro.z;
     double gyro_raw_roll = gyro_event.gyro.y;
 
@@ -145,12 +163,34 @@ void loop() {
     cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
     cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
     
-    
+    //error values when running lsm.setAccelCompositeFilter 
+    //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
 
     Serial.println(cf_pitch);
-   Serial.print(F(" "));
+    Serial.print(F(" "));
     Serial.println(cf_roll);
    // Serial.print(F(" "));
+
+   //pid code here 
+   float errorPitch = setpointPitch - cf_pitch;
+   if(Ki == 0 ||analogRead(A1)<185){ //either Ki = 0 or Speed =0, unsure how to determine speed
+      integral = 0; 
+   }
+   else{
+    integral += errorPitch * dt*0.001;
+   }
+
+  float derivative = (errorPitch - previousError) /(dt*0.001);
+  float PID = Kp * errorPitch + Ki * integral + Kd * derivative;
+  //chatgpt generated below.. not sure if it fits our specs or even works for that matter 
+  previousError = errorPitch;
+  float throttle = constrain(PID, 0, 255);
+  analogWrite(A1, throttle);
+  analogWrite(A3, throttle);
+
+
+
+
   }
 
   last = now;
