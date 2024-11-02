@@ -5600,35 +5600,35 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <library name="logo">
 <packages>
 <package name="PIDLOGO">
-<text x="-3.31" y="-10.66" size="3.81" layer="21" font="vector">PID</text>
-<wire x1="-8.754415625" y1="-12.731071875" x2="-8.204975" y2="-11.89" width="0.1524" layer="21" curve="-113.68986"/>
-<wire x1="-8.204975" y1="-5.89" x2="-8.754415625" y2="-5.048928125" width="0.1524" layer="21" curve="-113.68986"/>
-<circle x="-7" y="-17.735246875" radius="1.22" width="0.1524" layer="21"/>
-<circle x="-7" y="-0.044753125" radius="1.22" width="0.1524" layer="21"/>
-<wire x1="-5.932625" y1="-1.393496875" x2="-8.067375" y2="1.303990625" width="0.1524" layer="21" curve="180"/>
-<wire x1="-8.067375" y1="-19.083990625" x2="-5.932625" y2="-16.386503125" width="0.1524" layer="21" curve="180.000001"/>
-<wire x1="-4.289521875" y1="-11.89" x2="-3.82993125" y2="-12.104284375" width="0.1524" layer="21" curve="-49.994799"/>
-<wire x1="-3.82993125" y1="-5.675715625" x2="-4.289521875" y2="-5.89" width="0.1524" layer="21" curve="-49.994799"/>
-<wire x1="-3.82993125" y1="-12.104284375" x2="3.82993125" y2="-12.104284375" width="0.1524" layer="21" curve="99.989598"/>
-<wire x1="3.82993125" y1="-5.675715625" x2="-3.82993125" y2="-5.675715625" width="0.1524" layer="21" curve="99.989598"/>
-<wire x1="-8.754415625" y1="-5.048928125" x2="-5.932625" y2="-1.393496875" width="0.1524" layer="21" curve="-27.952561"/>
-<wire x1="-5.932625" y1="-16.386503125" x2="-8.754415625" y2="-12.731071875" width="0.1524" layer="21" curve="-27.952561"/>
-<wire x1="5.932625" y1="-1.393496875" x2="8.754415625" y2="-5.048928125" width="0.1524" layer="21" curve="-27.952561"/>
-<wire x1="8.754415625" y1="-12.731071875" x2="5.932625" y2="-16.386503125" width="0.1524" layer="21" curve="-27.952561"/>
-<wire x1="8.067375" y1="-19.083990625" x2="8.067375" y2="1.303990625" width="0.1524" layer="21" curve="103.284842"/>
-<wire x1="-8.067375" y1="1.303990625" x2="-8.067375" y2="-19.083990625" width="0.1524" layer="21" curve="103.284842"/>
-<wire x1="3.82993125" y1="-12.104284375" x2="4.289521875" y2="-11.89" width="0.1524" layer="21" curve="-49.994799"/>
-<wire x1="4.289521875" y1="-5.89" x2="3.82993125" y2="-5.675715625" width="0.1524" layer="21" curve="-49.994799"/>
-<circle x="7" y="-17.735246875" radius="1.22" width="0.1524" layer="21"/>
-<wire x1="5.932625" y1="-16.386503125" x2="8.067375" y2="-19.083990625" width="0.1524" layer="21" curve="180.000001"/>
-<circle x="7" y="-0.044753125" radius="1.22" width="0.1524" layer="21"/>
-<wire x1="8.067375" y1="1.303990625" x2="5.932625" y2="-1.393496875" width="0.1524" layer="21" curve="180"/>
-<wire x1="8.204975" y1="-11.89" x2="8.754415625" y2="-12.731071875" width="0.1524" layer="21" curve="-113.68986"/>
-<wire x1="8.754415625" y1="-5.048928125" x2="8.204975" y2="-5.89" width="0.1524" layer="21" curve="-113.68986"/>
-<wire x1="-8.204975" y1="-11.89" x2="-4.289521875" y2="-11.89" width="0.1524" layer="21"/>
-<wire x1="-4.289521875" y1="-5.89" x2="-8.204975" y2="-5.89" width="0.1524" layer="21"/>
-<wire x1="4.289521875" y1="-11.89" x2="8.204975" y2="-11.89" width="0.1524" layer="21"/>
-<wire x1="8.204975" y1="-5.89" x2="4.289521875" y2="-5.89" width="0.1524" layer="21"/>
+<text x="-3.31" y="2.04" size="3.81" layer="21" font="vector">PID</text>
+<wire x1="-4.37720625" y1="-7.000534375" x2="-4.1024875" y2="-6.58" width="0.1524" layer="21" curve="-113.68986"/>
+<wire x1="-4.1024875" y1="-3.58" x2="-4.37720625" y2="-3.159465625" width="0.1524" layer="21" curve="-113.68986"/>
+<circle x="-3.5" y="-9.502625" radius="0.61" width="0.1524" layer="21"/>
+<circle x="-3.5" y="-0.657375" radius="0.61" width="0.1524" layer="21"/>
+<wire x1="-2.9663125" y1="-1.331746875" x2="-4.0336875" y2="0.016996875" width="0.1524" layer="21" curve="180"/>
+<wire x1="-4.0336875" y1="-10.176996875" x2="-2.9663125" y2="-8.828253125" width="0.1524" layer="21" curve="180.000001"/>
+<wire x1="-2.1447625" y1="-6.58" x2="-1.914965625" y2="-6.68714375" width="0.1524" layer="21" curve="-49.994799"/>
+<wire x1="-1.914965625" y1="-3.47285625" x2="-2.1447625" y2="-3.58" width="0.1524" layer="21" curve="-49.994799"/>
+<wire x1="-1.914965625" y1="-6.68714375" x2="1.914965625" y2="-6.68714375" width="0.1524" layer="21" curve="99.989598"/>
+<wire x1="1.914965625" y1="-3.47285625" x2="-1.914965625" y2="-3.47285625" width="0.1524" layer="21" curve="99.989598"/>
+<wire x1="-4.37720625" y1="-3.159465625" x2="-2.9663125" y2="-1.331746875" width="0.1524" layer="21" curve="-27.952561"/>
+<wire x1="-2.9663125" y1="-8.828253125" x2="-4.37720625" y2="-7.000534375" width="0.1524" layer="21" curve="-27.952561"/>
+<wire x1="2.9663125" y1="-1.331746875" x2="4.37720625" y2="-3.159465625" width="0.1524" layer="21" curve="-27.952561"/>
+<wire x1="4.37720625" y1="-7.000534375" x2="2.9663125" y2="-8.828253125" width="0.1524" layer="21" curve="-27.952561"/>
+<wire x1="4.0336875" y1="-10.176996875" x2="4.0336875" y2="0.016996875" width="0.1524" layer="21" curve="103.284842"/>
+<wire x1="-4.0336875" y1="0.016996875" x2="-4.0336875" y2="-10.176996875" width="0.1524" layer="21" curve="103.284842"/>
+<wire x1="1.914965625" y1="-6.68714375" x2="2.1447625" y2="-6.58" width="0.1524" layer="21" curve="-49.994799"/>
+<wire x1="2.1447625" y1="-3.58" x2="1.914965625" y2="-3.47285625" width="0.1524" layer="21" curve="-49.994799"/>
+<circle x="3.5" y="-9.502625" radius="0.61" width="0.1524" layer="21"/>
+<wire x1="2.9663125" y1="-8.828253125" x2="4.0336875" y2="-10.176996875" width="0.1524" layer="21" curve="180.000001"/>
+<circle x="3.5" y="-0.657375" radius="0.61" width="0.1524" layer="21"/>
+<wire x1="4.0336875" y1="0.016996875" x2="2.9663125" y2="-1.331746875" width="0.1524" layer="21" curve="180"/>
+<wire x1="4.1024875" y1="-6.58" x2="4.37720625" y2="-7.000534375" width="0.1524" layer="21" curve="-113.68986"/>
+<wire x1="4.37720625" y1="-3.159465625" x2="4.1024875" y2="-3.58" width="0.1524" layer="21" curve="-113.68986"/>
+<wire x1="-4.1024875" y1="-6.58" x2="-2.1447625" y2="-6.58" width="0.1524" layer="21"/>
+<wire x1="-2.1447625" y1="-3.58" x2="-4.1024875" y2="-3.58" width="0.1524" layer="21"/>
+<wire x1="2.1447625" y1="-6.58" x2="4.1024875" y2="-6.58" width="0.1524" layer="21"/>
+<wire x1="4.1024875" y1="-3.58" x2="2.1447625" y2="-3.58" width="0.1524" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -5661,9 +5661,9 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <classes>
 <class number="0" name="default" width="0" drill="0">
 </class>
-<class number="1" name="HIGH-I" width="0.381" drill="0">
+<class number="1" name="HIGH-I" width="0.5" drill="0">
 </class>
-<class number="3" name="PWR" width="0" drill="0">
+<class number="3" name="PWR" width="0.254" drill="0">
 </class>
 <class number="4" name="RFSIG" width="0" drill="0">
 </class>
@@ -6549,8 +6549,8 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="119.38" y1="134.62" x2="119.38" y2="127" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="127" x2="119.38" y2="127" width="0.1524" layer="91"/>
 <junction x="119.38" y="127"/>
-<pinref part="C9" gate="G$1" pin="2"/>
 <pinref part="U2" gate="G$1" pin="VDD"/>
+<pinref part="C9" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="P+7" gate="G$1" pin="3V"/>
@@ -6559,8 +6559,8 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="124.46" y1="121.92" x2="101.6" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="121.92" x2="96.52" y2="121.92" width="0.1524" layer="91"/>
 <junction x="101.6" y="121.92"/>
-<pinref part="C10" gate="G$1" pin="1"/>
 <pinref part="U2" gate="G$1" pin="VDDIO"/>
+<pinref part="C10" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <wire x1="127" y1="91.44" x2="119.38" y2="91.44" width="0.1524" layer="91"/>
@@ -6687,6 +6687,10 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <wire x1="86.36" y1="-50.8" x2="76.2" y2="-50.8" width="0.1524" layer="91"/>
 <label x="76.2" y="-50.8" size="1.778" layer="95" rot="MR0" xref="yes"/>
 <pinref part="L4" gate="G$1" pin="A"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
 </segment>
 </net>
 <net name="RESET" class="0">
