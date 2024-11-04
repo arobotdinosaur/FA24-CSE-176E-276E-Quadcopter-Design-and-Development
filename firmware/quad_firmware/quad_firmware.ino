@@ -36,6 +36,8 @@
   double cf_roll = 0.0;
 
   //pid params tuning 
+  float PID = 0.0;
+  int PIDoutput = 0;
   float setpointPitch = 0.0;
   float Kp = 1.0; 
   float Ki = 0.1;
@@ -43,6 +45,15 @@
   float integral = 0.0;
   float integral_error = 0.0;
   float previousError = 0.0;
+
+  int throttle_left_rear = 0; 
+  int throttle_right_rear = 0;
+  int throttle_left_top = 0;
+  int throttle_right_top = 0;
+
+  int timer = 0;
+  
+  int throttle = 0;
 
 //sensors in imu
 void setupSensor()
@@ -181,12 +192,20 @@ void loop() {
    }
 
   float derivative = (errorPitch - previousError) /(dt*0.001);
-  float PID = Kp * errorPitch + Ki * integral + Kd * derivative;
-  //chatgpt generated below.. not sure if it fits our specs or even works for that matter 
+  PID = Kp * errorPitch + Ki * integral + Kd * derivative;
   previousError = errorPitch;
-  float throttle = constrain(PID, 0, 255);
-  analogWrite(A1, throttle);
-  analogWrite(A3, throttle);
+
+  int PIDoutput = constrain(PID, 0, 50);
+
+  //New mixing algorithm concept - we constrain throttle to set range that is between 0 and like 200, and then use pid to deviate from that range by +-50 or so.
+  // I think it sense to also have PID deviate below the throttle range for normal flight. The one challenge with this is that at near zero throttle the PID controller cannot deviate as far below, so it may perform differently/less stable if it
+  //wants to push the throttle lower but cannot. Worth experimenting with. On the other hand we want the quadcopter to stay level so we do want to figure out to make the negative pid work somehow.
+  //Maybe weirdness at the low throttle levels doesn't matter since the quadcopter doesn't fly anyway. So our PID probably doesn't work right at throttle <20% but it never matters.
+
+  //Doing it all down below in a mixing() function eventually we want to print out the individual throttle values for each rotor. For now we just do pitch.
+
+  //analogWrite(left_rear, throttle_left_rear);
+ // analogWrite(right_rear, throttle_right_rear);
 
 
 
@@ -199,7 +218,7 @@ void loop() {
   
 
 
-  int throttle = 0; 
+  throttle = 0;
   int len;
   
 uint8_t a[4] = {0};
@@ -250,8 +269,14 @@ uint8_t a[4] = {0};
   b[3] = b[0]+b[1]+b[2];
   //disarm = 0;
 
+  
+  timer = timer+dt;
+  if (timer>50){
   rfWrite(b,4);
-  delay(50);
+  timer = 0;
+  }
+  //delay(50); The above implementation stops the rfwrite delays from slowing everything else down.
+
   //analogWrite(LED3, 200);
   //analogWrite(LED4, 200);
 
@@ -264,7 +289,7 @@ uint8_t a[4] = {0};
 }
 
 
-
+/*
 void read_radio() {
 int i = 0;
 uint8_t a[4] = {0};
@@ -290,4 +315,11 @@ uint8_t a[4] = {0};
     }
 }
 
+*/
 
+void mixing(){
+throttle_left_rear = throttle-PIDoutput;
+throttle_right_rear = throttle - PIDoutput;
+throttle_left_top = throttle + PIDoutput;
+throttle_right_top = throttle + PIDoutput;
+}
