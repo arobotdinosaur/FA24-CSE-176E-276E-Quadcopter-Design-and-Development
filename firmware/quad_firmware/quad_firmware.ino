@@ -5,7 +5,7 @@
 #include <Adafruit_Sensor.h>
 #include <QuadClass_LSM6DSOX.h>
 
-
+  uint8_t a[4] = {0};
   const int left_rear = 8;
   const int right_rear = 3;
   const int left_top = 5; 
@@ -16,7 +16,7 @@
 
   int len = 0;
 
-  uint8_t a[4] = {0};
+  //uint8_t a[4] = {0};
 
 
   float pitch; 
@@ -34,6 +34,10 @@
   
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
+  double pitch_offset = 1.88+0.51; 
+  double yaw_offset = -0.91+0.45;
+  double pitch_corrected; 
+  double yaw_corrected;
 
   //pid params tuning 
   float PID = 0.0;
@@ -86,6 +90,22 @@ void setupSensor()
 #
 }
 
+void mixing(){
+throttle_left_rear = throttle-PIDoutput;
+throttle_right_rear = throttle - PIDoutput;
+throttle_left_top = throttle + PIDoutput;
+throttle_right_top = throttle + PIDoutput;
+analogWrite(left_rear, throttle_left_rear);
+analogWrite(right_rear, throttle_right_rear);
+analogWrite(left_top, throttle_left_top);
+analogWrite(right_top, throttle_right_top);
+
+Serial.println(throttle_right_rear);
+Serial.println(throttle_left_rear);
+Serial.println(throttle_left_top);
+Serial.println(throttle_right_top);
+
+}
 
 void setup() {
   //copied from rfecho
@@ -174,17 +194,20 @@ void loop() {
     cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
     cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
     
+    pitch_corrected = pitch_offset + cf_pitch; 
+    yaw_corrected = yaw_offset + cf_roll; 
+
     //error values when running lsm.setAccelCompositeFilter 
     //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
 
-    Serial.println(cf_pitch);
-    Serial.print(F(" "));
-    Serial.println(cf_roll);
+    //Serial.println(pitch_corrected);
+   // Serial.print(F(" "));
+    //Serial.println(yaw_corrected);
    // Serial.print(F(" "));
 
    //pid code here 
-   float errorPitch = setpointPitch - cf_pitch;
-   if(Ki == 0 ||analogRead(A1)<185){ //either Ki = 0 or Speed =0, unsure how to determine speed
+   float errorPitch = setpointPitch - pitch_corrected;
+   if(Ki == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
       integral = 0; 
    }
    else{
@@ -195,7 +218,11 @@ void loop() {
   PID = Kp * errorPitch + Ki * integral + Kd * derivative;
   previousError = errorPitch;
 
-  int PIDoutput = constrain(PID, 0, 50);
+  int PIDoutput = constrain(PID, -50, 50);
+  Serial.print("PIDoutput:");
+  Serial.println(PIDoutput);
+
+  mixing();
 
   //New mixing algorithm concept - we constrain throttle to set range that is between 0 and like 200, and then use pid to deviate from that range by +-50 or so.
   // I think it sense to also have PID deviate below the throttle range for normal flight. The one challenge with this is that at near zero throttle the PID controller cannot deviate as far below, so it may perform differently/less stable if it
@@ -217,14 +244,13 @@ void loop() {
   
   
 
-
-  throttle = 0;
   int len;
   
-uint8_t a[4] = {0};
+  uint8_t a[4] = {0};
+  
  if (len = rfAvailable()){
-  Serial.print("Read packets:");
-  Serial.println(len);
+  //Serial.print("Read packets:");
+  //Serial.println(len);
   if(len!=4){
   rfFlush();
  }  
@@ -235,10 +261,11 @@ uint8_t a[4] = {0};
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
-      analogWrite(left_rear, throttle);
-      analogWrite(right_rear, throttle);
-      analogWrite(left_top, throttle );
-      analogWrite(right_top, throttle);
+      
+      //analogWrite(left_rear, throttle);
+      //analogWrite(right_rear, throttle);
+      //analogWrite(left_top, throttle );
+      //analogWrite(right_top, throttle);
     }
     else{
       rfFlush();
@@ -317,9 +344,3 @@ uint8_t a[4] = {0};
 
 */
 
-void mixing(){
-throttle_left_rear = throttle-PIDoutput;
-throttle_right_rear = throttle - PIDoutput;
-throttle_left_top = throttle + PIDoutput;
-throttle_right_top = throttle + PIDoutput;
-}
