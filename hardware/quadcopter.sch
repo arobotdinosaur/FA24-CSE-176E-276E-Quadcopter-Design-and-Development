@@ -6684,10 +6684,6 @@ This is the in-system programming (ISP) connector for Atmel Microcontrollers pro
 <pinref part="L4" gate="G$1" pin="A"/>
 </segment>
 </net>
-<net name="N$3" class="0">
-<segment>
-</segment>
-</net>
 <net name="RESET" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="RSTN"/>
