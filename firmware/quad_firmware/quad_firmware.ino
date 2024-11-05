@@ -43,9 +43,9 @@
   float PID = 0.0;
   int PIDoutput = 0;
   float setpointPitch = 0.0;
-  float Kp = 1.0; 
-  float Ki = 0.1;
-  float Kd = 0.01;
+  float Kp = 0.45; 
+  float Ki = 0.0;
+  float Kd = 0.3;
   float integral = 0.0;
   float integral_error = 0.0;
   float previousError = 0.0;
@@ -91,10 +91,16 @@ void setupSensor()
 }
 
 void mixing(){
-throttle_left_rear = throttle-PIDoutput;
-throttle_right_rear = throttle - PIDoutput;
+throttle_left_rear = throttle+PIDoutput;
 throttle_left_top = throttle + PIDoutput;
-throttle_right_top = throttle + PIDoutput;
+throttle_right_rear = throttle - PIDoutput;
+throttle_right_top = throttle - PIDoutput;
+Serial.print("PRE PID:");
+Serial.println(PIDoutput);
+throttle_left_rear = constrain(throttle_left_rear, 0, 255);
+throttle_right_rear = constrain(throttle_right_rear,0,255);
+throttle_left_top = constrain(throttle_left_top, 0,255);
+throttle_right_top = constrain(throttle_right_top, 0,255);
 analogWrite(left_rear, throttle_left_rear);
 analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
@@ -109,7 +115,7 @@ Serial.println(throttle_right_top);
 
 void setup() {
   //copied from rfecho
-  rfBegin(13);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(25);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
@@ -193,12 +199,17 @@ void loop() {
     //Serial.print(F(" "));
     cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
     cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
+    Serial.print("cf pitch:");
+    Serial.println(cf_pitch);
     
+    Serial.print("cf roll:");
+    Serial.println(cf_roll);
     pitch_corrected = pitch_offset + cf_pitch; 
     yaw_corrected = yaw_offset + cf_roll; 
 
     //error values when running lsm.setAccelCompositeFilter 
     //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
+    
 
     //Serial.println(pitch_corrected);
    // Serial.print(F(" "));
@@ -218,11 +229,13 @@ void loop() {
   PID = Kp * errorPitch + Ki * integral + Kd * derivative;
   previousError = errorPitch;
 
-  int PIDoutput = constrain(PID, -50, 50);
+  PIDoutput = constrain(PID, -200, 200); //prev -50 to 50
   Serial.print("PIDoutput:");
   Serial.println(PIDoutput);
 
-  mixing();
+  
+    mixing();
+
 
   //New mixing algorithm concept - we constrain throttle to set range that is between 0 and like 200, and then use pid to deviate from that range by +-50 or so.
   // I think it sense to also have PID deviate below the throttle range for normal flight. The one challenge with this is that at near zero throttle the PID controller cannot deviate as far below, so it may perform differently/less stable if it
