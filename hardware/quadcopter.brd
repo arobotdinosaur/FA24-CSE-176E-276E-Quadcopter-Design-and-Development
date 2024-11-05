@@ -3685,8 +3685,8 @@ design rules under a new name.</description>
 <wire x1="20.04695" y1="19.558" x2="20.04695" y2="18.51025" width="0.127" layer="1"/>
 <wire x1="13.76045" y1="25.8445" x2="20.04695" y2="19.558" width="0.127" layer="1"/>
 <wire x1="11.8745" y1="27.73045" x2="13.76045" y2="25.8445" width="0.127" layer="16"/>
-<wire x1="-9.9187" y1="27.73045" x2="11.8745" y2="27.73045" width="0.127" layer="16"/>
-<wire x1="-17.0434" y1="27.73045" x2="-9.9187" y2="27.73045" width="0.127" layer="1"/>
+<wire x1="-10.9187" y1="27.73045" x2="11.8745" y2="27.73045" width="0.127" layer="16"/>
+<wire x1="-17.0434" y1="27.73045" x2="-10.9187" y2="27.73045" width="0.127" layer="1"/>
 <wire x1="20.04695" y1="18.51025" x2="20.105" y2="18.5" width="0.127" layer="1"/>
 <wire x1="-17.0434" y1="27.73045" x2="-17.045" y2="28" width="0.127" layer="1"/>
 <wire x1="-10.68705" y1="-9.84885" x2="-10.68705" y2="-16.41475" width="0.127" layer="1"/>
@@ -3702,7 +3702,7 @@ design rules under a new name.</description>
 <wire x1="-10.68705" y1="-16.41475" x2="-10.75" y2="-16.45" width="0.127" layer="1"/>
 <via x="13.76045" y="25.8445" extent="1-16" drill="0.2032">
 </via>
-<via x="-9.9187" y="27.73045" extent="1-16" drill="0.2032">
+<via x="-10.9187" y="27.73045" extent="1-16" drill="0.2032">
 </via>
 <via x="-12.22375" y="-0.8382" extent="1-16" drill="0.2032">
 </via>
@@ -3718,7 +3718,7 @@ design rules under a new name.</description>
 <signal name="N$5">
 <contactref element="B1" pad="2"/>
 <contactref element="C3" pad="1"/>
-<wire x1="-8.81" y1="22.99" x2="-11.495" y2="22.99" width="0.254" layer="1"/>
+<wire x1="-11.495" y1="22.99" x2="-8.81" y2="22.99" width="0.254" layer="1"/>
 <wire x1="-11.495" y1="22.99" x2="-11.605" y2="23.1" width="0.254" layer="1"/>
 </signal>
 <signal name="RF_P">
@@ -3731,10 +3731,9 @@ design rules under a new name.</description>
 <contactref element="B1" pad="1"/>
 <contactref element="A8" pad="FEED"/>
 <contactref element="C4" pad="1"/>
-<wire x1="-9" y1="29" x2="-8.895" y2="28.895" width="1.27" layer="1"/>
-<wire x1="-8.895" y1="28.895" x2="-8.895" y2="26" width="1.27" layer="1"/>
-<wire x1="-8.895" y1="26" x2="-8.895" y2="24.105" width="1.27" layer="1"/>
-<wire x1="-8.895" y1="24.105" x2="-9" y2="24" width="1.27" layer="1"/>
+<wire x1="-9" y1="29" x2="-9" y2="26" width="1.27" layer="1"/>
+<wire x1="-9" y1="26" x2="-8.895" y2="26" width="1.27" layer="1"/>
+<wire x1="-9" y1="26" x2="-9" y2="24" width="1.27" layer="1"/>
 <wire x1="-9" y1="24" x2="-8.81" y2="23.64" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$8">
