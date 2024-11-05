@@ -1,0 +1,3 @@
+Color: White
+Silkscreen: Black
+Max Dimensions of Board: 139mm x 139mm
