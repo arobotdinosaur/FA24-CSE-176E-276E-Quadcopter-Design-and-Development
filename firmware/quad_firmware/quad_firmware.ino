@@ -30,7 +30,8 @@
 
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
-  float gain = 0.75; 
+  float gain = 0.90; 
+  
   
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
@@ -43,8 +44,8 @@
   float PIDp = 0.0;
   int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.33; //0.5
-  float Kip = 0.01; //0.04
+  float Kpp = 0.5; //0.5
+  float Kip = 0.04; //0.04
   float Kdp = 0.0;//0.4
   float integralp = 0.0;
   float integral_errorp = 0.0;
@@ -152,7 +153,12 @@ void loop() {
     //Serial.print(now - last);
     //Serial.print(F(" "));
     pitch = orientation.pitch;
+    Serial.print("rawpitch:");
+    Serial.println(pitch);
+
     pitch_rate = orientation.pitch_rate;
+    Serial.print(" raw_pitch_rate:");
+    Serial.println(pitch_rate);
    // Serial.print(orientation.pitch);
    // Serial.print(F(" "));
    // Serial.print(orientation.pitch_rate);
@@ -170,12 +176,12 @@ void loop() {
     //lsm.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
     //lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 
-    double gyro_raw_pitch = gyro_event.gyro.x; //.z was there initially, may need pid change
-    double gyro_raw_roll = gyro_event.gyro.y;
+    double gyro_raw_pitch = gyro_event.gyro.y; //.z was there initially, may need pid change
+    double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
-    Serial.print("Raw:");
-    Serial.println(gyro_raw_pitch);
+    Serial.print("gyro_raw:");
+    Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     //Serial.print(gyro_raw_pitch);
     //Serial.print(F(" "));
@@ -189,13 +195,13 @@ void loop() {
     //Serial.print(F(" "));
     //Serial.print(gyro_angle_roll);
     //Serial.print(F(" "));
-    cf_pitch = (gain * gyro_angle_pitch) + (1-gain)*pitch;
-    cf_roll = (gain* gyro_angle_roll) + (1-gain)*roll;
-    Serial.print("cf pitch:");
+    cf_pitch = (gain * gyro_angle_pitch) + (1.0-gain)*pitch;
+    cf_roll = (gain* gyro_angle_roll) + (1.0-gain)*roll;
+    Serial.print(" cf_pitch:");
     Serial.println(cf_pitch);
     
-    Serial.print("cf roll:");
-    Serial.println(cf_roll);
+    //Serial.print("cf roll:");
+   // Serial.println(cf_roll);
     pitch_corrected = pitch_offset + cf_pitch; 
     yaw_corrected = yaw_offset + cf_roll; 
     //error values when running lsm.setAccelCompositeFilter 
@@ -221,11 +227,13 @@ void loop() {
   previousErrorp = errorPitch;
 
   PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
-  Serial.print("PIDoutputp:");
-  Serial.println(PIDoutputp);
+  //Serial.print("PIDoutputp:");
+ // Serial.println(PIDoutputp);
 
   
-    mixing();
+  //Serial.print(" gyro_yaw:");
+ // Serial.println(gyro_raw_yaw);
+    //mixing();
 
     yaw_error = yaw_setpoint - gyro_raw_yaw;
 
@@ -344,9 +352,13 @@ analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
 
+Serial.print("right_rear:");
 Serial.println(throttle_right_rear);
+Serial.print("left_rear:");
 Serial.println(throttle_left_rear);
+Serial.print("left_top:");
 Serial.println(throttle_left_top);
+Serial.print("right_top:");
 Serial.println(throttle_right_top);
 
 }
