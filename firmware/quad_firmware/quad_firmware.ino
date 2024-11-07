@@ -193,7 +193,7 @@ void loop() {
     //lsm.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
     //lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 
-    double gyro_raw_pitch = gyro_event.gyro.z;
+    double gyro_raw_pitch = gyro_event.gyro.x; //.z was there initially, may need pid change
     double gyro_raw_roll = gyro_event.gyro.y;
 
     //Serial.print(gyro_raw_pitch);
