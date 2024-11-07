@@ -95,6 +95,7 @@ void setup() {
 
   knob1_btn_cb = knob_pressed;
   btn1_cb = btn1_pressed;
+  //bool btn_left= btn_left_pressed;
   //testing for gimbal calibration
   /* while (millis() < 1000) {
     gimbal_value_l = analogRead(A1);
@@ -337,4 +338,37 @@ void btn1_pressed(bool down) {
 	} //else {
 	//	Serial.println("btn1 up");    
 	//}
+}
+
+
+
+
+void btn_left_pressed(bool down) {
+	if(down) {
+		Serial.println("left down");
+		//column = (column - 1) %16;
+		update_display();
+	} else {
+		Serial.println("left up");
+	}
+}
+
+void btn_right_pressed(bool down) {
+	if(down) {
+		Serial.println("right down");
+		//column = (column + 1) %16;
+		update_display();
+	} else {
+		Serial.println("right up");    
+	}
+}
+
+    
+void btn_center_pressed(bool down) {
+	if(down) {
+		Serial.println("center down");
+		update_display();
+	} else {
+		Serial.println("center up");    
+	}
 }
