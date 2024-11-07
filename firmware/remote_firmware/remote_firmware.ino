@@ -115,11 +115,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   //This was very heavily inspired by the AnalogReadSerial Example
   //involves battery and gimbal control
- // int leftsideways = analogRead(A0);
+  int leftsideways = analogRead(A0);
   int leftupdown = analogRead(A1);
-  Serial.print(leftupdown);
-  //int rightsideways = analogRead(A2);
-  //int rightupdown = analogRead(A3);
+  //Serial.print(leftupdown);
+  int rightsideways = analogRead(A2);
+  int rightupdown = analogRead(A3);
   int BAT_SENSE_PIN = analogRead(A7);
 
   //Serial.println(leftsideways);
@@ -128,11 +128,7 @@ void loop() {
   //Serial.print("Battery Voltage:");
  // Serial.println(BAT_SENSE_PIN);
 
-  //float max_gimbal_l=855;
-  //float min_gimbal_l=128;
-  //int throttle=255*((leftupdown-min_gimbal_l)/(max_gimbal_l-min_gimbal_l));
-
-  uint8_t a[4] = {0};
+  uint8_t a[10] = {0};
   a[0] = magicNumber;
 
   a[1]=armed;
@@ -143,6 +139,12 @@ void loop() {
 
   rightupdown = constrain(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert);
   rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, 0,255);
+
+  leftsideways = constrain(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert);
+  leftsideways = map(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert, 0, 255);
+
+  rightsideways = constrain(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor);
+  rightsideways = map(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor, 0,255);
  // Serial.println(rightupdown);
 
   if (leftupdown==0 && knob_down == 1){
@@ -152,8 +154,11 @@ void loop() {
   }
 
   a[2] = leftupdown;
+  a[3] = leftsideways;
+  a[4] = rightupdown;
+  a[5] = rightsideways;
   //Serial.println(leftupdown);
-  a[3] = a[0] + a[1] + a[2];
+  a[9] = a[0] + a[1] + a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
 
 
 	if (is_pressed(BUTTON_UP_PIN)&&armed==0) {
@@ -282,8 +287,8 @@ void calibrate() {
   update_display();
 
   lcd.print("Calibration done!");
-  uint8_t a[4]={0};
-  rfWrite(a,4);
+  uint8_t a[10]={0};
+  rfWrite(a,10);
 
 
   /*
@@ -333,37 +338,3 @@ void btn1_pressed(bool down) {
 	//	Serial.println("btn1 up");    
 	//}
 }
-/*
-void radio_transmit(){
-  uint8_t a[4] = {0};
-  a[0] = magicNumber;
-
-  a[1]=armed;
-
-  a[2] = leftupdown;
- // Serial.println(leftupdown);
-  a[3] = a[0] + a[1] + a[2];
-  while(i<=254){
-  uint8_t b[3] = {0};
-if (len = rfAvailable())  
-  {
-    rfRead(b, len);
-    if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3] && len==4){
-      start_time = 0; 
-      //Serial.println(b[1]);885
-      int quadbattery=b[1];
-      quadbattery = map(quadbattery, min_bat_quad, max_bat_quad, 0, 100);
-      lcd.print(" quad:");
-      lcd.print(quadbattery);
-      lcd.print("%");
-      if (b[2]=0){
-        armed = 0;
-      }
-    }
-    else{
-      rfFlush();
-    }
-  }
-  rfWrite(a, 4);
-  }
-}*/
