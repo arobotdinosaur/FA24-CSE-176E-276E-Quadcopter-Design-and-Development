@@ -40,15 +40,26 @@
   double yaw_corrected;
 
   //pid params tuning 
-  float PID = 0.0;
-  int PIDoutput = 0;
-  float setpointPitch = 0.0;
-  float Kp = 0.45; 
-  float Ki = 0.0;
-  float Kd = 0.3;
-  float integral = 0.0;
-  float integral_error = 0.0;
-  float previousError = 0.0;
+  float PIDp = 0.0;
+  int PIDoutputp = 0;
+  float setpointPitchp = 0.0;
+  float Kpp = 0.5; //0.5
+  float Kip = 0.04; //0.04
+  float Kdp = 0.4;//0.4
+  float integralp = 0.0;
+  float integral_errorp = 0.0;
+  float previousErrorp = 0.0;
+
+  float PIDy = 0.0;
+  int PIDoutputy = 0;
+  float setpointPitchy = 0.0;
+  float Kpy = 0.5; //0.5
+  float Kiy = 0.04; //0.04
+  float Kdy = 0.4;//0.4
+  float integraly = 0.0;
+  float integral_errory = 0.0;
+  float previousErrory = 0.0;
+
 
   int throttle_left_rear = 0; 
   int throttle_right_rear = 0;
@@ -91,12 +102,12 @@ void setupSensor()
 }
 
 void mixing(){
-throttle_left_rear = throttle+PIDoutput;
-throttle_left_top = throttle + PIDoutput;
-throttle_right_rear = throttle - PIDoutput;
-throttle_right_top = throttle - PIDoutput;
+throttle_left_rear = throttle+PIDoutputp;
+throttle_left_top = throttle + PIDoutputp;
+throttle_right_rear = throttle - PIDoutputp;
+throttle_right_top = throttle - PIDoutputp;
 Serial.print("PRE PID:");
-Serial.println(PIDoutput);
+Serial.println(PIDoutputp);
 throttle_left_rear = constrain(throttle_left_rear, 0, 255);
 throttle_right_rear = constrain(throttle_right_rear,0,255);
 throttle_left_top = constrain(throttle_left_top, 0,255);
@@ -217,21 +228,21 @@ void loop() {
    // Serial.print(F(" "));
 
    //pid code here 
-   float errorPitch = setpointPitch - pitch_corrected;
-   if(Ki == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      integral = 0; 
-   }
-   else{
-    integral += errorPitch * dt*0.001;
-   }
+   float errorPitch = setpointPitchp - pitch_corrected;
+   //if(Kip == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
+      //integralp = 0; 
+   //}
+   //else{
+    integralp += errorPitch * dt*0.001;
+   //}
 
-  float derivative = (errorPitch - previousError) /(dt*0.001);
-  PID = Kp * errorPitch + Ki * integral + Kd * derivative;
-  previousError = errorPitch;
+  float derivativep = (errorPitch - previousErrorp) /(dt*0.001);
+  PIDp = Kpp * errorPitch + Kip * integralp + Kdp * derivativep;
+  previousErrorp = errorPitch;
 
-  PIDoutput = constrain(PID, -200, 200); //prev -50 to 50
-  Serial.print("PIDoutput:");
-  Serial.println(PIDoutput);
+  PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
+  Serial.print("PIDoutputp:");
+  Serial.println(PIDoutputp);
 
   
     mixing();
