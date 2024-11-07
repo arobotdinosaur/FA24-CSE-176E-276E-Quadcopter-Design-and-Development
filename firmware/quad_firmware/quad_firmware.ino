@@ -50,15 +50,15 @@
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
 
-  float PIDy = 0.0;
-  int PIDoutputy = 0;
-  float setpointPitchy = 0.0;
+  
   float Kpy = 0.5; //0.5
   float Kiy = 0.04; //0.04
   float Kdy = 0.4;//0.4
-  float integraly = 0.0;
-  float integral_errory = 0.0;
-  float previousErrory = 0.0;
+  float yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
+  float yaw_rate = 0.0;      // The current yaw rate (from the gyroscope)
+  float yaw_error = 0.0;     // The difference between desired and actual yaw rate
+  float previousYawError = 0.0;  // Previous yaw error (for derivative term)
+  float integralYaw = 0.0;
 
 
   int throttle_left_rear = 0; 
@@ -195,6 +195,7 @@ void loop() {
 
     double gyro_raw_pitch = gyro_event.gyro.x; //.z was there initially, may need pid change
     double gyro_raw_roll = gyro_event.gyro.y;
+    double gyro_raw_yaw = gyro_event.gyro.z;
 
     //Serial.print(gyro_raw_pitch);
     //Serial.print(F(" "));
@@ -247,7 +248,16 @@ void loop() {
   
     mixing();
 
+    yaw_error = yaw_setpoint - gyro_raw_yaw;
 
+    integralYaw += yaw_error * dt;
+  
+  float derivativeYaw = (yaw_error - previousYawError) / dt;
+  float PIDyaw = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
+  previousYawError = yaw_error;
+  yaw_rate = PIDyaw;
+
+  yaw_rate = constrain(yaw_rate, -255, 255);
   //New mixing algorithm concept - we constrain throttle to set range that is between 0 and like 200, and then use pid to deviate from that range by +-50 or so.
   // I think it sense to also have PID deviate below the throttle range for normal flight. The one challenge with this is that at near zero throttle the PID controller cannot deviate as far below, so it may perform differently/less stable if it
   //wants to push the throttle lower but cannot. Worth experimenting with. On the other hand we want the quadcopter to stay level so we do want to figure out to make the negative pid work somehow.
