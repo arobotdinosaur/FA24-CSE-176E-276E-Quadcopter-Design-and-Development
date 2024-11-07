@@ -30,7 +30,7 @@
 
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
-  float gain = 0.98; 
+  float gain = 0.75; 
   
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
@@ -43,9 +43,9 @@
   float PIDp = 0.0;
   int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.5; //0.5
-  float Kip = 0.04; //0.04
-  float Kdp = 0.4;//0.4
+  float Kpp = 0.33; //0.5
+  float Kip = 0.01; //0.04
+  float Kdp = 0.0;//0.4
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -99,29 +99,6 @@ void setupSensor()
 
   ahrs = new Adafruit_Simple_AHRS(_accel, _mag, _gyro);
 #
-}
-
-void mixing(){
-throttle_left_rear = throttle+PIDoutputp;
-throttle_left_top = throttle + PIDoutputp;
-throttle_right_rear = throttle - PIDoutputp;
-throttle_right_top = throttle - PIDoutputp;
-Serial.print("PRE PID:");
-Serial.println(PIDoutputp);
-throttle_left_rear = constrain(throttle_left_rear, 0, 255);
-throttle_right_rear = constrain(throttle_right_rear,0,255);
-throttle_left_top = constrain(throttle_left_top, 0,255);
-throttle_right_top = constrain(throttle_right_top, 0,255);
-analogWrite(left_rear, throttle_left_rear);
-analogWrite(right_rear, throttle_right_rear);
-analogWrite(left_top, throttle_left_top);
-analogWrite(right_top, throttle_right_top);
-
-Serial.println(throttle_right_rear);
-Serial.println(throttle_left_rear);
-Serial.println(throttle_left_top);
-Serial.println(throttle_right_top);
-
 }
 
 void setup() {
@@ -197,6 +174,9 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.y;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
+    Serial.print("Raw:");
+    Serial.println(gyro_raw_pitch);
+
     //Serial.print(gyro_raw_pitch);
     //Serial.print(F(" "));
     //Serial.print(gyro_raw_roll);
@@ -218,7 +198,6 @@ void loop() {
     Serial.println(cf_roll);
     pitch_corrected = pitch_offset + cf_pitch; 
     yaw_corrected = yaw_offset + cf_roll; 
-
     //error values when running lsm.setAccelCompositeFilter 
     //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
     
@@ -229,7 +208,7 @@ void loop() {
    // Serial.print(F(" "));
 
    //pid code here 
-   float errorPitch = setpointPitchp - pitch_corrected;
+   float errorPitch = setpointPitchp - pitch_corrected; 
    //if(Kip == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
       //integralp = 0; 
    //}
@@ -238,7 +217,7 @@ void loop() {
    //}
 
   float derivativep = (errorPitch - previousErrorp) /(dt*0.001);
-  PIDp = Kpp * errorPitch + Kip * integralp + Kdp * derivativep;
+  PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
   PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
@@ -349,32 +328,25 @@ void loop() {
 
 }
 
+void mixing(){
+throttle_left_rear = throttle+PIDoutputp;
+throttle_left_top = throttle + PIDoutputp;
+throttle_right_rear = throttle - PIDoutputp;
+throttle_right_top = throttle - PIDoutputp;
+Serial.print("PRE PID:");
+Serial.println(PIDoutputp);
+throttle_left_rear = constrain(throttle_left_rear, 0, 255);
+throttle_right_rear = constrain(throttle_right_rear,0,255);
+throttle_left_top = constrain(throttle_left_top, 0,255);
+throttle_right_top = constrain(throttle_right_top, 0,255);
+analogWrite(left_rear, throttle_left_rear);
+analogWrite(right_rear, throttle_right_rear);
+analogWrite(left_top, throttle_left_top);
+analogWrite(right_top, throttle_right_top);
 
-/*
-void read_radio() {
-int i = 0;
-uint8_t a[4] = {0};
- rfRead(a, 4);
-    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){
-      start_time = 0; 
-      analogWrite(LED1, 200);
-      //analogWrite(LED2, 200);
-      analogWrite(left_rear, a[2]);
-      analogWrite(right_rear, a[2]);
-      analogWrite(left_top, a[2]);
-      analogWrite(right_top, a[2]);
-    }
-    else{
-      if(i<=254){
-       i=i+1;
-      rfFlush();
-      read_radio();
-      }
-      else{
-      rfFlush();
-    }
-    }
+Serial.println(throttle_right_rear);
+Serial.println(throttle_left_rear);
+Serial.println(throttle_left_top);
+Serial.println(throttle_right_top);
+
 }
-
-*/
-
