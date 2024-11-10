@@ -44,9 +44,9 @@
   float PIDp = 0.0;
   int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.5; //0.5
-  float Kip = 0.04; //0.04
-  float Kdp = 0.0;//0.4
+  float Kpp = 0.25; //0.5  //battery on bottom: this works 0.25
+  float Kip = 0.05; //0.04, 0.05
+  float Kdp = 0.0;//0.4, 0.1
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -62,14 +62,14 @@
   float integralYaw = 0.0;
 
 
-  int throttle_left_rear = 0; 
-  int throttle_right_rear = 0;
-  int throttle_left_top = 0;
-  int throttle_right_top = 0;
+  int16_t throttle_left_rear = 0; 
+  int16_t throttle_right_rear = 0;
+  int16_t throttle_left_top = 0;
+  int16_t throttle_right_top = 0;
 
-  int timer = 0;
+  int16_t timer = 0;
   
-  int throttle = 0;
+  int16_t throttle = 0;
 
 //sensors in imu
 void setupSensor()
@@ -138,6 +138,10 @@ void setup() {
 unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
+  Serial.print("-90:");
+  Serial.println(-90);
+    Serial.print("90:");
+  Serial.println(90);
   int BAT_VALUE = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_VALUE);
@@ -219,10 +223,10 @@ void loop() {
       //integralp = 0; 
    //}
    //else{
-    integralp += errorPitch * dt*0.001;
+    integralp = errorPitch * dt*0.001+integralp*3/4;
    //}
 
-  float derivativep = (errorPitch - previousErrorp) /(dt*0.001);
+  float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
@@ -233,7 +237,7 @@ void loop() {
   
   //Serial.print(" gyro_yaw:");
  // Serial.println(gyro_raw_yaw);
-    //mixing();
+    mixing();
 
     yaw_error = yaw_setpoint - gyro_raw_yaw;
 
@@ -278,7 +282,7 @@ void loop() {
  else{
     rfRead(a, len);
     if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
-      start_time = 0; 
+      //start_time = 0; 
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
@@ -296,7 +300,7 @@ void loop() {
 
  // read_radio();
 
-  if (start_time<=4){
+ /* if (start_time<=4){
   start_time = start_time + 1;
   }
   if (start_time >= 20){
@@ -307,7 +311,7 @@ void loop() {
       analogWrite(right_rear, 0);
       analogWrite(left_top, 0);
       analogWrite(right_top, 0);
-  }
+  }*/
   //Serial.println(start_time);
 
   uint8_t b[4] = {0};
@@ -337,6 +341,7 @@ void loop() {
 }
 
 void mixing(){
+throttle=10;
 throttle_left_rear = throttle+PIDoutputp;
 throttle_left_top = throttle + PIDoutputp;
 throttle_right_rear = throttle - PIDoutputp;
