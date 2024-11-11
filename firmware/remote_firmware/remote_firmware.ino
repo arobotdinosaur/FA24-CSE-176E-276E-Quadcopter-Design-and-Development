@@ -184,7 +184,7 @@ else{
   lcd.print("%");
 }
 
-  rfWrite(a, 4);
+  rfWrite(a, 10);
 
 uint8_t b[4] = {0};
 if (len = rfAvailable())  
@@ -206,7 +206,7 @@ if (len = rfAvailable())
       if (b[2]=0){
         armed = 0;
       }
-      rfWrite(a,4);
+      rfWrite(a,10);
     }
     else{
       rfFlush();

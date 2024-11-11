@@ -42,11 +42,11 @@
 
   //pid params tuning 
   float PIDp = 0.0;
-  int PIDoutputp = 0;
+  //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.25; //0.5  //battery on bottom: this works 0.25
-  float Kip = 0.05; //0.04, 0.05
-  float Kdp = 0.0;//0.4, 0.1
+  float Kpp = 0.15; //0.5  //battery on bottom: this works 0.25
+  float Kip = 0.04; //0.04, 0.05
+  float Kdp = 0.05;//0.4, 0.1
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -131,17 +131,17 @@ void setup() {
   const int LED4 = 36; 
   const int PRETTY_LEDS = 34;
 
-  
+  //startupRamp();
 
 }
 
 unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
-  Serial.print("-90:");
-  Serial.println(-90);
-    Serial.print("90:");
-  Serial.println(90);
+  //Serial.print("-90:");
+  //Serial.println(-90);
+  //Serial.print("90:");
+  //Serial.println(90);
   int BAT_VALUE = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_VALUE);
@@ -151,18 +151,19 @@ void loop() {
   //static unsigned long  last_time = millis();
   unsigned long  now = millis();
   float dt = (now - last);
+  //Serial.println(dt);
   if (ahrs->getQuadOrientation(&orientation))
   {
     /* 'orientation' should have valid .roll and .pitch fields */
     //Serial.print(now - last);
     //Serial.print(F(" "));
     pitch = orientation.pitch;
-    Serial.print("rawpitch:");
-    Serial.println(pitch);
+    //Serial.print("rawpitch:");
+    //Serial.println(pitch);
 
     pitch_rate = orientation.pitch_rate;
-    Serial.print(" raw_pitch_rate:");
-    Serial.println(pitch_rate);
+    //Serial.print(" raw_pitch_rate:");
+    //Serial.println(pitch_rate);
    // Serial.print(orientation.pitch);
    // Serial.print(F(" "));
    // Serial.print(orientation.pitch_rate);
@@ -184,8 +185,8 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
-    Serial.print("gyro_raw:");
-    Serial.println(gyro_raw_pitch*RAD_TO_DEG);
+    //Serial.print("gyro_raw:");
+    //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     //Serial.print(gyro_raw_pitch);
     //Serial.print(F(" "));
@@ -201,8 +202,8 @@ void loop() {
     //Serial.print(F(" "));
     cf_pitch = (gain * gyro_angle_pitch) + (1.0-gain)*pitch;
     cf_roll = (gain* gyro_angle_roll) + (1.0-gain)*roll;
-    Serial.print(" cf_pitch:");
-    Serial.println(cf_pitch);
+    //Serial.print(" cf_pitch:");
+    //Serial.println(cf_pitch);
     
     //Serial.print("cf roll:");
    // Serial.println(cf_roll);
@@ -223,14 +224,14 @@ void loop() {
       //integralp = 0; 
    //}
    //else{
-    integralp = errorPitch * dt*0.001+integralp*3/4;
+    integralp = errorPitch * dt*0.001+integralp;
    //}
 
   float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
-  PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
+  //PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
   //Serial.print("PIDoutputp:");
  // Serial.println(PIDoutputp);
 
@@ -276,16 +277,18 @@ void loop() {
  if (len = rfAvailable()){
   //Serial.print("Read packets:");
   //Serial.println(len);
-  if(len!=4){
+  if(len!=10){
   rfFlush();
  }  
  else{
     rfRead(a, len);
-    if (a[0]==magicNumber && a[1]==1 && a[0] + a[1] + a[2] == a[3]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
+    if (a[0]==magicNumber && a[1]==1 && a[9]==a[0]+a[1]+a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8]){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
       //start_time = 0; 
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
+      Serial.println("a2");
+      Serial.print(a[2]);
       
       //analogWrite(left_rear, throttle);
       //analogWrite(right_rear, throttle);
@@ -333,23 +336,19 @@ void loop() {
   //analogWrite(LED4, 200);
 
   //analogWrite(PRETTY_LEDS, 200);
-
-
-
-
-
 }
 
 void mixing(){
-throttle=10;
-throttle_left_rear = throttle+PIDoutputp;
-throttle_left_top = throttle + PIDoutputp;
-throttle_right_rear = throttle - PIDoutputp;
-throttle_right_top = throttle - PIDoutputp;
-Serial.print("PRE PID:");
-Serial.println(PIDoutputp);
+Serial.println("Throttle:");
+Serial.print(throttle);
+throttle_left_rear = throttle+PIDp;
+throttle_left_top = throttle + PIDp;
+throttle_right_rear = throttle - PIDp;
+throttle_right_top = throttle - PIDp;
+//Serial.print("PRE PID:");
+//Serial.println(PIDp);
 throttle_left_rear = constrain(throttle_left_rear, 0, 255);
-throttle_right_rear = constrain(throttle_right_rear,0,255);
+throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
 throttle_left_top = constrain(throttle_left_top, 0,255);
 throttle_right_top = constrain(throttle_right_top, 0,255);
 analogWrite(left_rear, throttle_left_rear);
@@ -357,13 +356,23 @@ analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
 
-Serial.print("right_rear:");
-Serial.println(throttle_right_rear);
-Serial.print("left_rear:");
-Serial.println(throttle_left_rear);
+//Serial.print("right_rear:");
+//Serial.println(throttle_right_rear);
+//Serial.print("left_rear:");
+//Serial.println(throttle_left_rear);
 Serial.print("left_top:");
 Serial.println(throttle_left_top);
-Serial.print("right_top:");
-Serial.println(throttle_right_top);
+//Serial.print("right_top:");
+//Serial.println(throttle_right_top);
+}
 
+void startupRamp(){
+    int i=0;
+  for (i=0; i<50; i+=5) {
+    analogWrite(left_rear, i);
+    analogWrite(right_rear, i);
+    analogWrite(left_top, i);
+    analogWrite(right_top, i);
+    delay(500);
+  }
 }
