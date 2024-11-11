@@ -159,7 +159,9 @@ void loop() {
   a[4] = rightupdown;
   a[5] = rightsideways;
   //Serial.println(leftupdown);
-  a[9] = a[0] + a[1] + a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+  a[9] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8];
+
+
 
 
 	if (is_pressed(BUTTON_UP_PIN)&&armed==0) {
@@ -184,7 +186,7 @@ else{
   lcd.print("%");
 }
 
-  rfWrite(a, 10);
+  //rfWrite(a, 10);
 
 uint8_t b[4] = {0};
 if (len = rfAvailable())  
@@ -194,7 +196,7 @@ if (len = rfAvailable())
  }  
  else{
     rfRead(b, len);
-    Serial.println(len);
+    //Serial.println(len);
     if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ 
       start_time = 0; 
       //Serial.println(b[1]);885
@@ -207,6 +209,8 @@ if (len = rfAvailable())
         armed = 0;
       }
       rfWrite(a,10);
+      Serial.println("a0");
+      Serial.println(a[2]);
     }
     else{
       rfFlush();
