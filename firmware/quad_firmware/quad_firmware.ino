@@ -1,4 +1,3 @@
-//this had no compilation issues
 #include <radio.h>
 #include <Adafruit_Simple_AHRS.h>
 #include <Wire.h>
@@ -16,12 +15,10 @@
 
   int len = 0;
 
-  //uint8_t a[4] = {0};
-
-
-  float pitch; 
-  float pitch_rate;
-  float roll;
+  float pitch=0.0; 
+  float pitch_rate = 0.0;
+  float roll=0.0;
+  float yaw = 0.0;
   QuadClass_LSM6DSOX lsm = QuadClass_LSM6DSOX();
   Adafruit_Simple_AHRS *ahrs = NULL;
   Adafruit_Sensor *_accel = NULL;
@@ -31,19 +28,17 @@
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
   float gain = 0.90; 
-  float gainyaw = 0.9;
-  
-  
+
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
-  double cf_yaw = 0.0;
   double pitch_offset = 1.88+0.51; 
-  double yaw_offset = -0.91+0.45;
-  double pitch_corrected; 
-  double yaw_corrected;
+  double pitch_corrected = 0.0; 
+  double gyro_angle_yaw = 0.0;
 
   //pid params tuning 
   float PIDp = 0.0;
+  float PIDr = 0.0;
+  float PIDy = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
   float Kpp = 0.15; //0.5  //battery on bottom: this works 0.25
@@ -52,17 +47,15 @@
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
-
   
   float Kpy = 0.5; //0.5
-  float Kiy = 0.04; //0.04
-  float Kdy = 0.4;//0.4
+  float Kiy = 0.0; //0.04
+  float Kdy = 0.0;//0.4
   float yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
   float yaw_rate = 0.0;      // The current yaw rate (from the gyroscope)
   float yaw_error = 0.0;     // The difference between desired and actual yaw rate
   float previousYawError = 0.0;  // Previous yaw error (for derivative term)
   float integralYaw = 0.0;
-
 
   int16_t throttle_left_rear = 0; 
   int16_t throttle_right_rear = 0;
@@ -133,17 +126,16 @@ void setup() {
   const int LED4 = 36; 
   const int PRETTY_LEDS = 34;
 
-  //startupRamp();
-
+  //startupRamp(); 
 }
 
 unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
-  //Serial.print("-90:");
-  //Serial.println(-90);
-  //Serial.print("90:");
-  //Serial.println(90);
+  Serial.print("-90:");
+  Serial.println(-90);
+  Serial.print("90:");
+  Serial.println(90);
   int BAT_VALUE = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_VALUE);
@@ -158,7 +150,6 @@ void loop() {
   {
     /* 'orientation' should have valid .roll and .pitch fields */
     //Serial.print(now - last);
-    //Serial.print(F(" "));
     pitch = orientation.pitch;
     //Serial.print("rawpitch:");
     //Serial.println(pitch);
@@ -166,22 +157,14 @@ void loop() {
     pitch_rate = orientation.pitch_rate;
     //Serial.print(" raw_pitch_rate:");
     //Serial.println(pitch_rate);
-   // Serial.print(orientation.pitch);
-   // Serial.print(F(" "));
-   // Serial.print(orientation.pitch_rate);
-    //Serial.print(F(" "));
-    //implemeting for complemetary filtering (check if this is right)
+    //yaw=orientation.yaw;
+
     roll = orientation.roll;
     
     sensors_event_t gyro_event;
     _gyro->getEvent(&gyro_event);
     lsm.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
     lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
-
-    // don't know why this doesnt work- check 
-   // _accel->getEvent(&accel_event);
-    //lsm.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
-    //lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 
     double gyro_raw_pitch = gyro_event.gyro.y; //.z was there initially, may need pid change
     double gyro_raw_roll = gyro_event.gyro.x;
@@ -190,29 +173,21 @@ void loop() {
     //Serial.print("gyro_raw:");
     //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
-    //Serial.print(gyro_raw_pitch);
-    //Serial.print(F(" "));
-    //Serial.print(gyro_raw_roll);
-    //Serial.print(F(" "));
-    //Serial.print(dt);
-    //Serial.print(F(" "));
+    
     double gyro_angle_pitch = cf_pitch + (gyro_raw_pitch * RAD_TO_DEG)*dt*0.001;
     double gyro_angle_roll = cf_roll + (gyro_raw_roll * RAD_TO_DEG)*dt*0.001;
-    double gyro_angle_yaw = cf_yaw + (gyro_raw_yaw*RAD_TO_DEG*dt*0.001);
-    //Serial.print(gyro_angle_pitch);
-    //Serial.print(F(" "));
-    //Serial.print(gyro_angle_roll);
-    //Serial.print(F(" "));
+    gyro_angle_yaw = gyro_angle_yaw + (gyro_raw_yaw*RAD_TO_DEG*dt*0.001);
+
     cf_pitch = (gain * gyro_angle_pitch) + (1.0-gain)*pitch;
     cf_roll = (gain * gyro_angle_roll) + (1.0-gain)*roll;
-    cf_yaw = (gainyaw * gyro_angle_yaw) + (1.0-gain)*roll;
     //Serial.print(" cf_pitch:");
     //Serial.println(cf_pitch);
     
     //Serial.print("cf roll:");
    // Serial.println(cf_roll);
+    //Serial.print("gyro_angle_yaw:");
+    //Serial.println(gyro_angle_yaw);
     pitch_corrected = pitch_offset + cf_pitch; 
-    yaw_corrected = yaw_offset + cf_roll; 
     //error values when running lsm.setAccelCompositeFilter 
     //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
     
@@ -235,37 +210,21 @@ void loop() {
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
-  //PIDoutputp = constrain(PIDp, -200, 200); //prev -50 to 50
-  //Serial.print("PIDoutputp:");
- // Serial.println(PIDoutputp);
-
-  
   //Serial.print(" gyro_yaw:");
  // Serial.println(gyro_raw_yaw);
-    mixing();
 
-    yaw_error = yaw_setpoint - gyro_raw_yaw;
+    yaw_error = yaw_setpoint - gyro_angle_yaw;
 
     integralYaw += yaw_error * dt;
   
   float derivativeYaw = (yaw_error - previousYawError) / dt;
-  float PIDyaw = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
+
+  float PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
+
   previousYawError = yaw_error;
-  yaw_rate = PIDyaw;
 
-  yaw_rate = constrain(yaw_rate, -255, 255);
-  //New mixing algorithm concept - we constrain throttle to set range that is between 0 and like 200, and then use pid to deviate from that range by +-50 or so.
-  // I think it sense to also have PID deviate below the throttle range for normal flight. The one challenge with this is that at near zero throttle the PID controller cannot deviate as far below, so it may perform differently/less stable if it
-  //wants to push the throttle lower but cannot. Worth experimenting with. On the other hand we want the quadcopter to stay level so we do want to figure out to make the negative pid work somehow.
-  //Maybe weirdness at the low throttle levels doesn't matter since the quadcopter doesn't fly anyway. So our PID probably doesn't work right at throttle <20% but it never matters.
-
-  //Doing it all down below in a mixing() function eventually we want to print out the individual throttle values for each rotor. For now we just do pitch.
-
-  //analogWrite(left_rear, throttle_left_rear);
- // analogWrite(right_rear, throttle_right_rear);
-
-
-
+  //mixing();
+  yawcontrol();
 
   }
 
@@ -276,7 +235,7 @@ void loop() {
 
   int len;
   
-  uint8_t a[4] = {0};
+  uint8_t a[10] = {0};
   
  if (len = rfAvailable()){
   //Serial.print("Read packets:");
@@ -293,13 +252,12 @@ void loop() {
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
+      yaw_setpoint = a[3];
+      Serial.print("yaw_setpoint");
+      Serial.println(yaw_setpoint);
       //Serial.println("a2");
       //Serial.print(a[2]);
       
-      //analogWrite(left_rear, throttle);
-      //analogWrite(right_rear, throttle);
-      //analogWrite(left_top, throttle );
-      //analogWrite(right_top, throttle);
     }
     else{
       rfFlush();
@@ -386,10 +344,10 @@ void startupRamp(){
 void yawcontrol(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-throttle_left_rear = throttle+PIDp;
-throttle_left_top = throttle + PIDp;
-throttle_right_rear = throttle - PIDp;
-throttle_right_top = throttle - PIDp;
+throttle_left_rear = throttle+PIDy;
+throttle_left_top = throttle - PIDy;
+throttle_right_rear = throttle + PIDy;
+throttle_right_top = throttle - PIDy;
 //Serial.print("PRE PID:");
 //Serial.println(PIDp);
 throttle_left_rear = constrain(throttle_left_rear, 0, 255);

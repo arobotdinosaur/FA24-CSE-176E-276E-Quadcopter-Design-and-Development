@@ -139,13 +139,13 @@ void loop() {
  // Serial.println(leftupdown);
 
   rightupdown = constrain(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert);
-  rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, 0,255);
+  rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, -127,127);
 
   leftsideways = constrain(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert);
-  leftsideways = map(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert, 0, 255);
+  leftsideways = map(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert, -127, 127);
 
   rightsideways = constrain(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor);
-  rightsideways = map(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor, 0,255);
+  rightsideways = map(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor, -127,127);
  // Serial.println(rightupdown);
 
   if (leftupdown==0 && knob_down == 1){
@@ -159,6 +159,7 @@ void loop() {
   a[4] = rightupdown;
   a[5] = rightsideways;
   //Serial.println(leftupdown);
+
   a[9] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8];
 
 
@@ -209,8 +210,8 @@ if (len = rfAvailable())
         armed = 0;
       }
       rfWrite(a,10);
-      Serial.println("a0");
-      Serial.println(a[2]);
+      //Serial.println("a0");
+      Serial.println(a[3]);
     }
     else{
       rfFlush();
