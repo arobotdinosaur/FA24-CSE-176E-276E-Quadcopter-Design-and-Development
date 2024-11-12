@@ -48,9 +48,9 @@
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
   
-  float Kpy = 0.5; //0.5
+  float Kpy = 0.4; //0.5
   float Kiy = 0.0; //0.04
-  float Kdy = 1.25;//0.4
+  float Kdy = 0.6;//0.4
   double yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
   float yaw_rate = 0.0;      // The current yaw rate (from the gyroscope)
   float yaw_error = 0.0;     // The difference between desired and actual yaw rate
@@ -65,6 +65,8 @@
   int16_t timer = 0;
   
   int16_t throttle = 0;
+
+  double radiotimer = 0.0;
 
 //sensors in imu
 void setupSensor()
@@ -132,10 +134,7 @@ void setup() {
 unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
-  //Serial.print("-90:");
-  //Serial.println(-90);
-  //Serial.print("90:");
-  //Serial.println(90);
+
   int BAT_VALUE = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_VALUE);
@@ -170,7 +169,7 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
-    //Serial.print("gyro_raw:");
+    //Serial.print("gyro_raw_pitch:");
     //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     
@@ -210,8 +209,8 @@ void loop() {
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
-  //Serial.print(" gyro_yaw:");
- // Serial.println(gyro_raw_yaw);
+  //Serial.print(" gyro_raw_yaw:");
+  //Serial.println(gyro_raw_yaw);
 
     yaw_error = yaw_setpoint - gyro_angle_yaw;
     //Serial.print(yaw_error);
@@ -223,10 +222,10 @@ void loop() {
   PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
 
   previousYawError = yaw_error;
-  Serial.println(a[1]);
+  //Serial.println(a[1]);
   if (a[1]==1){
-  //mixing();
-  yawcontrol();
+  mixing();
+  //yawcontrol();
   }
   }
 
@@ -258,49 +257,41 @@ void loop() {
       yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
-      
+      radiotimer=0.0;
     }
     else{
       rfFlush();
     }
    }
+  //Serial.print("-90:");
+  //Serial.println(-90);
+  //Serial.print("90:");
+  //Serial.println(90);
   }
-
- // read_radio();
-
- /* if (start_time<=4){
-  start_time = start_time + 1;
-  }
-  if (start_time >= 20){
-      a[4]={0};
-      throttle=0;
-      analogWrite(LED1, 0);
-      analogWrite(left_rear, 0); 
-      analogWrite(right_rear, 0);
-      analogWrite(left_top, 0);
-      analogWrite(right_top, 0);
-  }*/
-  //Serial.println(start_time);
 
   uint8_t b[4] = {0};
   b[0] = magicNumber2;
   b[1]= BAT_VALUE;
   b[2]=1;
   b[3] = b[0]+b[1]+b[2];
-  //disarm = 0;
-
   
   timer = timer+dt;
+  radiotimer = radiotimer+dt;
   if (timer>50){
   rfWrite(b,4);
   timer = 0;
   }
-  //delay(50); The above implementation stops the rfwrite delays from slowing everything else down.
-
-  //analogWrite(LED3, 200);
-  //analogWrite(LED4, 200);
-
-  //analogWrite(PRETTY_LEDS, 200);
+  if (radiotimer > 2000){
+  a[1]=0;
+throttle=0;
+PIDy=0;
+PIDp=0;
+analogWrite(left_rear, 0);
+analogWrite(right_rear, 0);
+analogWrite(left_top, 0);
+analogWrite(right_top, 0);
+  }
+  
 }
 
 void mixing(){
