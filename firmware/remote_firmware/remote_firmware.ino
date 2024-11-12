@@ -50,7 +50,7 @@ int16_t min_gimbal_r_hor = 0;
 const int magicNumber = 57;
 const int magicNumber2 = 53;
 const int SERIAL_BAUD = 9600;
-const int channel = 25;
+const int channel = 11;
 
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
@@ -340,6 +340,7 @@ void btn1_pressed(bool down) {
 	if(down) {
 		//Serial.println("btn1 down");
     armed=0;
+    uint8_t a[10]={0};
 	} //else {
 	//	Serial.println("btn1 up");    
 	//}

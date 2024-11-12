@@ -99,7 +99,7 @@ void setupSensor()
 
 void setup() {
   //copied from rfecho
-  rfBegin(25);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(11);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
@@ -223,11 +223,11 @@ void loop() {
   PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
 
   previousYawError = yaw_error;
-
+  Serial.println(a[1]);
+  if (a[1]==1){
   //mixing();
-  //Serial.print(PIDy);
   yawcontrol();
-
+  }
   }
 
   last = now;
@@ -235,9 +235,9 @@ void loop() {
   
   
 
-  int len;
+  int len = 0;
   
-  uint8_t a[10] = {0};
+  //uint8_t a[10] = {0};
   
  if (len = rfAvailable()){
   //Serial.print("Read packets:");
@@ -256,8 +256,8 @@ void loop() {
       throttle=a[2];
       int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
       yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
-      Serial.print("yaw_setpoint");
-      Serial.println(yaw_setpoint);
+      //Serial.print("yaw_setpoint");
+      //Serial.println(yaw_setpoint);
       
     }
     else{
