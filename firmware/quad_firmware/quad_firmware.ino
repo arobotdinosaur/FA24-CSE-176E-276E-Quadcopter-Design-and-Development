@@ -41,9 +41,9 @@
   float PIDy = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.15; //0.5  //battery on bottom: this works 0.25
-  float Kip = 0.04; //0.04, 0.05
-  float Kdp = 0.05;//0.4, 0.1
+  float Kpp = 0.23; //0.5  //battery on bottom: this works 0.25  0.20
+  float Kip = 0.002; //0.04, 0.05   0.01
+  float Kdp = 0.05;//0.4, 0.1  0.06
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -297,6 +297,7 @@ analogWrite(right_top, 0);
 void mixing(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
+constrain(PIDp,-10,10);
 throttle_left_rear = throttle+PIDp;
 throttle_left_top = throttle + PIDp;
 throttle_right_rear = throttle - PIDp;
