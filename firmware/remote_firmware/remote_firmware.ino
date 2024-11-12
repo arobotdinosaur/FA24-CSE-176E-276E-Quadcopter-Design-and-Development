@@ -117,6 +117,7 @@ void loop() {
   //This was very heavily inspired by the AnalogReadSerial Example
   //involves battery and gimbal control
   int leftsideways = analogRead(A0);
+  Serial.println(leftsideways);
   int leftupdown = analogRead(A1);
   //Serial.print(leftupdown);
   int rightsideways = analogRead(A2);
@@ -139,13 +140,13 @@ void loop() {
  // Serial.println(leftupdown);
 
   rightupdown = constrain(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert);
-  rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, -127,127);
+  rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, 0,255);
 
   leftsideways = constrain(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert);
-  leftsideways = map(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert, -127, 127);
+  leftsideways = map(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert, 0, 255);
 
   rightsideways = constrain(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor);
-  rightsideways = map(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor, -127,127);
+  rightsideways = map(rightsideways, min_gimbal_r_hor, max_gimbal_r_hor, 0,255);
  // Serial.println(rightupdown);
 
   if (leftupdown==0 && knob_down == 1){
@@ -156,6 +157,7 @@ void loop() {
 
   a[2] = leftupdown;
   a[3] = leftsideways;
+  Serial.println(a[3]);
   a[4] = rightupdown;
   a[5] = rightsideways;
   //Serial.println(leftupdown);
@@ -210,8 +212,6 @@ if (len = rfAvailable())
         armed = 0;
       }
       rfWrite(a,10);
-      //Serial.println("a0");
-      Serial.println(a[3]);
     }
     else{
       rfFlush();
@@ -255,11 +255,11 @@ void calibrate() {
   delay(1000);
   update_display();
 
-  lcd.print("Move left joystick left");
+  lcd.print("Move left joystick right");
   delay(5000);
   min_gimbal_l_hor = analogRead(A0);
   update_display();
-  lcd.print("Move left joystick right");
+  lcd.print("Move left joystick left");
   delay(5000);
   max_gimbal_l_hor = analogRead(A0);
   EEPROM.put(max_gimbal_l_hor_ad,max_gimbal_l_hor);

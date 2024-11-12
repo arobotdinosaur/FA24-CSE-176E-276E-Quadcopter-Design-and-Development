@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>
 #include <QuadClass_LSM6DSOX.h>
 
-  uint8_t a[4] = {0};
+  uint8_t a[10] = {0};
   const int left_rear = 8;
   const int right_rear = 3;
   const int left_top = 5; 
@@ -50,8 +50,8 @@
   
   float Kpy = 0.5; //0.5
   float Kiy = 0.0; //0.04
-  float Kdy = 0.0;//0.4
-  float yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
+  float Kdy = 1.25;//0.4
+  double yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
   float yaw_rate = 0.0;      // The current yaw rate (from the gyroscope)
   float yaw_error = 0.0;     // The difference between desired and actual yaw rate
   float previousYawError = 0.0;  // Previous yaw error (for derivative term)
@@ -132,10 +132,10 @@ void setup() {
 unsigned long  last = millis();
 //full battery is at 885 max 
 void loop() {
-  Serial.print("-90:");
-  Serial.println(-90);
-  Serial.print("90:");
-  Serial.println(90);
+  //Serial.print("-90:");
+  //Serial.println(-90);
+  //Serial.print("90:");
+  //Serial.println(90);
   int BAT_VALUE = analogRead(A7); 
   //Serial.print("Battery Voltage:"); 
   //Serial.println(BAT_VALUE);
@@ -214,16 +214,18 @@ void loop() {
  // Serial.println(gyro_raw_yaw);
 
     yaw_error = yaw_setpoint - gyro_angle_yaw;
+    //Serial.print(yaw_error);
 
     integralYaw += yaw_error * dt;
   
   float derivativeYaw = (yaw_error - previousYawError) / dt;
 
-  float PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
+  PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
 
   previousYawError = yaw_error;
 
   //mixing();
+  //Serial.print(PIDy);
   yawcontrol();
 
   }
@@ -252,11 +254,10 @@ void loop() {
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
-      yaw_setpoint = a[3];
+      int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
+      yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
       Serial.print("yaw_setpoint");
       Serial.println(yaw_setpoint);
-      //Serial.println("a2");
-      //Serial.print(a[2]);
       
     }
     else{
@@ -342,14 +343,12 @@ void startupRamp(){
 }
 
 void yawcontrol(){
-//Serial.println("Throttle:");
-//Serial.print(throttle);
 throttle_left_rear = throttle+PIDy;
 throttle_left_top = throttle - PIDy;
-throttle_right_rear = throttle + PIDy;
-throttle_right_top = throttle - PIDy;
-//Serial.print("PRE PID:");
-//Serial.println(PIDp);
+throttle_right_rear = throttle - PIDy;
+throttle_right_top = throttle + PIDy;
+//Serial.print("PIDyaw:");
+//Serial.println(PIDy);
 throttle_left_rear = constrain(throttle_left_rear, 0, 255);
 throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
 throttle_left_top = constrain(throttle_left_top, 0,255);
