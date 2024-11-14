@@ -41,9 +41,9 @@
   float PIDy = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.23; //0.5  //battery on bottom: this works 0.25  0.20
-  float Kip = 0.002; //0.04, 0.05   0.01
-  float Kdp = 0.05;//0.4, 0.1  0.06
+  float Kpp = 0.5; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+  float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
+  float Kdp = 0.15;//0.4, 0.1  0.06 0.05, 0,032
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -101,7 +101,7 @@ void setupSensor()
 
 void setup() {
   //copied from rfecho
-  rfBegin(11);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(16);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
@@ -169,8 +169,8 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
-    //Serial.print("gyro_raw_pitch:");
-    //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
+    Serial.print("gyro_raw_pitch:");
+    Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     
     double gyro_angle_pitch = cf_pitch + (gyro_raw_pitch * RAD_TO_DEG)*dt*0.001;
@@ -191,13 +191,14 @@ void loop() {
     //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
     
 
-    //Serial.println(pitch_corrected);
+    Serial.println(pitch_corrected);
    // Serial.print(F(" "));
     //Serial.println(yaw_corrected);
    // Serial.print(F(" "));
 
    //pid code here 
-   setpointPitchp = ((a[4] - 127) * (10 / 127))
+   setpointPitchp = ((a[4] - 127) * (0.0787401));
+   //Serial.println(setpointPitchp);
    float errorPitch = setpointPitchp - pitch_corrected; 
    //if(Kip == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
       //integralp = 0; 
@@ -209,6 +210,8 @@ void loop() {
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
+  Serial.print(" dp ");
+  Serial.println(derivativep);
   //Serial.print(" gyro_raw_yaw:");
   //Serial.println(gyro_raw_yaw);
     
@@ -297,7 +300,7 @@ analogWrite(right_top, 0);
 void mixing(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-constrain(PIDp,-7,7);
+constrain(PIDp,-10,10);
 throttle_left_rear = throttle+PIDp;
 throttle_left_top = throttle + PIDp;
 throttle_right_rear = throttle - PIDp;

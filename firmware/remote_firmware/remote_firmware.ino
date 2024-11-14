@@ -28,9 +28,9 @@ int min_gimbal_l_hor_ad = 10;
 int max_gimbal_r_hor_ad = 12;
 int min_gimbal_r_hor_ad = 14;
 
-int p_ad = 16
-int i_ad = 18
-int d_ad = 20
+int p_ad = 16;
+int i_ad = 18;
+int d_ad = 20;
 
 bool knob_down=0;
 uint32_t start_time = 0; 
@@ -54,7 +54,7 @@ int16_t min_gimbal_r_hor = 0;
 const int magicNumber = 57;
 const int magicNumber2 = 53;
 const int SERIAL_BAUD = 19200;
-const int channel = 11;
+const int channel = 16;
 
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
@@ -130,6 +130,7 @@ void loop() {
   //Serial.print(leftupdown);
   int rightsideways = analogRead(A2);
   int rightupdown = analogRead(A3);
+  
   int BAT_SENSE_PIN = analogRead(A7);
 
   //Serial.println(leftsideways);
@@ -147,7 +148,7 @@ void loop() {
   leftupdown = map(leftupdown, min_gimbal_l_vert, max_gimbal_l_vert, 0, 255);
  // Serial.println(leftupdown);
 
-  rightupdown = constrain(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert);
+  rightupdown = constrain(rightupdown, max_gimbal_r_vert, min_gimbal_r_vert);
   rightupdown = map(rightupdown, min_gimbal_r_vert, max_gimbal_r_vert, 0,255);
 
   leftsideways = constrain(leftsideways, min_gimbal_l_hor, max_gimbal_l_vert);
@@ -167,6 +168,7 @@ void loop() {
   a[3] = leftsideways;
   //Serial.println(a[3]);
   a[4] = rightupdown;
+  Serial.println(a[4]);
   a[5] = rightsideways;
   //Serial.println(leftupdown);
 
