@@ -28,6 +28,10 @@ int min_gimbal_l_hor_ad = 10;
 int max_gimbal_r_hor_ad = 12;
 int min_gimbal_r_hor_ad = 14;
 
+int p_ad = 16
+int i_ad = 18
+int d_ad = 20
+
 bool knob_down=0;
 uint32_t start_time = 0; 
 
@@ -49,7 +53,7 @@ int16_t min_gimbal_r_hor = 0;
 
 const int magicNumber = 57;
 const int magicNumber2 = 53;
-const int SERIAL_BAUD = 9600;
+const int SERIAL_BAUD = 19200;
 const int channel = 11;
 
 const int BAT_SENSE_PIN = A7;
@@ -93,8 +97,12 @@ void setup() {
   max_gimbal_r_hor=EEPROM.get(max_gimbal_r_hor_ad,max_gimbal_r_hor);
   min_gimbal_r_hor=EEPROM.get(min_gimbal_r_hor_ad,min_gimbal_r_hor);
 
+  knobs_update_cb = knobs_update; 
   knob1_btn_cb = knob_pressed;
   btn1_cb = btn1_pressed;
+  btn_left_cb =  btn_left_pressed;
+	btn_right_cb = btn_right_pressed;
+	btn_center_cb =  btn_center_pressed;
   //bool btn_left= btn_left_pressed;
   //testing for gimbal calibration
   /* while (millis() < 1000) {
@@ -117,7 +125,7 @@ void loop() {
   //This was very heavily inspired by the AnalogReadSerial Example
   //involves battery and gimbal control
   int leftsideways = analogRead(A0);
-  Serial.println(leftsideways);
+  //Serial.println(leftsideways);
   int leftupdown = analogRead(A1);
   //Serial.print(leftupdown);
   int rightsideways = analogRead(A2);
@@ -157,7 +165,7 @@ void loop() {
 
   a[2] = leftupdown;
   a[3] = leftsideways;
-  Serial.println(a[3]);
+  //Serial.println(a[3]);
   a[4] = rightupdown;
   a[5] = rightsideways;
   //Serial.println(leftupdown);
@@ -338,7 +346,7 @@ void quad_bat(){
 
 void btn1_pressed(bool down) {
 	if(down) {
-		//Serial.println("btn1 down");
+		Serial.println("btn1 down");
     armed=0;
     uint8_t a[10]={0};
 	} //else {
@@ -377,4 +385,9 @@ void btn_center_pressed(bool down) {
 	} else {
 		Serial.println("center up");    
 	}
+}
+
+void knobs_update() {
+	Serial.print("Knob: ");
+	Serial.println(knob1.getCurrentPos());
 }

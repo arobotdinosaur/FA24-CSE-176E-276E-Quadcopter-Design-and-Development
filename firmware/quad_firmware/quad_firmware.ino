@@ -197,6 +197,7 @@ void loop() {
    // Serial.print(F(" "));
 
    //pid code here 
+   setpointPitchp = ((a[4] - 127) * (10 / 127))
    float errorPitch = setpointPitchp - pitch_corrected; 
    //if(Kip == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
       //integralp = 0; 
@@ -204,14 +205,13 @@ void loop() {
    //else{
     integralp = errorPitch * dt*0.001+integralp;
    //}
-
   float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
   //Serial.print(" gyro_raw_yaw:");
   //Serial.println(gyro_raw_yaw);
-
+    
     yaw_error = yaw_setpoint - gyro_angle_yaw;
     //Serial.print(yaw_error);
 
@@ -297,7 +297,7 @@ analogWrite(right_top, 0);
 void mixing(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-constrain(PIDp,-10,10);
+constrain(PIDp,-7,7);
 throttle_left_rear = throttle+PIDp;
 throttle_left_top = throttle + PIDp;
 throttle_right_rear = throttle - PIDp;
@@ -335,6 +335,7 @@ void startupRamp(){
 }
 
 void yawcontrol(){
+constrain(PIDy,-20,20);
 throttle_left_rear = throttle+PIDy;
 throttle_left_top = throttle - PIDy;
 throttle_right_rear = throttle - PIDy;
