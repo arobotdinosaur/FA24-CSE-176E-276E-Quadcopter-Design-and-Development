@@ -43,7 +43,7 @@
   float setpointPitchp = 0.0;
   float Kpp = 0.5; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
-  float Kdp = 0.15;//0.4, 0.1  0.06 0.05, 0,032
+  float Kdp = 0.25;//0.4, 0.1  0.06 0.05, 0,032
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -206,7 +206,8 @@ void loop() {
    //else{
     integralp = errorPitch * dt*0.001+integralp;
    //}
-  float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
+  //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
+  float derivativep = gyro_raw_pitch;
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
