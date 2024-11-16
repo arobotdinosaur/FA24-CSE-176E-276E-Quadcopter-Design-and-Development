@@ -32,6 +32,10 @@ int p_ad = 16;
 int i_ad = 18;
 int d_ad = 20;
 
+float Kp = 0.39; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+float Ki = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
+float Kd = 0.0;//0.4, 0.1  0.06 0.05, 0,032
+
 bool knob_down=0;
 uint32_t start_time = 0; 
 
@@ -168,8 +172,11 @@ void loop() {
   a[3] = leftsideways;
   //Serial.println(a[3]);
   a[4] = rightupdown;
-  Serial.println(a[4]);
+  //Serial.println(a[4]);
   a[5] = rightsideways;
+  a[6]=Kp*100; //Convert to int
+  a[7]=Kd*100;
+  a[8]=Ki*1000;
   //Serial.println(leftupdown);
 
   a[9] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8];
@@ -359,13 +366,61 @@ void btn1_pressed(bool down) {
 
 
 
+
 void btn_left_pressed(bool down) {
 	if(down) {
-		Serial.println("left down");
+    update_display();
+    lcd.print(knob1.getCurrentPos());
+    if(knob1.getCurrentPos()==1){
+      Kp=Kp+0.01;
+    lcd.print("Kp ");
+    lcd.print(Kp);
+    Serial.print("Kp");
+    Serial.println(Kp);
+    }
+    if(knob1.getCurrentPos()==2){
+      Kp=Kp-0.01;
+    lcd.print("Kp ");
+    lcd.print(Kp);
+    Serial.print("Kp");
+    Serial.println(Kp);
+    }
+    if(knob1.getCurrentPos()==3){
+    Kd=Kd+0.01;
+    lcd.print("Kd ");
+    lcd.print(Kd);
+    Serial.print("Kd");
+    Serial.println(Kd);
+    }
+    if(knob1.getCurrentPos()==4){
+    Kd=Kd-0.01;
+    lcd.print("Kd ");
+    lcd.print(Kd);
+    Serial.print("Kd");
+    Serial.println(Kd);
+    }
+    if(knob1.getCurrentPos()==5){
+    Ki=Ki+0.001;
+    lcd.print("Ki*10 ");//So stupid that this is necessary
+    lcd.print(Ki*10);
+    Serial.print("Ki*10");
+    Serial.println(Ki*10);
+    }
+    if(knob1.getCurrentPos()==6){
+    Ki=Ki-0.001;
+    lcd.print("Ki*10 ");
+    lcd.print(Ki*10);
+    Serial.print("Ki*10");
+    Serial.println(Ki*10);
+    }
+		//Serial.println("left down");;
+    //Kp=Kp+knob1.getCurrentPos()*0.01;
+    //knob1.setCurrentPos(0);
 		//column = (column - 1) %16;
-		update_display();
+		//update_display();
+    //lcd.print(Kp);
 	} else {
-		Serial.println("left up");
+		//Serial.println("left up");
 	}
 }
 

@@ -169,8 +169,8 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
-    Serial.print("gyro_raw_pitch:");
-    Serial.println(gyro_raw_pitch*RAD_TO_DEG);
+    //Serial.print("gyro_raw_pitch:");
+    //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     
     double gyro_angle_pitch = cf_pitch + (gyro_raw_pitch * RAD_TO_DEG)*dt*0.001;
@@ -187,14 +187,6 @@ void loop() {
     //Serial.print("gyro_angle_yaw:");
     //Serial.println(gyro_angle_yaw);
     pitch_corrected = pitch_offset + cf_pitch; 
-    //error values when running lsm.setAccelCompositeFilter 
-    //lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_HPF, LSM6DS_CompositeFilter_ODR_DIV_800);
-    
-
-    Serial.println(pitch_corrected);
-   // Serial.print(F(" "));
-    //Serial.println(yaw_corrected);
-   // Serial.print(F(" "));
 
    //pid code here 
    setpointPitchp = ((a[4] - 127) * (0.0787401));
@@ -211,8 +203,8 @@ void loop() {
   PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
   previousErrorp = errorPitch;
 
-  Serial.print(" dp ");
-  Serial.println(derivativep);
+  //Serial.print(" dp ");
+  //Serial.println(derivativep);
   //Serial.print(" gyro_raw_yaw:");
   //Serial.println(gyro_raw_yaw);
     
@@ -257,8 +249,14 @@ void loop() {
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
-      int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
+      //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
       yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
+      float a6=a[6];//Stop the values from getting rounded away
+      Kpp=a6/100;
+      Serial.println(a[6]);
+      Serial.println(Kpp);
+      Kdp=a[7]/100;
+      Kip=a[8]/1000;
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
       radiotimer=0.0;
