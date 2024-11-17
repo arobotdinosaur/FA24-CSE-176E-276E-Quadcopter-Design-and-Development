@@ -200,7 +200,14 @@ void loop() {
    //}
   //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   float derivativep = gyro_raw_pitch*RAD_TO_DEG;
-  PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep;
+  float max_derivative = 2.5;
+  derivativep = constrain(derivativep, -max_derivative, max_derivative); //constrain d
+  static float last_derivative = 0.0;
+  float filtered_derivative = 0.8 * last_derivative + 0.2 * gyro_raw_pitch * RAD_TO_DEG;
+  last_derivative = filtered_derivative; //smoothening derivative term
+  float max_integral = 10;
+  integralp = constrain(integralp, -max_integral, max_integral); //constrain i
+  PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * filtered_derivative; //changed from derivativep to filtered_derivative
   previousErrorp = errorPitch;
 
   Serial.print("d:");
