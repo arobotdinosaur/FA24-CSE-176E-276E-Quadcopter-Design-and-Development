@@ -34,7 +34,7 @@ int d_ad = 20;
 
 float Kp = 0.39; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
 float Ki = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
-float Kd = 0.0;//0.4, 0.1  0.06 0.05, 0,032
+float Kd = 0.3;//0.4, 0.1  0.06 0.05, 0,032
 
 bool knob_down=0;
 uint32_t start_time = 0; 

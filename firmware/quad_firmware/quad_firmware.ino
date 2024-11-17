@@ -41,9 +41,9 @@
   float PIDy = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.6; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+  float Kpp = 0.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
-  float Kdp = 1;//0.4, 0.1  0.06 0.05, 0,032
+  float Kdp = 0;//0.4, 0.1  0.06 0.05, 0,032
   float integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -199,12 +199,14 @@ void loop() {
     integralp = errorPitch * dt*0.001+integralp;
    //}
   //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
-  float derivativep = gyro_raw_pitch;
-  PIDp = (Kpp * errorPitch) + Kip * integralp + Kdp * derivativep;
+  float derivativep = gyro_raw_pitch*RAD_TO_DEG;
+  PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep;
   previousErrorp = errorPitch;
 
-  //Serial.print(" dp ");
-  //Serial.println(derivativep);
+  Serial.print("d:");
+  Serial.println(derivativep*Kdp);
+  Serial.print("p:");
+  Serial.println(errorPitch*Kpp);
   //Serial.print(" gyro_raw_yaw:");
   //Serial.println(gyro_raw_yaw);
     
@@ -252,11 +254,13 @@ void loop() {
       //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
       yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
       float a6=a[6];//Stop the values from getting rounded away
+      float a7=a[7];
+      float a8=a[8];
       Kpp=a6/100;
-      Serial.println(a[6]);
-      Serial.println(Kpp);
-      Kdp=a[7]/100;
-      Kip=a[8]/1000;
+      //Serial.println(a[6]);
+      //Serial.println(Kpp);
+      Kdp=a7/100;
+      Kip=a8/1000;
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
       radiotimer=0.0;
