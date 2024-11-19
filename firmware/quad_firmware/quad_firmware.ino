@@ -19,6 +19,7 @@
   float pitch_rate = 0.0;
   float roll=0.0;
   float yaw = 0.0;
+  float target_yaw = 0.0;
   QuadClass_LSM6DSOX lsm = QuadClass_LSM6DSOX();
   Adafruit_Simple_AHRS *ahrs = NULL;
   Adafruit_Sensor *_accel = NULL;
@@ -39,9 +40,10 @@
   float PIDp = 0.0;
   float PIDr = 0.0;
   float PIDy = 0.0;
+  float PIDy2 = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
-  float Kpp = 0.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+  float Kpp = 00.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
   float Kdp = 0;//0.4, 0.1  0.06 0.05, 0,032
   double integralp = 0.0;
@@ -97,6 +99,7 @@ void setupSensor()
   }
   _accel = lsm.getAccelerometerSensor();
   _gyro = lsm.getGyroSensor();
+
 
   ahrs = new Adafruit_Simple_AHRS(_accel, _mag, _gyro);
 #
@@ -166,8 +169,13 @@ void loop() {
     sensors_event_t gyro_event;
     _gyro->getEvent(&gyro_event);
     lsm.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
-    lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+    lsm.setGyroDataRate(LSM6DS_RATE_208_HZ);
 
+    sensors_event_t accel;
+    _accel->getEvent(&accel);
+    lsm.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
+    lsm.setAccelDataRate(LSM6DS_RATE_208_HZ);
+    lsm.setAccelCompositeFilter(LSM6DS_CompositeFilter_LPF2, LSM6DS_CompositeFilter_ODR_DIV_800);
     double gyro_raw_pitch = gyro_event.gyro.y; //.z was there initially, may need pid change
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
@@ -186,7 +194,7 @@ void loop() {
     //Serial.println(cf_pitch);
     
     //Serial.print("cf roll:");
-   // Serial.println(cf_roll);
+    //Serial.println(cf_roll);
     //Serial.print("gyro_angle_yaw:");
     //Serial.println(gyro_angle_yaw);
     pitch_corrected = pitch_offset + cf_pitch; 
@@ -219,20 +227,23 @@ void loop() {
   //Serial.print(" gyro_raw_yaw:");
   //Serial.println(gyro_raw_yaw);
     
-    yaw_error = yaw_setpoint - gyro_angle_yaw;
+    yaw_error = yaw_setpoint - gyro_angle_yaw*RAD_TO_DEG;
     //Serial.print(yaw_error);
-
+  //Serial.println(yaw_setpoint);
     integralYaw += yaw_error * dt;
   
   float derivativeYaw = (yaw_error - previousYawError) / dt;
 
+  float yaw_rate_error = yaw_setpoint-gyro_raw_yaw;
+
   PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
+  PIDy2 = Kpy*yaw_rate_error;
 
   previousYawError = yaw_error;
   //Serial.println(a[1]);
   if (a[1]==1){
   //mixing();
-  yawcontrol();
+  yawcontrol2();
   }
   }
 
@@ -261,13 +272,14 @@ void loop() {
       //analogWrite(LED2, 200);
       throttle=a[2];
       //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
-      yaw_setpoint = (a[3]-122)*1.41176470588 ;//conversion to deg
+      yaw_setpoint = (a[3]-123)*0.1 ;//conversion to deg
+      Serial.println(a[3]);
       float a6=a[6];//Stop the values from getting rounded away
       float a7=a[7];
       float a8=a[8];
-      //Kpp=a6/100;
-      //Kdp=a7/100;
-      //Kip=a8/1000;
+      Kpp=a6/100;
+      Kdp=a7/100;
+      Kip=a8/1000;
       Kpy=a6/100;
       Kdy=a7/100;
       Kiy=a8/1000;
@@ -344,7 +356,7 @@ void startupRamp(){
 }
 
 void yawcontrol(){
-constrain(PIDy,-10,10);
+constrain(PIDy,-20,20);
 throttle_left_rear = throttle+PIDy;
 throttle_left_top = throttle - PIDy;
 throttle_right_rear = throttle - PIDy;
@@ -362,3 +374,24 @@ analogWrite(right_top, throttle_right_top);
 
 
 }
+
+void yawcontrol2(){
+//constrain(PIDy2,-10,10);
+throttle_left_rear = throttle+PIDy2;
+throttle_left_top = throttle - PIDy2;
+throttle_right_rear = throttle - PIDy2;
+throttle_right_top = throttle + PIDy2;
+//Serial.print("PIDyaw:");
+//Serial.println(PIDy);
+throttle_left_rear = constrain(throttle_left_rear, 0, 255);
+throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
+throttle_left_top = constrain(throttle_left_top, 0,255);
+throttle_right_top = constrain(throttle_right_top, 0,255);
+analogWrite(left_rear, throttle_left_rear);
+analogWrite(right_rear, throttle_right_rear);
+analogWrite(left_top, throttle_left_top);
+analogWrite(right_top, throttle_right_top);
+
+
+}
+
