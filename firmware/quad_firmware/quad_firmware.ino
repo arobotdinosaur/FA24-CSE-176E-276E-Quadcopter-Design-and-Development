@@ -27,7 +27,7 @@
 
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
-  float gain = 0.90; 
+  float gain = 0.95; 
 
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
@@ -49,7 +49,7 @@
   float previousErrorp = 0.0;
   float max_proportional = 30.0;
   float max_derivative = 40.0;
-  float max_integral = 0.0;
+  float max_integral = 100.0;
   
   float Kpy = 0.4; //0.5
   float Kiy = 0.0; //0.04
@@ -195,12 +195,12 @@ void loop() {
    setpointPitchp = ((a[4] - 127) * (0.0787401));
    //Serial.println(setpointPitchp);
    float errorPitch = setpointPitchp - pitch_corrected; 
-   //if(Kip == 0 ||a[2]<5){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      //integralp = 0; 
-   //}
-   //else{
+   if(Kip == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
+      integralp = 0; 
+   }
+   else{
     integralp = errorPitch * dt*0.001+integralp;
-   //}
+   }
   //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   float derivativep = gyro_raw_pitch*RAD_TO_DEG;
   //derivativep = constrain(derivativep, -max_derivative, max_derivative); //constrain d
@@ -208,7 +208,7 @@ void loop() {
   //float filtered_derivative = 0.8 * last_derivative + 0.2 * gyro_raw_pitch * RAD_TO_DEG;
   //last_derivative = filtered_derivative; //smoothening derivative term
   //float max_integral = 10;
-  //integralp = constrain(integralp, -max_integral, max_integral); //constrain i
+  integralp = constrain(integralp, -max_integral, max_integral); //constrain i
   PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep; //changed from derivativep to filtered_derivative
   previousErrorp = errorPitch;
 
@@ -231,8 +231,8 @@ void loop() {
   previousYawError = yaw_error;
   //Serial.println(a[1]);
   if (a[1]==1){
-  mixing();
-  //yawcontrol();
+  //mixing();
+  yawcontrol();
   }
   }
 
@@ -265,13 +265,13 @@ void loop() {
       float a6=a[6];//Stop the values from getting rounded away
       float a7=a[7];
       float a8=a[8];
-      Kpp=a6/100;
-      //Serial.println(a[6]);
-      //Serial.println(Kpp);
-      Kdp=a7/100;
-      Kip=a8/1000;
-      //Serial.print("Ki");
-      //Serial.println(Kip);
+      //Kpp=a6/100;
+      //Kdp=a7/100;
+      //Kip=a8/1000;
+      Kpy=a6/100;
+      Kdy=a7/100;
+      Kiy=a8/1000;
+
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
       radiotimer=0.0;
@@ -314,7 +314,7 @@ analogWrite(right_top, 0);
 void mixing(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-//constrain(PIDp,-10,10);
+constrain(PIDp,-5,5);
 throttle_left_rear = throttle+PIDp;
 throttle_left_top = throttle + PIDp;
 throttle_right_rear = throttle - PIDp;
@@ -330,14 +330,6 @@ analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
 
-//Serial.print("right_rear:");
-//Serial.println(throttle_right_rear);
-//Serial.print("left_rear:");
-//Serial.println(throttle_left_rear);
-//Serial.print("left_top:");
-//Serial.println(throttle_left_top);
-//Serial.print("right_top:");
-//Serial.println(throttle_right_top);
 }
 
 void startupRamp(){
@@ -352,7 +344,7 @@ void startupRamp(){
 }
 
 void yawcontrol(){
-//constrain(PIDy,-20,20);
+constrain(PIDy,-10,10);
 throttle_left_rear = throttle+PIDy;
 throttle_left_top = throttle - PIDy;
 throttle_right_rear = throttle - PIDy;
@@ -368,12 +360,5 @@ analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
 
-//Serial.print("right_rear:");
-//Serial.println(throttle_right_rear);
-//Serial.print("left_rear:");
-//Serial.println(throttle_left_rear);
-//Serial.print("left_top:");
-//Serial.println(throttle_left_top);
-//Serial.print("right_top:");
-//Serial.println(throttle_right_top);
+
 }
