@@ -46,6 +46,8 @@
   float Kpp = 00.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
   float Kdp = 0;//0.4, 0.1  0.06 0.05, 0,032
+  float previous_yaw_rate_error = 0.0;
+  float derivative_yaw_rate = 0.0;
   double integralp = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
@@ -55,7 +57,7 @@
   
   float Kpy = 0.4; //0.5
   float Kiy = 0.0; //0.04
-  float Kdy = 0.6;//0.4
+  float Kdy = 1.0;//0.4
   double yaw_setpoint = 0.0;  // The desired yaw rate (usually set to 0)
   float yaw_rate = 0.0;      // The current yaw rate (from the gyroscope)
   float yaw_error = 0.0;     // The difference between desired and actual yaw rate
@@ -219,7 +221,6 @@ void loop() {
   integralp = constrain(integralp, -max_integral, max_integral); //constrain i
   PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep; //changed from derivativep to filtered_derivative
   previousErrorp = errorPitch;
-
   //Serial.print("d:");
   //Serial.println(derivativep*Kdp);
   //Serial.print("p:");
@@ -235,10 +236,15 @@ void loop() {
   float derivativeYaw = (yaw_error - previousYawError) / dt;
 
   float yaw_rate_error = yaw_setpoint-gyro_raw_yaw;
+  previous_yaw_rate_error = yaw_rate_error;
+  
+  derivative_yaw_rate = (yaw_rate_error-previous_yaw_rate_error)/dt;
+
 
   PIDy = Kpy * yaw_error + Kiy * integralYaw + Kdy * derivativeYaw;
-  PIDy2 = Kpy*yaw_rate_error;
+  PIDy2 = Kpy*yaw_rate_error+Kdy*derivative_yaw_rate;
 
+  float yaw_control_derivative = gyro_raw_yaw/dt;
   previousYawError = yaw_error;
   //Serial.println(a[1]);
   if (a[1]==1){
@@ -274,7 +280,7 @@ void loop() {
       throttle=a[2];
       //Serial.println(a[2]);
       //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
-      yaw_setpoint = (a[3]-123)*0.1 ;//conversion to deg
+      yaw_setpoint = (a[3]-123)*0.03 ;//conversion to deg
       //Serial.println(a[3]);
       float a6=a[6];//Stop the values from getting rounded away
       float a7=a[7];
@@ -285,7 +291,8 @@ void loop() {
       //Kpy=a6/100;
       //Kdy=a7/100;
       //Kiy=a8/1000;
-      Kpy = a[9]; 
+      Kpy = a[9];
+      //Kdy = a[10]; 
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
       radiotimer=0.0;
@@ -378,7 +385,7 @@ analogWrite(right_top, throttle_right_top);
 }
 
 void yawcontrol2(){
-//constrain(PIDy2,-10,10);
+constrain(PIDy2,-20,20);
 throttle_left_rear = throttle+PIDy2;
 throttle_left_top = throttle - PIDy2;
 throttle_right_rear = throttle - PIDy2;
