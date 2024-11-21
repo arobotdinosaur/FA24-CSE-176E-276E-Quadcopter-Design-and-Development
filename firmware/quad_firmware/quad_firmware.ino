@@ -32,8 +32,10 @@
 
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
-  double pitch_offset = 1.88+0.51; 
+  double pitch_offset = 1.88+0.51;
+  double roll_offset = 0.0; 
   double pitch_corrected = 0.0; 
+  double roll_corrected = 0.0;
   double gyro_angle_yaw = 0.0;
 
   //pid params tuning 
@@ -43,12 +45,17 @@
   float PIDy2 = 0.0;
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
+  float setpointRoll = 0.0;
   float Kpp = 00.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
   float Kdp = 0;//0.4, 0.1  0.06 0.05, 0,032
+  float Kpr = 0.0;
+  float Kdr = 0.0;
+  float Kir = 0.0;
   float previous_yaw_rate_error = 0.0;
   float derivative_yaw_rate = 0.0;
   double integralp = 0.0;
+  double integralr = 0.0;
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
   float max_proportional = 30.0;
@@ -200,19 +207,24 @@ void loop() {
     //Serial.print("gyro_angle_yaw:");
     //Serial.println(gyro_angle_yaw);
     pitch_corrected = pitch_offset + cf_pitch; 
+    roll_corrected = roll_offset+cf_roll;
 
    //pid code here 
    setpointPitchp = ((a[4] - 127) * (0.0787401));
+   setpointRoll = ((a[5]-127)*0.0787401);
    //Serial.println(setpointPitchp);
-   float errorPitch = setpointPitchp - pitch_corrected; 
+   float errorPitch = setpointRoll - pitch_corrected; 
+   float errorRoll = setpointRoll - roll_corrected;
    if(Kip == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
       integralp = 0; 
    }
    else{
     integralp = errorPitch * dt*0.001+integralp;
+
    }
   //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
   float derivativep = gyro_raw_pitch*RAD_TO_DEG;
+  float derivativer = gyro_raw_roll*RAD_TO_DEG;
   //derivativep = constrain(derivativep, -max_derivative, max_derivative); //constrain d
   //static float last_derivative = 0.0;
   //float filtered_derivative = 0.8 * last_derivative + 0.2 * gyro_raw_pitch * RAD_TO_DEG;
@@ -221,6 +233,7 @@ void loop() {
   integralp = constrain(integralp, -max_integral, max_integral); //constrain i
   PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep; //changed from derivativep to filtered_derivative
   previousErrorp = errorPitch;
+  PIDr= (Kpp * errorRoll) + Kip * integralr - Kdp * derivativer;
   //Serial.print("d:");
   //Serial.println(derivativep*Kdp);
   //Serial.print("p:");
