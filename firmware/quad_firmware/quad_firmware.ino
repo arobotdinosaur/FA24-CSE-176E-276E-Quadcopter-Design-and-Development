@@ -248,8 +248,8 @@ void loop() {
   previousYawError = yaw_error;
   //Serial.println(a[1]);
   if (a[1]==1){
-  //mixing();
-  yawcontrol2();
+  mixing();
+  //yawcontrol2();
   }
   }
 
