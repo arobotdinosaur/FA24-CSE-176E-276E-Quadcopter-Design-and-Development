@@ -259,31 +259,33 @@ void loop() {
  if (len = rfAvailable()){
   //Serial.print("Read packets:");
   //Serial.println(len);
-  if(len!=10){
+  if(len!=15){
   rfFlush();
  }  
  else{
     rfRead(a, len);
     //Serial.println("a9");
     //Serial.println(a[9]);
-    if ((a[0]==magicNumber) && (a[1]==1) && (a[9]==(a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8]))){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
+    //Serial.println(len);
+    if ((a[0]==magicNumber) && (a[1]==1) && (a[14]==(a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8]^a[9]^a[10]^a[11]^a[12]^a[13]))){//adding && len==4 check fails - len seems to be assigned to 130 instead... sometimes 126
       //start_time = 0; 
       analogWrite(LED1, 200);
       //analogWrite(LED2, 200);
       throttle=a[2];
+      //Serial.println(a[2]);
       //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
       yaw_setpoint = (a[3]-123)*0.1 ;//conversion to deg
-      Serial.println(a[3]);
+      //Serial.println(a[3]);
       float a6=a[6];//Stop the values from getting rounded away
       float a7=a[7];
       float a8=a[8];
       Kpp=a6/100;
       Kdp=a7/100;
       Kip=a8/1000;
-      Kpy=a6/100;
-      Kdy=a7/100;
-      Kiy=a8/1000;
-
+      //Kpy=a6/100;
+      //Kdy=a7/100;
+      //Kiy=a8/1000;
+      Kpy = a[9]; 
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
       radiotimer=0.0;

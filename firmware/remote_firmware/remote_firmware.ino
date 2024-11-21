@@ -32,10 +32,11 @@ int p_ad = 16;
 int i_ad = 18;
 int d_ad = 20;
 
-float Kp = 10.0; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+float Kp = 13.0; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
 float Ki = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
 float Kd = 0.06;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
+float Kpy=5.0;
 
 bool knob_down=0;
 uint32_t start_time = 0; 
@@ -144,7 +145,7 @@ void loop() {
   //Serial.print("Battery Voltage:");
  // Serial.println(BAT_SENSE_PIN);
 
-  uint8_t a[10] = {0};
+  uint8_t a[15] = {0};
   a[0] = magicNumber;
 
   a[1]=armed;
@@ -178,9 +179,12 @@ void loop() {
   a[6]=Kp*100; //Convert to int
   a[7]=Kd*100;
   a[8]=Ki*1000;
+
+  a[9] = Kpy; 
+  
   //Serial.println(leftupdown);
 
-  a[9] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8];
+  a[14] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8]^a[9]^a[10]^a[11]^a[12]^a[13];
 
 
 
@@ -229,7 +233,7 @@ if (len = rfAvailable())
       if (b[2]=0){
         armed = 0;
       }
-      rfWrite(a,10);
+      rfWrite(a,15);
     }
     else{
       rfFlush();
@@ -311,8 +315,8 @@ void calibrate() {
   update_display();
 
   lcd.print("Calibration done!");
-  uint8_t a[10]={0};
-  rfWrite(a,10);
+  uint8_t a[15]={0};
+  rfWrite(a,15);
 
 
   /*
@@ -413,6 +417,20 @@ void btn_left_pressed(bool down) {
     lcd.print(Ki*10);
     Serial.print("Ki*10");
     Serial.println(Ki*10);
+    }
+    if(knob1.getCurrentPos()==7){
+      Kpy = Kpy+1.0;
+      lcd.print("Kpy ");
+      lcd.print(Kpy);
+      Serial.print("Kpy");
+      Serial.println(Kpy);
+    }
+    if(knob1.getCurrentPos()==8){
+      Kpy = Kpy-1.0;
+      lcd.print("Kpy ");
+      lcd.print(Kpy);
+      Serial.print("Kpy");
+      Serial.println(Kpy);
     }
 		//Serial.println("left down");;
     //Kp=Kp+knob1.getCurrentPos()*0.01;
