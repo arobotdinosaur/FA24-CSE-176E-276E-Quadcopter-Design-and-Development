@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>
 #include <QuadClass_LSM6DSOX.h>
 
-  uint8_t a[10] = {0};
+  uint8_t a[15] = {0};
   const int left_rear = 8;
   const int right_rear = 3;
   const int left_top = 5; 
@@ -28,7 +28,7 @@
 
   //complementary filter param 
   #define RAD_TO_DEG 57.295779513082320876798154814105
-  float gain = 0.95; 
+  float gain = 0.98; 
 
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
@@ -85,20 +85,7 @@
 //sensors in imu
 void setupSensor()
 {
-  // Set data rate for G and XL.  Set G low-pass cut off.  (Section 7.12)
- // lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG1_G,  ODR_952 | G_BW_G_10 );  //952hz ODR + 63Hz cuttof
 
-  // Enable the XL (Section 7.23)
-  //lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG5_XL, XL_ENABLE_X | XL_ENABLE_Y | XL_ENABLE_Z);
-
-  // Set low-pass XL filter frequency divider (Section 7.25)
-  //lsm.write8(XGTYPE, Adafruit_LSM9DS1::LSM9DS1_REGISTER_CTRL_REG7_XL, HR_MODE | XL_LP_ODR_RATIO_9);
-  
-
-  // This only sets range of measurable values for each sensor.  Setting these manually (I.e., without using these functions) will cause incorrect output from the library.
- // lsm.setupAccel(Adafruit_LSM9DS1::LSM9DS1_ACCELRANGE_2G);
-  //lsm.setupMag(Adafruit_LSM9DS1::LSM9DS1_MAGGAIN_4GAUSS);
- // lsm.setupGyro(Adafruit_LSM9DS1::LSM9DS1_GYROSCALE_245DPS);
 
  if (!lsm.begin_I2C()) {
    // Serial.println("Failed to find LSM6DSOX chip");
@@ -199,15 +186,24 @@ void loop() {
 
     cf_pitch = (gain * gyro_angle_pitch) + (1.0-gain)*pitch;
     cf_roll = (gain * gyro_angle_roll) + (1.0-gain)*roll;
-    //Serial.print(" cf_pitch:");
-    //Serial.println(cf_pitch);
+    Serial.print(" cf_pitch:");
+    Serial.println(cf_pitch);
     
-    //Serial.print("cf roll:");
-    //Serial.println(cf_roll);
+    Serial.print("cf roll:");
+    Serial.println(cf_roll);
     //Serial.print("gyro_angle_yaw:");
     //Serial.println(gyro_angle_yaw);
+    if (a[13]==1){
+      pitch_offset=-cf_pitch;
+      roll_offset=-cf_roll;
+    }
+
     pitch_corrected = pitch_offset + cf_pitch; 
     roll_corrected = roll_offset+cf_roll;
+    Serial.print("pitch_corrected:");
+    Serial.println(pitch_corrected);
+    Serial.print("roll_corrected:");
+    Serial.println(roll_corrected);
 
    //pid code here 
    setpointPitchp = ((a[4] - 127) * (0.0787401));
@@ -220,6 +216,13 @@ void loop() {
    }
    else{
     integralp = errorPitch * dt*0.001+integralp;
+
+   }
+      if(Kir == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
+      integralr = 0; 
+   }
+   else{
+    integralr = errorRoll * dt*0.001+integralr;
 
    }
   //float derivativep = (errorPitch - previousErrorp) / (dt*0.001);
@@ -261,7 +264,7 @@ void loop() {
   previousYawError = yaw_error;
   //Serial.println(a[1]);
   if (a[1]==1){
-  mixing();
+  flying();
   //yawcontrol2();
   }
   }
@@ -314,10 +317,10 @@ void loop() {
       rfFlush();
     }
    }
-  //Serial.print("-90:");
-  //Serial.println(-90);
-  //Serial.print("90:");
-  //Serial.println(90);
+  Serial.print("-90:");
+  Serial.println(-90);
+  Serial.print("90:");
+  Serial.println(90);
   }
 
   uint8_t b[4] = {0};
@@ -377,25 +380,6 @@ void startupRamp(){
   }
 }
 
-void yawcontrol(){
-constrain(PIDy,-20,20);
-throttle_left_rear = throttle+PIDy;
-throttle_left_top = throttle - PIDy;
-throttle_right_rear = throttle - PIDy;
-throttle_right_top = throttle + PIDy;
-//Serial.print("PIDyaw:");
-//Serial.println(PIDy);
-throttle_left_rear = constrain(throttle_left_rear, 0, 255);
-throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
-throttle_left_top = constrain(throttle_left_top, 0,255);
-throttle_right_top = constrain(throttle_right_top, 0,255);
-analogWrite(left_rear, throttle_left_rear);
-analogWrite(right_rear, throttle_right_rear);
-analogWrite(left_top, throttle_left_top);
-analogWrite(right_top, throttle_right_top);
-
-
-}
 
 void yawcontrol2(){
 constrain(PIDy2,-20,20);
@@ -413,7 +397,27 @@ analogWrite(left_rear, throttle_left_rear);
 analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
-
-
 }
 
+void flying(){
+//Serial.println("Throttle:");
+//Serial.print(throttle);
+constrain(PIDp,-5,5);
+constrain(PIDr,-5,5);
+constrain(PIDy2,-10,10);
+throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
+throttle_left_top = throttle + PIDp+PIDr-PIDy2;
+throttle_right_rear = throttle - PIDp-PIDr-PIDy2;
+throttle_right_top = throttle - PIDp+PIDr+PIDy2;
+//Serial.print("PRE_PID:");
+//Serial.println(PIDp);
+throttle_left_rear = constrain(throttle_left_rear, 0, 255);
+throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
+throttle_left_top = constrain(throttle_left_top, 0,255);
+throttle_right_top = constrain(throttle_right_top, 0,255);
+analogWrite(left_rear, throttle_left_rear);
+analogWrite(right_rear, throttle_right_rear);
+analogWrite(left_top, throttle_left_top);
+analogWrite(right_top, throttle_right_top);
+
+}

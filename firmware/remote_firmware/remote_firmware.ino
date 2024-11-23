@@ -4,6 +4,7 @@
 #include <EEPROM.h>
 //serLCD lcd; //idk why but this doesn't compile. Maybe changing it to SerLCD fixes it? Removing it doesn't seem to cause any issue.
 
+uint8_t a[15] = {0};
 //copied from the knob example
 void knobs_update();
 void knob_pressed(bool);
@@ -36,12 +37,13 @@ float Kp = 0.7; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.2
 float Ki = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
 float Kd = 0.1;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
-float Kpy=76.0;
+float Kpy=5.0;
 
 bool knob_down=0;
 uint32_t start_time = 0; 
 
 //data corresponding to max and min gimbal (top-bottom)
+
 uint8_t gimbal_value_l = 0;
 uint8_t gimbal_value_r = 0;
 int16_t max_gimbal_l_vert = 1023;  //uint8_t only goes to 255 so I changed this data type. Also, we want a signed int - we get negative values sometimes
@@ -109,6 +111,7 @@ void setup() {
   btn_left_cb =  btn_left_pressed;
 	btn_right_cb = btn_right_pressed;
 	btn_center_cb =  btn_center_pressed;
+  btn_down_cb = btn_down_pressed;
   //bool btn_left= btn_left_pressed;
   //testing for gimbal calibration
   /* while (millis() < 1000) {
@@ -507,6 +510,18 @@ void btn_center_pressed(bool down) {
 		update_display();
 	} else {
 		Serial.println("center up");    
+	}
+}
+
+void btn_down_pressed(bool down) {
+	if(down) {
+		Serial.println("bottom down");
+    a[13]=1;
+    rfWrite(a,15);
+	} else {
+    a[13]=0;
+    rfWrite(a,15);
+		Serial.println("bottom up");    
 	}
 }
 
