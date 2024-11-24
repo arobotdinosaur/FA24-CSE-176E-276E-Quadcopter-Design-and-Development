@@ -186,11 +186,11 @@ void loop() {
 
     cf_pitch = (gain * gyro_angle_pitch) + (1.0-gain)*pitch;
     cf_roll = (gain * gyro_angle_roll) + (1.0-gain)*roll;
-    Serial.print(" cf_pitch:");
-    Serial.println(cf_pitch);
+    //Serial.print(" cf_pitch:");
+    //Serial.println(cf_pitch);
     
-    Serial.print("cf roll:");
-    Serial.println(cf_roll);
+    //Serial.print("cf roll:");
+    //Serial.println(cf_roll);
     //Serial.print("gyro_angle_yaw:");
     //Serial.println(gyro_angle_yaw);
     if (a[13]==1){
@@ -200,10 +200,10 @@ void loop() {
 
     pitch_corrected = pitch_offset + cf_pitch; 
     roll_corrected = roll_offset+cf_roll;
-    Serial.print("pitch_corrected:");
-    Serial.println(pitch_corrected);
-    Serial.print("roll_corrected:");
-    Serial.println(roll_corrected);
+    //Serial.print("pitch_corrected:");
+    //Serial.println(pitch_corrected);
+    //Serial.print("roll_corrected:");
+    //Serial.println(roll_corrected);
 
    //pid code here 
    setpointPitchp = ((a[4] - 127) * (0.0787401));
@@ -303,7 +303,7 @@ void loop() {
       float a8=a[8];
       Kpp=a6/100;
       Kdp=a7/100;
-      Kip=a8/1000;
+      Kip=a8/100;
       //Kpy=a6/100;
       //Kdy=a7/100;
       //Kiy=a8/1000;
@@ -317,10 +317,10 @@ void loop() {
       rfFlush();
     }
    }
-  Serial.print("-90:");
-  Serial.println(-90);
-  Serial.print("90:");
-  Serial.println(90);
+  //Serial.print("-90:");
+  //Serial.println(-90);
+  //Serial.print("90:");
+  //Serial.println(90);
   }
 
   uint8_t b[4] = {0};
@@ -335,7 +335,7 @@ void loop() {
   rfWrite(b,4);
   timer = 0;
   }
-  if (radiotimer > 2000){
+  if (radiotimer > 1000){
   a[1]=0;
 throttle=0;
 PIDy=0;
@@ -351,7 +351,7 @@ analogWrite(right_top, 0);
 void mixing(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-constrain(PIDp,-5,5);
+//PIDp=constrain(PIDp,-5,5);
 throttle_left_rear = throttle+PIDp;
 throttle_left_top = throttle + PIDp;
 throttle_right_rear = throttle - PIDp;
@@ -382,7 +382,7 @@ void startupRamp(){
 
 
 void yawcontrol2(){
-constrain(PIDy2,-20,20);
+//PIDy=constrain(PIDy2,-20,20);
 throttle_left_rear = throttle+PIDy2;
 throttle_left_top = throttle - PIDy2;
 throttle_right_rear = throttle - PIDy2;
@@ -402,9 +402,10 @@ analogWrite(right_top, throttle_right_top);
 void flying(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
-constrain(PIDp,-5,5);
-constrain(PIDr,-5,5);
-constrain(PIDy2,-10,10);
+PIDp=constrain(PIDp,-40,40);
+PIDr=constrain(PIDr,-40,40);
+//PIDy2=constrain(PIDy2,-10,10);
+throttle=constrain(throttle,0,255);
 throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;

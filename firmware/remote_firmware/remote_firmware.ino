@@ -181,7 +181,7 @@ void loop() {
   a[5] = rightsideways;
   a[6]=Kp*100; //Convert to int
   a[7]=Kd*100;
-  a[8]=Ki*1000;
+  a[8]=Ki*100;
 
   a[9] = Kpy; 
   
@@ -408,18 +408,18 @@ void btn_left_pressed(bool down) {
     Serial.println(Kd);
     }
     if(knob1.getCurrentPos()==5){
-    Ki=Ki+0.001;
-    lcd.print("Ki*10 ");//So stupid that this is necessary
-    lcd.print(Ki*10);
-    Serial.print("Ki*10");
-    Serial.println(Ki*10);
+    Ki=Ki+0.01;
+    lcd.print("Ki");
+    lcd.print(Ki);
+    Serial.print("Ki");
+    Serial.println(Ki);
     }
     if(knob1.getCurrentPos()==6){
-    Ki=Ki-0.001;
+    Ki=Ki-0.01;
     lcd.print("Ki*10 ");
     lcd.print(Ki*10);
-    Serial.print("Ki*10");
-    Serial.println(Ki*10);
+    Serial.print("Ki");
+    Serial.println(Ki);
     }
     if(knob1.getCurrentPos()==7){
       Kpy = Kpy+1.0;
@@ -479,18 +479,18 @@ void btn_right_pressed(bool down) {
     Serial.println(Kd);
     }
     if(knob1.getCurrentPos()==5){
-    Ki=Ki-0.001;
-    lcd.print("Ki*10 ");//So stupid that this is necessary
-    lcd.print(Ki*10);
-    Serial.print("Ki*10");
-    Serial.println(Ki*10);
+    Ki=Ki-0.01;
+    lcd.print("Ki");
+    lcd.print(Ki);
+    Serial.print("Ki");
+    Serial.println(Ki);
     }
     if(knob1.getCurrentPos()==6){
-    Ki=Ki+0.001;
-    lcd.print("Ki*10 ");
-    lcd.print(Ki*10);
-    Serial.print("Ki*10");
-    Serial.println(Ki*10);
+    Ki=Ki+0.01;
+    lcd.print("Ki");
+    lcd.print(Ki);
+    Serial.print("Ki");
+    Serial.println(Ki);
     }
 		//Serial.println("left down");;
     //Kp=Kp+knob1.getCurrentPos()*0.01;
