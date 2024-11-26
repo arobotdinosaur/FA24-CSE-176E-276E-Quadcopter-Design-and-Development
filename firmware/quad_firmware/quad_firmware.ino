@@ -103,7 +103,7 @@ void setupSensor()
 
 void setup() {
   //copied from rfecho
-  rfBegin(16);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
+  rfBegin(18);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
   uint8_t b[4] = {0};
@@ -358,10 +358,11 @@ throttle_right_rear = throttle - PIDp;
 throttle_right_top = throttle - PIDp;
 //Serial.print("PRE_PID:");
 //Serial.println(PIDp);
-throttle_left_rear = constrain(throttle_left_rear, 0, 255);
-throttle_right_rear = constrain(throttle_right_rear, 0 ,255);
-throttle_left_top = constrain(throttle_left_top, 0,255);
-throttle_right_top = constrain(throttle_right_top, 0,255);
+float ratio_scale_p = 255/(throttle + PIDp);
+throttle_left_rear = ratio_scale_p*constrain(throttle_left_rear, 0, 255);
+throttle_right_rear = ratio_scale_p*constrain(throttle_right_rear, 0 ,255);
+throttle_left_top = ratio_scale_p*constrain(throttle_left_top, 0,255);
+throttle_right_top = ratio_scale_p*constrain(throttle_right_top, 0,255);
 analogWrite(left_rear, throttle_left_rear);
 analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
@@ -402,10 +403,12 @@ analogWrite(right_top, throttle_right_top);
 void flying(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
+
 PIDp=constrain(PIDp,-40,40);
 PIDr=constrain(PIDr,-40,40);
+float ratio_scale = 255/(throttle + abs(PIDp + PIDr + PIDy2));
 //PIDy2=constrain(PIDy2,-10,10);
-throttle=constrain(throttle,0,255);
+throttle= constrain(throttle,0,225);
 throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;

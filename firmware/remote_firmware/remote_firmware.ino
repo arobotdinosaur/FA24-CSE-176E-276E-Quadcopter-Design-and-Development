@@ -62,7 +62,7 @@ int16_t min_gimbal_r_hor = 0;
 const int magicNumber = 57;
 const int magicNumber2 = 53;
 const int SERIAL_BAUD = 19200;
-const int channel = 16;
+const int channel = 18;
 
 const int BAT_SENSE_PIN = A7;
 const int max_bat_remote = 57;
