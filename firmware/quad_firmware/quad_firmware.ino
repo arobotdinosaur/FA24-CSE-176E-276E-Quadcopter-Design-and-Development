@@ -413,6 +413,14 @@ throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;
 throttle_right_top = throttle - PIDp+PIDr+PIDy2;
+
+int big1=max(throttle_left_rear,throttle_left_top);
+int big2=max(throttle_right_rear,throttle_right_top);
+int biggest=max(big1,big2);
+throttle_left_rear = throttle_left_rear-biggest;
+throttle_right_rear = throttle_right_rear-biggest;
+throttle_left_top = throttle_left_top-biggest;
+throttle_right_top = throttle_right_top-biggest;
 //Serial.print("PRE_PID:");
 //Serial.println(PIDp);
 throttle_left_rear = constrain(throttle_left_rear, 0, 255);
