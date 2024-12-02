@@ -33,9 +33,9 @@ int p_ad = 16;
 int i_ad = 18;
 int d_ad = 20;
 
-float Kp = 0.7; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
-float Ki = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
-float Kd = 0.1;//0.04 0.4, 0.1  0.06 0.05, 0,032
+float Kp = 0.9; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+float Ki = 0.02; //0.04, 0.05   0.01 0.002 , 0.0025
+float Kd = 0.13;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
 float Kpy=5.0;
 
@@ -227,6 +227,8 @@ if (len = rfAvailable())
     //Serial.println(len);
     if (b[0]==magicNumber2 && b[0] + b[1] +b[2] == b[3]){ 
       start_time = 0; 
+      uint8_t integrator = b[2];
+      Serial.println(integrator);
       //Serial.println(b[1]);885
       int quadbattery=b[1];
       quadbattery = map(quadbattery, min_bat_quad, max_bat_quad, 0, 100);

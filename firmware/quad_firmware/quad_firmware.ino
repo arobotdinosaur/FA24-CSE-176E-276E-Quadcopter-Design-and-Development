@@ -54,8 +54,8 @@
   float Kir = 0.0;
   float previous_yaw_rate_error = 0.0;
   float derivative_yaw_rate = 0.0;
-  double integralp = 0.0;
-  double integralr = 0.0;
+  double integralp = 200.00; //from 0.0
+  double integralr = 200.0; //from 0.0 
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
   float max_proportional = 30.0;
@@ -212,14 +212,14 @@ void loop() {
    float errorPitch = setpointRoll - pitch_corrected; 
    float errorRoll = setpointRoll - roll_corrected;
    if(Kip == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      integralp = 0; 
+      integralp = 200.0; 
    }
    else{
     integralp = errorPitch * dt*0.001+integralp;
 
    }
       if(Kir == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      integralr = 0; 
+      integralr = 200.00; 
    }
    else{
     integralr = errorRoll * dt*0.001+integralr;
@@ -233,7 +233,8 @@ void loop() {
   //float filtered_derivative = 0.8 * last_derivative + 0.2 * gyro_raw_pitch * RAD_TO_DEG;
   //last_derivative = filtered_derivative; //smoothening derivative term
   //float max_integral = 10;
-  integralp = constrain(integralp, -max_integral, max_integral); //constrain i
+  //integralp = constrain(integralp, -max_integral, max_integral); //constrain i
+  //Serial.println(integralp);
   PIDp = (Kpp * errorPitch) + Kip * integralp - Kdp * derivativep; //changed from derivativep to filtered_derivative
   previousErrorp = errorPitch;
   PIDr= (Kpp * errorRoll) + Kip * integralr - Kdp * derivativer;
@@ -326,7 +327,10 @@ void loop() {
   uint8_t b[4] = {0};
   b[0] = magicNumber2;
   b[1]= BAT_VALUE;
-  b[2]=1;
+  //Serial.println(integralp);
+  b[2]=integralp;
+  b[2] = b[2]/5;
+  //Serial.println(b[2]);
   b[3] = b[0]+b[1]+b[2];
   
   timer = timer+dt;
