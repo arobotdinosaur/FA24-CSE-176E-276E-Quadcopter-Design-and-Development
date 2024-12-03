@@ -32,7 +32,7 @@
 
   double cf_pitch = 0.0;
   double cf_roll = 0.0;
-  double pitch_offset = 1.88+0.51;
+  double pitch_offset = 0.0;//1.88+0.51;
   double roll_offset = 0.0; 
   double pitch_corrected = 0.0; 
   double roll_corrected = 0.0;
@@ -46,7 +46,7 @@
   //int PIDoutputp = 0;
   float setpointPitchp = 0.0;
   float setpointRoll = 0.0;
-  float Kpp = 00.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+  float Kpp = 0.0; //0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
   float Kip = 0.0; //0.04, 0.05   0.01 0.002 , 0.0025
   float Kdp = 0;//0.4, 0.1  0.06 0.05, 0,032
   float Kpr = 0.0;
@@ -54,8 +54,8 @@
   float Kir = 0.0;
   float previous_yaw_rate_error = 0.0;
   float derivative_yaw_rate = 0.0;
-  double integralp = 200.00; //from 0.0
-  double integralr = 200.0; //from 0.0 
+  double integralp = 00.00; //from 0.0
+  double integralr = 00.0; //from 0.0 
   float integral_errorp = 0.0;
   float previousErrorp = 0.0;
   float max_proportional = 30.0;
@@ -106,12 +106,14 @@ void setup() {
   rfBegin(18);  // Initialize ATmega128RFA1 radio on channel 11 (can be 11-26)
   int disarm = 1;
   disarm = 0;
-  uint8_t b[4] = {0};
+  uint8_t b[6] = {0};
   b[0] = magicNumber2;
   b[1]= 57;
   b[2]=disarm;
-  b[3] = b[0]+b[1]+b[2];
-  rfWrite(b,4);
+  b[3]=0;
+  b[4]=0;
+  b[5] = b[0]^b[1]^b[2]^b[3]^b[4];
+  rfWrite(b,6);
 
   //rear is where the 6 pins are sticking out
   const int SERIAL_BAUD = 19200 ;        // Baud rate for serial port 
@@ -212,14 +214,14 @@ void loop() {
    float errorPitch = setpointRoll - pitch_corrected; 
    float errorRoll = setpointRoll - roll_corrected;
    if(Kip == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      integralp = 200.0; 
+      integralp = 0.0; 
    }
    else{
     integralp = errorPitch * dt*0.001+integralp;
 
    }
-      if(Kir == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
-      integralr = 200.00; 
+      if(a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
+      integralr = 0.00; 
    }
    else{
     integralr = errorRoll * dt*0.001+integralr;
@@ -327,16 +329,17 @@ void loop() {
   uint8_t b[4] = {0};
   b[0] = magicNumber2;
   b[1]= BAT_VALUE;
-  //Serial.println(integralp);
-  b[2]=integralp;
-  b[2] = b[2]/5;
+  //Serial.println(integralr);
+  b[2]=0;
+  b[3] = integralp/5;
+  b[4] = integralr/5;
   //Serial.println(b[2]);
-  b[3] = b[0]+b[1]+b[2];
+  b[5] = b[0]^b[1]^b[2]^b[3]^b[4];
   
   timer = timer+dt;
   radiotimer = radiotimer+dt;
   if (timer>50){
-  rfWrite(b,4);
+  rfWrite(b,6);
   timer = 0;
   }
   if (radiotimer > 1000){
@@ -408,11 +411,11 @@ void flying(){
 //Serial.println("Throttle:");
 //Serial.print(throttle);
 
-PIDp=constrain(PIDp,-40,40);
-PIDr=constrain(PIDr,-40,40);
-float ratio_scale = 255/(throttle + abs(PIDp + PIDr + PIDy2));
+//PIDp=constrain(PIDp,-40,40);
+//PIDr=constrain(PIDr,-40,40);
+//float ratio_scale = 255/(throttle + abs(PIDp + PIDr + PIDy2));
 //PIDy2=constrain(PIDy2,-10,10);
-throttle= constrain(throttle,0,225);
+throttle= constrain(throttle,0,255);
 throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;
@@ -438,5 +441,9 @@ analogWrite(left_rear, throttle_left_rear);
 analogWrite(right_rear, throttle_right_rear);
 analogWrite(left_top, throttle_left_top);
 analogWrite(right_top, throttle_right_top);
+//Serial.println(throttle_left_rear);
+//Serial.print(throttle_right_rear);
+//Serial.print(throttle_left_top);
+//Serial.print(throttle_right_top);
 
 }
