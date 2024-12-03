@@ -33,11 +33,11 @@ int p_ad = 16;
 int i_ad = 18;
 int d_ad = 20;
 
-float Kp = 0.9; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
-float Ki = 0.19; //0.15 0.02 0.04, 0.05   0.01 0.002 , 0.0025
-float Kd = 0.13;//0.04 0.4, 0.1  0.06 0.05, 0,032
+float Kp = 0.99; //0.13 0.5  //battery on bottom: this works 0.25  0.20 0.23, 0.22
+float Ki = 1.58; //0.15 0.02 0.04, 0.05   0.01 0.002 , 0.0025
+float Kd = 0.20;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
-float Kpy=5.0;
+float Kpy=40.0;
 
 bool knob_down=0;
 uint32_t start_time = 0; 

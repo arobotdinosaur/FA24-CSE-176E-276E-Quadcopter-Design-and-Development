@@ -210,8 +210,13 @@ void loop() {
    //pid code here 
    setpointPitchp = ((a[4] - 127) * (0.0787401));
    setpointRoll = ((a[5]-127)*0.0787401);
-   //Serial.println(setpointPitchp);
-   float errorPitch = setpointRoll - pitch_corrected; 
+   if (abs(setpointPitchp)<1){
+    setpointPitchp=0;
+   }
+    if (abs(setpointRoll)<1){
+    setpointRoll=0;
+   }
+   float errorPitch = setpointPitchp - pitch_corrected; 
    float errorRoll = setpointRoll - roll_corrected;
    if(Kip == 0 ||a[2]<10){ //either Ki = 0 or Speed =0, unsure how to determine speed
       integralp = 0.0; 
@@ -420,6 +425,8 @@ throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;
 throttle_right_top = throttle - PIDp+PIDr+PIDy2;
+Serial.println(PIDp);
+Serial.println(PIDr);
 
 int big1=max(throttle_left_rear,throttle_left_top);
 int big2=max(throttle_right_rear,throttle_right_top);
