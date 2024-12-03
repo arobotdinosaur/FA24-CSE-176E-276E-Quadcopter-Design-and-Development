@@ -1,0 +1,10 @@
+PID Values:
+0.9 P
+0.13 I
+0.19 D
+shared between roll and pitch
+
+Yaw:
+P=5
+
+Filters are on defaults, 208 Hz, etc.
