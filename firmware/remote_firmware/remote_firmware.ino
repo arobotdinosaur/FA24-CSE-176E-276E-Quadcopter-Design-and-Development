@@ -39,6 +39,9 @@ float Kd = 0.20;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
 float Kpy=40.0;
 
+float trimp=0.0;
+float trimr=0.0;
+
 bool knob_down=0;
 uint32_t start_time = 0; 
 
@@ -184,7 +187,8 @@ void loop() {
   a[8]=Ki*100;
 
   a[9] = Kpy; 
-  
+  a[11] = trimp*10+127;
+  a[12] = trimr*10+127;
   //Serial.println(leftupdown);
 
   a[14] = a[0]^a[1]^a[2]^a[3]^a[4]^a[5]^a[6]^a[7]^a[8]^a[9]^a[10]^a[11]^a[12]^a[13];
@@ -381,6 +385,21 @@ void btn_left_pressed(bool down) {
 	if(down) {
     update_display();
     lcd.print(knob1.getCurrentPos());
+    if(knob1.getCurrentPos()==-1){
+      trimp=trimp+0.1;
+    lcd.print("trimp ");
+    lcd.print(trimp);
+    Serial.print("trimp ");
+    Serial.println(trimp);
+    }    
+    if(knob1.getCurrentPos()==0){
+      trimr=trimr-0.1;
+    lcd.print("trimr ");
+    lcd.print(trimr);
+    Serial.print("trimr ");
+    Serial.println(trimr);
+    }
+
     if(knob1.getCurrentPos()==1){
       Kp=Kp+0.01;
     lcd.print("Kp ");
@@ -452,6 +471,20 @@ void btn_right_pressed(bool down) {
 	if(down) {
     update_display();
     lcd.print(knob1.getCurrentPos());
+    if(knob1.getCurrentPos()==-1){
+      trimp=trimp-0.1;
+    lcd.print("trimp ");
+    lcd.print(trimp);
+    Serial.print("trimp ");
+    Serial.println(trimp);
+    }    
+    if(knob1.getCurrentPos()==0){
+      trimr=trimr+0.1;
+    lcd.print("trimr ");
+    lcd.print(trimr);
+    Serial.print("trimr ");
+    Serial.println(trimr);
+    }
     if(knob1.getCurrentPos()==1){
       Kp=Kp-0.01;
     lcd.print("Kp ");

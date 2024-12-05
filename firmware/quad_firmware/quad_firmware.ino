@@ -154,8 +154,8 @@ void loop() {
     /* 'orientation' should have valid .roll and .pitch fields */
     //Serial.print(now - last);
     pitch = orientation.pitch;
-    //Serial.print("rawpitch:");
-    //Serial.println(pitch);
+   //Serial.print("rawpitch:");
+   //Serial.println(pitch);
 
     pitch_rate = orientation.pitch_rate;
     //Serial.print(" raw_pitch_rate:");
@@ -178,8 +178,13 @@ void loop() {
     double gyro_raw_roll = gyro_event.gyro.x;
     double gyro_raw_yaw = gyro_event.gyro.z;
 
+  //Serial.print("\t\tAccel X: ");
+  //Serial.print(accel.acceleration.x);
+  //Serial.print(" \tY: ");
+  //Serial.println(accel.acceleration.y);
+
     //Serial.print("gyro_raw_pitch:");
-    //Serial.println(gyro_raw_pitch*RAD_TO_DEG);
+   // Serial.println(gyro_raw_pitch*RAD_TO_DEG);
 
     
     double gyro_angle_pitch = cf_pitch + (gyro_raw_pitch * RAD_TO_DEG)*dt*0.001;
@@ -202,6 +207,10 @@ void loop() {
 
     pitch_corrected = pitch_offset + cf_pitch; 
     roll_corrected = roll_offset+cf_roll;
+    //Serial.print("pitch_offset:");
+    //Serial.println(pitch_offset);
+    //Serial.print("roll_offset:");
+    //Serial.println(roll_offset);
     //Serial.print("pitch_corrected:");
     //Serial.println(pitch_corrected);
     //Serial.print("roll_corrected:");
@@ -305,10 +314,17 @@ void loop() {
       //Serial.println(a[2]);
       //int16_t a3 = a[3]; //converting to larger data type to avoid loop-around in conversion
       yaw_setpoint = (a[3]-123)*0.03 ;//conversion to deg
+      if (abs(yaw_setpoint)<0.5){
+        yaw_setpoint=0.0;
+      }
       //Serial.println(a[3]);
       float a6=a[6];//Stop the values from getting rounded away
       float a7=a[7];
       float a8=a[8];
+      float a11=a[11];
+      //Serial.println(a11);
+      float a12=a[12];
+
       Kpp=a6/100;
       Kdp=a7/100;
       Kip=a8/100;
@@ -316,6 +332,10 @@ void loop() {
       //Kdy=a7/100;
       //Kiy=a8/1000;
       Kpy = a[9];
+
+      pitch_offset=(a11-127)/10;
+      roll_offset=(a12-127)/10;
+
       //Kdy = a[10]; 
       //Serial.print("yaw_setpoint");
       //Serial.println(yaw_setpoint);
@@ -425,8 +445,8 @@ throttle_left_rear = throttle+PIDp-PIDr+PIDy2;
 throttle_left_top = throttle + PIDp+PIDr-PIDy2;
 throttle_right_rear = throttle - PIDp-PIDr-PIDy2;
 throttle_right_top = throttle - PIDp+PIDr+PIDy2;
-Serial.println(PIDp);
-Serial.println(PIDr);
+//Serial.println(PIDp);
+//Serial.println(PIDr);
 
 int big1=max(throttle_left_rear,throttle_left_top);
 int big2=max(throttle_right_rear,throttle_right_top);
