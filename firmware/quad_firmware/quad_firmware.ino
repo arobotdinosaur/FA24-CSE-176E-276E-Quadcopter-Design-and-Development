@@ -217,8 +217,8 @@ void loop() {
     //Serial.println(roll_corrected);
 
    //pid code here 
-   setpointPitchp = ((a[4] - 127) * (0.0787401));
-   setpointRoll = ((a[5]-127)*0.0787401);
+   setpointPitchp = ((a[4] - 127) * (0.0787401*0.5));
+   setpointRoll = ((a[5]-127)*0.0787401*0.5);
    if (abs(setpointPitchp)<1){
     setpointPitchp=0;
    }

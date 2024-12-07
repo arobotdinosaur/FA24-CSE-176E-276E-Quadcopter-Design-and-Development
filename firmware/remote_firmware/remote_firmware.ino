@@ -39,8 +39,8 @@ float Kd = 0.20;//0.04 0.4, 0.1  0.06 0.05, 0,032
 
 float Kpy=40.0;
 
-float trimp=0.0;
-float trimr=0.0;
+float trimp=1.20;
+float trimr=-1.40;
 
 bool knob_down=0;
 uint32_t start_time = 0; 
@@ -232,7 +232,7 @@ if (len = rfAvailable())
     if (b[0]==magicNumber2 && b[0]^b[1]^b[2]^b[3]^b[4]==b[5]){ 
       start_time = 0; 
       uint8_t integrator = b[4];
-      Serial.println(integrator);
+      //Serial.println(integrator);
       //Serial.println(b[1]);885
       int quadbattery=b[1];
       quadbattery = map(quadbattery, min_bat_quad, max_bat_quad, 0, 100);
