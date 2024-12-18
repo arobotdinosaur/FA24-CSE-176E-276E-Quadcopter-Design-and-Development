@@ -63,3 +63,5 @@ We built four copies of the motor driver sketch as there were four motors drivin
 We designed a low-dropout voltage regulator in the schematic to provide a stable power output of 3V to the motors. This was because the batteries were providing power ranging from 4V to 5V. We had two power rails: An unregulated power rail (called VBAT) that provides power to the motors and input of the voltage regulator and is driven directly by the battery, and a regulated supply driven by the voltage regulator (called 3V) 
 
 A netbridge was also created in order to electrically connect two nets in a schematic while keeping the nets separate in schematic . This was done to connect digital ground (BAT_GND) to regular ground. 
+
+{include picture of schematic} 
