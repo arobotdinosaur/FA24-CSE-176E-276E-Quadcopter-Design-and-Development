@@ -5,7 +5,7 @@ Quadcopters designed by Kaustubh Kanagalekar and Alexander Haken
 
 In this project class, we were challenged to design a printed circuit board (PCB) quadcopter and program it using Arduino software in order to achieve flight. 
 
-The class was broken into multiple smaller milestones- PCB design for electronic components, PCB design for quadcopter, sensor filtering and calibration, Proportional, Integral, Derivative (PID) tuning, PCB quadcopter assembly, and flight. As we were designing the PCB quadcopter using computer software, we were provided with a test flight control board (FCB) that we could work on concurrently. In case our PCB quadcopter wouldn’t work as intended, we could use the FCB for demonstration purposes. 
+The class was broken into multiple smaller milestones- PCB design for electronic components, PCB design for quadcopter, sensor filtering and calibration, Proportional, Integral, Derivative (PID) tuning, PCB quadcopter assembly, and flight. As we were designing the PCB quadcopter using computer software, we were provided with a test flight control board (FCB) that we could work on concurrently. We could use either the FCB or the custom PCB quadcopter for demonstration purposes. 
 
 The skills that we learned from the class were-
 1. PCB design and fabrication
@@ -138,7 +138,7 @@ Picture of assembly after reflow (note that some components were missing due to 
 ![Incomplete Assembly](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_5480.jpg)
 
 ## Flight 
-Unfortunately, due to time constraints, we were not able to achieve flight on our custom PCB’s; we demonstrated flight using the provided FCB. 
+We demonstrated flight using the provided FCB. 
 
 Flight was broken into the following categories- 
 1. "Roombaing" -- moving around the the floor with dowels installed with direction control and minimal yaw
