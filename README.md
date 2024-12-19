@@ -139,5 +139,6 @@ In our final demonstration, we were able to achieve FL 5.
 
 ## Acknowledgements
 We would like to thank our instructor, Dr. Steven Swanson, our TA, Zifeng Zhang, and our classmates for their assistance and guidance with the project.  
-Here is the [link] to the main quadcopter class repository(https://github.com/NVSL/QuadClass-Resources)
+Here is the [link](https://github.com/NVSL/QuadClass-Resources) to the main quadcopter class repository.
+
 
