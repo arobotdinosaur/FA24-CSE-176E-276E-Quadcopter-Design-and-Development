@@ -26,6 +26,8 @@ More specifically, we utilised the footprints tab in Fusion 360 to add SMD pads,
 We also took advantage of the automated building tool at times to accurately build the electronic components.  
 
 {insert pictures of footprints} 
+![Footprint of the resistor](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/Screenshot%202024-12-17%20at%2015.55.44.png) 
+
 
 After creating the footprints, we built symbols for each electronic component using the standard IEEE styling conventions using the symbols tab. 
 
