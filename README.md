@@ -76,7 +76,8 @@ We designed a low-dropout voltage regulator in the schematic to provide a stable
 
 A netbridge was also created in order to electrically connect two nets in a schematic while keeping the nets separate in schematic . This was done to connect digital ground (BAT_GND) to regular ground. 
 
-{include picture of schematic} 
+Image of the overall schematic 
+![Schematic](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/Screenshot%202024-12-17%20at%2022.47.36.png)
 
 ### PCB Design 
 We created a custom shape for the quadcopter and placed all the necessary components from the sketch to the board. The placement of some components were extremely important- for example, the antenna had to be placed near the edge of the board for uninterrupted communication, and the IMU had to be placed at the centre for accurate measurements. The crystal was placed close to the microcontroller, and the motor controllers were placed at the edges of the board. 
@@ -89,7 +90,9 @@ In Fusion 360, the board was aligned to a 1 mm grid for aesthetic reasons.
 We had four layers on the board in order to manage all the wirings and connections succinctly. We had a top layer, bottom layer, and two internal layers (one for 3V/VBAT and the other for GND/BAT_GND). The top and bottom layers involved signal routing for connecting various electronic components. The bottom plan was used whenever possible to reduce electrical noise. The 3V/VBAT and GND/BAT_GND layers were exclusively used for delivering power and ground signals, respectively. The traces that carried both power and ground signals were as short as possible to provide a low-resistance path for current to flow. 
 One notable exception was that the IMU did not have access to any layer of the board; this was because of the recommendations made by the IMU manufacturer. 
  
-{insert pictures of board} 
+Image of the connected boards in Fusion 360.
+![Board 1](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/Screenshot%202024-12-18%20at%2015.51.15.png)
+![Board 2](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/Screenshot%202024-12-18%20at%2016.17.27.png)
 
 ## Sensor Filtering and Calibration 
 
@@ -124,13 +127,15 @@ After writing the code for all three axes control, we combined them so that ther
 Through trial and error, we were able to find the optimal `Kp, Ki, Kd` values for the various axes to achieve stability. For pitch and roll: a ‘P’ overshoot would have resulted in the FCB “sway” from one end to another, an ‘I’ overshoot would have resulted in levelling at an odd angle, and a ‘D’ overshoot would have resulted in the FCB oscillating rapidly. Undershoots of each would have resulted in the quad not being able to move at all. For yaw rate, overshoots of ‘P’ and ‘D’ resulted in the FCB spinning uncontrollably in space, whereas undershoots would have not caused any motion. 
 For determining the yaw rate coefficients, our control was proportional to the yaw rate error (thus we did not have a `Kd` value after testing).  
 
-{insert video of PID demo} 
+This is a video of the PID demonstration for the pitch axis
+![PID Demo video](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_5397.mov)
 
 
 ## PCB Assembly 
 After our PCB quadcopter boards were manufactured, we started on the assembly portion of the board. We applied solder paste to our boards using a stencil (a thin aluminium sheet with precise holes corresponding to the board). Immediately after, we attached all the necessary electronic components by hand, ensuring accuracy and precision. We later used a reflow oven to connect the components and the PCB pads as a reflow oven guarantees a secure connections between the paste applied to the PCB pads and the attached components. 
  
-{insert picture of assembly} 
+Picture of assembly after reflow (note that some components were missing due to unavailability at the time of assembly) 
+![Incomplete Assembly](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_5480.jpg)
 
 ## Flight 
 Unfortunately, due to time constraints, we were not able to achieve flight on our custom PCB’s; we demonstrated flight using the provided FCB. 
@@ -147,7 +152,7 @@ Flight was broken into the following categories-
 In this phase, we had also implemented a “trimming” mechanism where we would manually offset any discrepancies in pitch and roll to ensure a level flight takeoff. We would test which direction the FCB would travel towards when throttle was applied and would adjust any errors according. Trimming would have to be done every time we flew from a different location as ground would be levelled differently at each location. 
 
 In our final demonstration, we were able to achieve FL 5. 
-{attach video of demo flight} 
+![Flight!](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_5474.mov)
 
 ## Acknowledgements
 We would like to thank our instructor, Dr. Steven Swanson, our TA, Zifeng Zhang, and our classmates for their assistance and guidance with the project.  
