@@ -152,6 +152,8 @@ Flight was broken into the following categories-
 In this phase, we had also implemented a “trimming” mechanism where we would manually offset any discrepancies in pitch and roll to ensure a level flight takeoff. We would test which direction the FCB would travel towards when throttle was applied and would adjust any errors according. Trimming would have to be done every time we flew from a different location as ground would be levelled differently at each location. 
 
 In our final demonstration, we were able to achieve FL 5. 
+
+Please download the video after clicking the "?" icon to view the flight
 ![Flight video](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_5474.mov)
 
 ## Acknowledgements
