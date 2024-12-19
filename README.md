@@ -137,3 +137,6 @@ In this phase, we had also implemented a “trimming” mechanism where we would
 In our final demonstration, we were able to achieve FL 5. 
 {attach video of demo flight} 
 
+## Acknowledgements
+We would like to thank our instructor, Dr. Steven Swanson, our TA, Zifeng Zhang, and our classmates for their assistance and guidance with the project.  
+
