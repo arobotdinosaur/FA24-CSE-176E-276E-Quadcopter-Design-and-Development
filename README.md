@@ -65,3 +65,16 @@ We designed a low-dropout voltage regulator in the schematic to provide a stable
 A netbridge was also created in order to electrically connect two nets in a schematic while keeping the nets separate in schematic . This was done to connect digital ground (BAT_GND) to regular ground. 
 
 {include picture of schematic} 
+
+### PCB Design 
+We created a custom shape for the quadcopter and placed all the necessary components from the sketch to the board. The placement of some components were extremely important- for example, the antenna had to be placed near the edge of the board for uninterrupted communication, and the IMU had to be placed at the centre for accurate measurements. The crystal was placed close to the microcontroller, and the motor controllers were placed at the edges of the board. 
+
+We primarily used the autorouter to route all wirings and connections, except in the case of the antenna and parts of the microcontroller. The antenna had to be connected with a large wire (50 mm) manually to the balun and other components (such as the corresponding  microcontroller pins and capacitors). The crystal also had to manually routed with specific pins of the microcontroller.  
+
+The board had to fit under a 13.9 cm square requirement  with motor holes of 12.2 mm for optimal placement. 
+In Fusion 360, the board was aligned to a 1 mm grid for aesthetic reasons. 
+
+We had four layers on the board in order to manage all the wirings and connections succinctly. We had a top layer, bottom layer, and two internal layers (one for 3V/VBAT and the other for GND/BAT_GND). The top and bottom layers involved signal routing for connecting various electronic components. The bottom plan was used whenever possible to reduce electrical noise. The 3V/VBAT and GND/BAT_GND layers were exclusively used for delivering power and ground signals, respectively. The traces that carried both power and ground signals were as short as possible to provide a low-resistance path for current to flow. 
+One notable exception was that the IMU did not have access to any layer of the board; this was because of the recommendations made by the IMU manufacturer. 
+ 
+{insert pictures of board} 
