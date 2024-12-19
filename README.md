@@ -78,3 +78,62 @@ We had four layers on the board in order to manage all the wirings and connectio
 One notable exception was that the IMU did not have access to any layer of the board; this was because of the recommendations made by the IMU manufacturer. 
  
 {insert pictures of board} 
+
+## Sensor Filtering and Calibration 
+
+Prior to reading data from the IMU, we had to establish a connection between a test remote and the FCB; we accomplished this using a check-sum that would transmit data sent from the remote (such as throttle value, pitch, roll, yaw) to the FCB. In addition, we also wrote code that read the existing gimbal value from the remote and transmitted it to the FCB to achieve flight. 
+The check-sum was created in order to prevent bad data packets from getting sent over and to only accept packets that were sent from our remote (and not from other groups). 
+
+On the FCB, we had to read data from the IMU to accurately measure the orientation. We used an existing library corresponding to the IMU called Adafruit_AHRS- from this, we used the `Adafruit_Simple_AHRS::getQuadOrientation()` function to gather all the necessary data.
+We obtained the pitch rate, roll, and yaw from the quad orientation function.  
+After gathering these data from the IMU, we created a complementary filter to filter out some of the noise created by the accelerometer and gyroscope. The accelerometer (Euler angles of the orientation) and gyroscope readings (the angular accelerations) were taken from the IMU. 
+The reason we created a complementary filter was to gather the best possible data from both the gyroscope and the accelerometer as each inertial sensor has positives and drawbacks. The accelerometers do not drift over time, but they are quite noisy when the motors are running. Whereas, gyroscopes are less noisy than  the accelerometers, but the resulting measurement will drift over time due to accumulated error. We tried to set a high gain such that we could extract more data from the gyroscope in our code. 
+We used a standard formula shown below with a gain of 0.98- `cf_angle = (gain) * (cf_angle + (gyro_raw * RAD_TO_DEG * dt)) + (1-gain) * (acc_angle)`
+
+`RAD_TO_DEG = 57.295779513082320876798154814105`
+`cf_angle` is the angle resulted from the complementary  filter, `gyro_raw` is the gyroscope measurement, `acc_angle` is the Euler angles, `dt` is the change in time from the measurements.  
+
+We also accounted for any offsets caused by the IMU in the code to have it read zero when levelled. 
+We only performed complementary filtering on the roll and pitch axes. 
+
+## PID Control and Tuning 
+PID is a type of controller used in feedback systems to regulate speed, position, and various other parameters to ensure stability. We used PID to keep the FCB stable and levelled when the motors were running. 
+Proportional (P) responds to the current error and provides immediate action 
+Integral (I) accumulates past errors 
+Derivative (D) predicts future errors based on the rate of change. 
+This was implemented for all three axes (roll, pitch, yaw rate) using the following equation- 
+`PID = (Kp* error) + Ki* integral - Kd* derivative` 
+Where `Kp, Ki, Kd` are constants that are determined by testing, `error` is the difference from the remote gimbal input and the offset of the axis (`error = setpoint - corrected`), `integral` is `integral = error* dt+integral` , and derivative is the raw gyro readings in degrees. 
+
+PID for yaw rate was implemented a bit differently as ‘I’ wasn’t required to control it. Hence, only `Kp` and `Kd` were used in the PID code (with similar implementation as listed above). 
+
+After writing the code for all three axes control, we combined them so that there would be an equal output to the motors. We implemented a mixing function which increased the power for the front motors and decreased the power for the rear motors based on the PID output.
+
+Through trial and error, we were able to find the optimal `Kp, Ki, Kd` values for the various axes to achieve stability. For pitch and roll: a ‘P’ overshoot would have resulted in the FCB “sway” from one end to another, an ‘I’ overshoot would have resulted in levelling at an odd angle, and a ‘D’ overshoot would have resulted in the FCB oscillating rapidly. Undershoots of each would have resulted in the quad not being able to move at all. For yaw rate, overshoots of ‘P’ and ‘D’ resulted in the FCB spinning uncontrollably in space, whereas undershoots would have not caused any motion. 
+For determining the yaw rate coefficients, our control was proportional to the yaw rate error (thus we did not have a `Kd` value after testing).  
+
+{insert video of PID demo} 
+
+
+## PCB Assembly 
+After our PCB quadcopter boards were manufactured, we started on the assembly portion of the board. We applied solder paste to our boards using a stencil (a thin aluminium sheet with precise holes corresponding to the board). Immediately after, we attached all the necessary electronic components by hand, ensuring accuracy and precision. We later used a reflow oven to connect the components and the PCB pads as a reflow oven guarantees a secure connections between the paste applied to the PCB pads and the attached components. 
+ 
+{insert picture of assembly} 
+
+## Flight 
+Unfortunately, due to time constraints, we were not able to achieve flight on our custom PCB’s; we demonstrated flight using the provided FCB. 
+
+Flight was broken into the following categories- 
+1. "Roombaing" -- moving around the the floor with dowels installed with direction control and minimal yaw
+2. Repeated, vertical hopping (>1 inches, > 0.25 second)
+3. Repeated, vertical hopping (>6 inches, > 1 second)
+4. Repeated, vertical hopping (>12 inches, > 3 seconds)
+5. Short flight (>12 inches, > 6 seconds)
+6. Sustained flight (> 12 inches, > 10 seconds, demonstrate yaw control)
+7. 	Sustained flight (Fly long enough to consume an entire battery)
+
+In this phase, we had also implemented a “trimming” mechanism where we would manually offset any discrepancies in pitch and roll to ensure a level flight takeoff. We would test which direction the FCB would travel towards when throttle was applied and would adjust any errors according. Trimming would have to be done every time we flew from a different location as ground would be levelled differently at each location. 
+
+In our final demonstration, we were able to achieve FL 5. 
+{attach video of demo flight} 
+
