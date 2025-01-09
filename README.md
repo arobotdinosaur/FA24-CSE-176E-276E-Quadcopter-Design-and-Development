@@ -126,6 +126,8 @@ After writing the code for all three axes control, we combined them so that ther
 
 Through trial and error, we were able to find the optimal `Kp, Ki, Kd` values for the various axes to achieve stability. For pitch and roll: a ‘P’ overshoot would have resulted in the FCB “sway” from one end to another, an ‘I’ overshoot would have resulted in levelling at an odd angle, and a ‘D’ overshoot would have resulted in the FCB oscillating rapidly. Undershoots of each would have resulted in the quad not being able to move at all. For yaw rate, overshoots of ‘P’ and ‘D’ resulted in the FCB spinning uncontrollably in space, whereas undershoots would have not caused any motion. 
 
+One critical factor for having reliable PID control was having a fast control loop running on the microcontroller. We initially had issues with "derivative kick" where the derivative term was causing unstable behavior due to a high control latency. To optimize speed, we made sure that only critical processes were running. Once we commented out all the print statements that we'd been using for debugging, the loop time reduced from about 35 ms to only 8 ms, and our PID controller ran much better.
+
 For determining the yaw rate coefficients, our control was proportional to the yaw rate error (thus we did not have a `Kd` value after testing).  
 
 This is a video of the PID demonstration for the pitch axis
