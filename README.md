@@ -82,13 +82,13 @@ Image of the overall schematic
 ### PCB Design 
 We created a custom shape for the quadcopter and placed all the necessary components from the sketch to the board. The placement of some components were extremely important- for example, the antenna had to be placed near the edge of the board for uninterrupted communication, and the IMU had to be placed at the centre for accurate measurements. The crystal was placed close to the microcontroller, and the motor controllers were placed at the edges of the board. 
 
-We primarily used the autorouter to route all wirings and connections, except in the case of the antenna and parts of the microcontroller. The antenna had to be connected with a large wire (50 mm) manually to the balun and other components (such as the corresponding  microcontroller pins and capacitors). The crystal also had to manually routed with specific pins of the microcontroller.  
+We primarily used the autorouter to route all wirings and connections, except in the case of the antenna and parts of the microcontroller. The antenna had to be connected with a large wire (50 mm) manually to the balun and other components (such as the corresponding  microcontroller pins and capacitors). The crystal also had to manually routed with specific pins of the microcontroller. We utilized differential pairs for sending the signals from the antenna and crystal back to the microcontroller due to the sensitivity of these components.
 
 The board had to fit under a 13.9 cm square requirement  with motor holes of 12.2 mm for optimal placement. 
 In Fusion 360, the board was aligned to a 1 mm grid for aesthetic reasons. 
 
 We had four layers on the board in order to manage all the wirings and connections succinctly. We had a top layer, bottom layer, and two internal layers (one for 3V/VBAT and the other for GND/BAT_GND). The top and bottom layers involved signal routing for connecting various electronic components. The bottom plan was used whenever possible to reduce electrical noise. The 3V/VBAT and GND/BAT_GND layers were exclusively used for delivering power and ground signals, respectively. The traces that carried both power and ground signals were as short as possible to provide a low-resistance path for current to flow. 
-One notable exception was that the IMU did not have access to any layer of the board; this was because of the recommendations made by the IMU manufacturer. 
+We took care to leave a gap in all the layers beneath the IMU as the manufacture specified that we should not have metal underneath it for best performance.
  
 Image of the connected boards in Fusion 360.
 ![Board 1](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/Screenshot%202024-12-18%20at%2015.51.15.png)
@@ -102,7 +102,7 @@ The check-sum was created in order to prevent bad data packets from getting sent
 On the FCB, we had to read data from the IMU to accurately measure the orientation. We used an existing library corresponding to the IMU called Adafruit_AHRS- from this, we used the `Adafruit_Simple_AHRS::getQuadOrientation()` function to gather all the necessary data.
 We obtained the pitch rate, roll, and yaw from the quad orientation function.  
 After gathering these data from the IMU, we created a complementary filter to filter out some of the noise created by the accelerometer and gyroscope. The accelerometer (Euler angles of the orientation) and gyroscope readings (the angular accelerations) were taken from the IMU. 
-The reason we created a complementary filter was to gather the best possible data from both the gyroscope and the accelerometer as each inertial sensor has positives and drawbacks. The accelerometers do not drift over time, but they are quite noisy when the motors are running. Whereas, gyroscopes are less noisy than  the accelerometers, but the resulting measurement will drift over time due to accumulated error. We tried to set a high gain such that we could extract more data from the gyroscope in our code. 
+The reason we created a complementary filter was to gather the best possible data from both the gyroscope and the accelerometer as each inertial sensor has positives and drawbacks. The accelerometers do not drift over time, but they are quite noisy when the motors are running, and slightly less responsive compared to the gyroscope. Whereas, gyroscopes are less noisy than  the accelerometers, but the resulting measurement will drift over time due to accumulated error. We tried to set a high gain such that we could extract more data from the gyroscope in our code. 
 We used a standard formula shown below with a gain of 0.98- `cf_angle = (gain) * (cf_angle + (gyro_raw * RAD_TO_DEG * dt)) + (1-gain) * (acc_angle)`
 
 `RAD_TO_DEG = 57.295779513082320876798154814105`
@@ -116,15 +116,16 @@ PID is a type of controller used in feedback systems to regulate speed, position
 Proportional (P) responds to the current error and provides immediate action 
 Integral (I) accumulates past errors 
 Derivative (D) predicts future errors based on the rate of change. 
-This was implemented for all three axes (roll, pitch, yaw rate) using the following equation- 
+This was implemented for the pitch and roll axes using the following equation- 
 `PID = (Kp* error) + Ki* integral - Kd* derivative` 
-Where `Kp, Ki, Kd` are constants that are determined by testing, `error` is the difference from the remote gimbal input and the offset of the axis (`error = setpoint - corrected`), `integral` is `integral = error* dt+integral` , and derivative is the raw gyro readings in degrees. 
+Where `Kp, Ki, Kd` are constants that are determined by testing, `error` is the difference from the remote gimbal input and the offset of the axis (`error = setpoint - corrected`), `integral` is `integral = error* dt+integral` , and derivative is the raw gyro readings in degrees. We used the raw gyro readings rather than doing a numerical derivative of cf_pitch because the raw gyroscope readings had slightly less delay. 
 
-PID for yaw rate was implemented a bit differently as ‘I’ wasn’t required to control it. Hence, only `Kp` and `Kd` were used in the PID code (with similar implementation as listed above). 
+PID for yaw rate was implemented a bit differently. The control was only proportional to on the velocity error in yaw, which we got directly from the raw gyroscope yaw data.
 
 After writing the code for all three axes control, we combined them so that there would be an equal output to the motors. We implemented a mixing function which increased the power for the front motors and decreased the power for the rear motors based on the PID output.
 
 Through trial and error, we were able to find the optimal `Kp, Ki, Kd` values for the various axes to achieve stability. For pitch and roll: a ‘P’ overshoot would have resulted in the FCB “sway” from one end to another, an ‘I’ overshoot would have resulted in levelling at an odd angle, and a ‘D’ overshoot would have resulted in the FCB oscillating rapidly. Undershoots of each would have resulted in the quad not being able to move at all. For yaw rate, overshoots of ‘P’ and ‘D’ resulted in the FCB spinning uncontrollably in space, whereas undershoots would have not caused any motion. 
+
 For determining the yaw rate coefficients, our control was proportional to the yaw rate error (thus we did not have a `Kd` value after testing).  
 
 This is a video of the PID demonstration for the pitch axis
