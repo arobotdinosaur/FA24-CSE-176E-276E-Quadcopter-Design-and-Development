@@ -1,4 +1,4 @@
-![Raw Quadcopters](https://github.com/KaustubhKanagalekar/FA24-CSE-176E-276E-Quadcopter-Design-and-Development/blob/main/Misc/IMG_1573.png)
+![Raw Quadcopters](Misc/IMG_1573.png)
 Quadcopters designed by Kaustubh Kanagalekar and Alexander Haken
 
 ## Introduction
